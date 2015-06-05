@@ -1,5 +1,6 @@
 from bottle import route, run
 from logics.login import login
+from admin.config_view import config_view
 
 @route('/hello')
 def hello1():
