@@ -3,6 +3,23 @@
 <html>
 <head>
     <title>xgxxxgemss</title>
+    <script type="text/javascript" src="/static/js/ace/ace.js"></script>
+    <script type="text/javascript" src="/static/js/ace/theme-github.js"></script>
+    <script type="text/javascript" src="/static/js/ace/mode-json.js"></script>
+    <script type="text/javascript" src="/static/js/main.js"></script>
+<script type="text/javascript">
+    window.onload=function(){
+            var editor = ace.edit('ace-editor');
+            editor.setTheme("ace/theme/github");
+            var PyMode = require("ace/mode/json").Mode;
+            editor.getSession().setMode(new PyMode());
+
+            editor.getSession().setTabSize(4);
+            editor.getSession().setUseSoftTabs(true);
+            editor.getSession().setValue(json_format(editor.getSession().getValue(), false))
+    }
+</script>
+<link rel="stylesheet" type="text/css" href="/static/css/style.css" />
 </head>
 <body>
 <form action="/admin/config_view" method="post" enctype="multipart/form-data">
@@ -10,7 +27,9 @@
 <input type="submit" value="开始生成配置" />
 </form>
 
-<textarea name="config_value" class="hide">{{ config_value }}</textarea>
+
+
+<div id='ace-editor'>{{ config_value }}</div>
 
 
 

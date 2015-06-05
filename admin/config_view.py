@@ -3,16 +3,24 @@
 import ast
 import json
 
-from bottle import route, request
+from bottle import route, request, static_file
 from bottle import jinja2_view as view
 import xlrd
+
+@route('/static/<filepath:path>')
+def server_static(filepath):
+    print filepath
+    return static_file(filepath, root='./static/')
+    return ''
+    
+    
 
 
 @route('/admin/config_view', method=['GET', 'POST'])
 @view('admin/templates/config_view.html')
 def config_view():
     print dir(request)
-    view = "you get it"
+    view = '' 
     excel_file = request.files.get('xls')
     if excel_file:
         print excel_file.__dict__
