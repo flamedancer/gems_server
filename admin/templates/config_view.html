@@ -8,28 +8,29 @@
     <script type="text/javascript" src="/static/js/ace/mode-json.js"></script>
     <script type="text/javascript" src="/static/js/main.js"></script>
 <script type="text/javascript">
-    window.onload=function(){
-            var editor = ace.edit('ace-editor');
-            editor.setTheme("ace/theme/github");
-            var PyMode = require("ace/mode/json").Mode;
-            editor.getSession().setMode(new PyMode());
-
-            editor.getSession().setTabSize(4);
-            editor.getSession().setUseSoftTabs(true);
-            editor.getSession().setValue(json_format(editor.getSession().getValue(), false))
-    }
+    window.onload=set_ace_editor;
 </script>
 <link rel="stylesheet" type="text/css" href="/static/css/style.css" />
 </head>
 <body>
-<form action="/admin/config_view" method="post" enctype="multipart/form-data">
-<input type="file" name='xls' value="上传文件" />
+<form action="/admin/config_view?config_name={{config_name}}" method="post" enctype="multipart/form-data">
+<input type="file" name='xls' />
 <input type="submit" value="开始生成配置" />
 </form>
+ 
+<button name='save' onClick="save_config('{{ config_name }}')" >保存</button>
+<label id="save_tag" name='save_tag'></label>
 
+{% for info in config_titles %}
+<h4>{{ info.category }}</h4>
+    <ul class='config_category'>
+        {% for config_name, chinese_name in info.content %}
+        </li><a href="/admin/config_view?config_name={{config_name}}">{{ chinese_name }}</a></li>
+        {% endfor %}
+    </ul>
+{% endfor %}
 
-
-<div id='ace-editor'>{{ config_value }}</div>
+<div id='ace-editor'>{{ config_value|string }}</div>
 
 
 

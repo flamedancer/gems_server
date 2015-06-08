@@ -26,9 +26,12 @@ class BaseModel(object):
         return app.redis_store.set(self)
 
     #创建一个新的model 请在子类中实现
+    # @classmethod
+    # def create(cls):
+    #     return None
     @classmethod
-    def create(cls):
-        return None
+    def create(cls, pk):
+        return cls.get(pk) or cls(pk)
 
     def delete(self):
         app.redis_store.delete(self)
@@ -53,7 +56,6 @@ class UserModel(BaseModel):
     """用户个人的数据 一般只允许自己读写自己的 pk都是uid"""
 
     pk = 'uid'
-    fields = []
 
     @classmethod
     def get(cls, uid):
@@ -94,6 +96,24 @@ class UserModel(BaseModel):
         #due to backup mongo, old, no aggregate as of 2014/8/8
         #return app.bk_mongo.aggregate(cls,statement)
         return app.mongo_store.aggregate(cls,statement)
+
+
+class ConfigModel(BaseModel):
+    """游戏配置信息
+
+    Attributes:
+        config_name: 配置名称 str
+        data: 配置信息 dict
+    """
+    pk = 'config_name'
+    def __init__(self, config_name=None):
+        """初始化游戏配置信息
+
+        Args:
+            config_name: 配置名称
+        """
+        self.config_name = config_name
+        self.data = {}
 
 
 class TmpModel(BaseModel):

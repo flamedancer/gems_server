@@ -13,11 +13,6 @@ class GameModel(UserModel):
     _ALL_USER_CLASSES = {}
 
     @classmethod
-    def get(cls, uid):
-        obj = super(GameModel, cls).get(uid)
-        return obj
-    
-    @classmethod
     def create(cls, uid):
         return GameModel.get(uid) or cls(uid) 
 

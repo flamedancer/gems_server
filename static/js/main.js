@@ -1,7 +1,7 @@
 function json_format(txt,compress/*是否为压缩模式*/){/* 格式化JSON源码(对象转换为JSON文本) */  
         var indentChar = '    ';   
         if(/^\s*$/.test(txt)){   
-            alert('数据为空,无法格式化! ');   
+            // alert('数据为空,无法格式化! ');   
             return;   
         }   
         try{var data=eval('('+txt+')');}   
@@ -36,3 +36,43 @@ function json_format(txt,compress/*是否为压缩模式*/){/* 格式化JSON源�
         notify('',data,isLast,indent,false);   
         return draw.join('');   
     }  
+
+
+function set_ace_editor() {
+    var editor = ace.edit('ace-editor');
+    editor.setTheme("ace/theme/github");
+    var PyMode = require("ace/mode/json").Mode;
+    editor.getSession().setMode(new PyMode());
+
+    editor.getSession().setTabSize(4);
+    editor.getSession().setUseSoftTabs(true);
+    editor.getSession().setValue(json_format(editor.getSession().getValue(), false))
+}
+
+function save_config(config_name) { 
+    alert(config_name);
+    var editor = ace.edit('ace-editor');
+    config_value = editor.getSession().getValue();
+    
+    try{var data= eval('('+config_value+')');}
+    catch(e){
+        alert('配置格式错误无法提交！）')
+        return;
+    }
+
+    // ajax 发送保存配置数据
+    xmlhttp=new XMLHttpRequest();
+    xmlhttp.onreadystatechange=function() {
+        if (xmlhttp.readyState !=4) {
+            document.getElementById("save_tag").innerHTML="正在保存..."
+        }
+        else if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+            document.getElementById("save_tag").innerHTML="保存成功！"
+         }
+    }
+    xmlhttp.open("POST","/admin/save_config",true);
+    xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+    send_msg = "config_name="+config_name+"&config_value="+config_value;    
+    xmlhttp.send(send_msg);
+
+}
