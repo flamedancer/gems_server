@@ -14,11 +14,11 @@ class GameModel(UserModel):
 
     @classmethod
     def create(cls, uid):
-        return GameModel.get(uid) or cls(uid) 
+        return cls.get(uid) or cls(uid) 
 
     def __getattr__(self, model_name):
         if model_name in self._ALL_USER_CLASSES:
-            return self._ALL_USER_CLASSES[model_name].get(self.uid) or self._ALL_USER_CLASSES[model_name].get_instance(self.uid) 
+            return self._ALL_USER_CLASSES[model_name].create(self.uid) 
         class_name = "".join([name_str.capitalize() for name_str in model_name.split('_')]) 
         model_path = "models." + model_name
         try:
@@ -30,4 +30,5 @@ class GameModel(UserModel):
         if self.__class__.__bases__ != model_class.__bases__:
             raise AttributeError, "{} object is not a GameModel".format(model_name)
         self._ALL_USER_CLASSES[model_name] = model_class
-        return model_class.get(self.uid) or model_class.get_instance(self.uid) 
+        return model_class.create(self.uid) 
+

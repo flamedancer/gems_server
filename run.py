@@ -1,10 +1,11 @@
-from bottle import route, run
-from logics.login import login
-from admin.config_view import config_view
+from bottle import route, run, app, Bottle
+from logics import *
+from admin import *
 
 @route('/hello')
 def hello1():
     return "Hello World!"
 
+app = Bottle()
 
-run(host='127.0.0.1', port=8081, debug=True)
+run(host='192.168.1.43', reloader=True, port=8081, debug=True)

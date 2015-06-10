@@ -17,7 +17,7 @@ def server_static(filepath):
 
 
 @route('/admin/config_view', method=['GET', 'POST'])
-@view('admin/templates/config_view.html')
+@view('config_view.html')
 def config_view():
     this_config_name = request.query.get('config_name')
     view = {} 
@@ -35,7 +35,7 @@ def save_config():
     this_config_name = request.forms.get('config_name')
     this_config_value = request.forms.get('config_value')
     # 校验是否为json数据
-    json.loads(this_config_value)  
+    this_config_value = json.loads(this_config_value)  
     config_obj = ConfigModel.get(this_config_name)
     # config_list里是否有这个配置
     if not config_obj:
@@ -51,9 +51,7 @@ def save_config():
         else:
             raise Exception('This Config  Not Exist')
     config_obj.data = this_config_value
-    #config_obj.put()
-    print config_obj.config_name
-    print config_obj.data
+    config_obj.put()
     return ''
         
     
@@ -90,7 +88,10 @@ def excel_explain(sheet):
                 elif type_cell == 'list':
                     walk_dict[key] = ast.literal_eval('[' + values + ']')
                 elif type_cell == 'str':
-                    walk_dict[key] = values
+                    if isinstance(values, (int, float)):
+                        walk_dict[key] = str(values)
+                    else:
+                        walk_dict[key] = values
                 elif type_cell == 'int':
                     walk_dict[key] = int(values)
                 elif type_cell == 'float':
