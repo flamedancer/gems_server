@@ -8,4 +8,4 @@ def hello1():
 
 app = Bottle()
 
-run(host='192.168.1.43', reloader=True, port=8081, debug=True)
+run(host='192.168.1.43', reloader=False, port=8081, debug=True)
