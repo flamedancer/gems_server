@@ -16,8 +16,8 @@ def server_static(filepath):
     
 
 
-@route('/admin/config_view', method=['GET', 'POST'])
-@view('config_view.html')
+@route('/admin/game_config', method=['GET', 'POST'])
+@view('game_config.html')
 def config_view():
     this_config_name = request.query.get('config_name')
     view = {} 

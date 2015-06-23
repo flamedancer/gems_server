@@ -1,0 +1,53 @@
+{% extends "frame.html" %}
+{% block main %}
+    <script type="text/javascript" src="/static/js/ace/ace.js"></script>
+    <script type="text/javascript" src="/static/js/ace/theme-github.js"></script>
+    <script type="text/javascript" src="/static/js/ace/mode-json.js"></script>
+    <script type="text/javascript" src="/static/js/main.js"></script>
+<script type="text/javascript">
+    window.onload=set_ace_editor;
+</script>
+
+<div class="panel panel-primary" id='config_lists'>
+{% for info in config_titles %}
+    <div class="btn-toolbar" role="toolbar">
+        <div class="btn-group" >
+            <button type="button" class="btn btn-default">{{info.category}}：</button>
+            {% for this_config_name, chinese_name in info.content %}
+            {% if config_name == this_config_name %}
+            <button type="button" class="btn btn-warning" onClick="location.href='?config_name={{this_config_name}}'" style="color:blue;">{{ chinese_name }}</button>
+            {% else %}
+            <button type="button" class="btn btn-default" onClick="location.href='?config_name={{this_config_name}}'" style="color:blue;">{{ chinese_name }}</button>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+{% endfor %}
+</div>
+
+{% if config_name %}
+
+<div class="row" id="config_utiles">
+    <button class="btn btn-primary col-md-2">当前配置：{{ config_name }}</button>
+
+<div class="col-md-6 col-md-offset-1">
+<form class="form-inline" action="?config_name={{config_name}}" method="post" enctype="multipart/form-data">
+  <div class="form-group">
+    <label for="filepick">选择excel配置文件</label>
+    <input type="file" class="form-control" id="filepick" name='xls' placeholder="">
+  </div>
+  <button type="submit" class="btn btn-defualt">开始生成配置</button>
+</form>
+</div>
+<div class="col-md-3">
+<button name='save' class="btn btn-danger" onClick="save_config('{{ config_name }}')" >保存所做修改</button>
+<span id="save_tag" name='save_tag' class="label label-warning"></span>
+</div>
+</div>
+       
+<div id='ace-editor'>{{ config_value }}</div>
+{% endif %}
+
+
+{% endblock %}
+

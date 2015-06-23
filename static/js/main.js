@@ -50,7 +50,6 @@ function set_ace_editor() {
 }
 
 function save_config(config_name) { 
-    alert(config_name);
     var editor = ace.edit('ace-editor');
     config_value = editor.getSession().getValue();
     
@@ -68,7 +67,11 @@ function save_config(config_name) {
         }
         else if (xmlhttp.readyState==4 && xmlhttp.status==200) {
             document.getElementById("save_tag").innerHTML="保存成功！"
+            alert("保存成功！");
          }
+        else {
+            document.getElementById("save_tag").innerHTML="保存失败！"
+        }
     }
     xmlhttp.open("POST","/admin/save_config",true);
     xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
