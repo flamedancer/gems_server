@@ -9,6 +9,7 @@ from libs.model import ConfigModel
 from bottle import route, request, static_file
 from bottle import jinja2_view as view
 import xlrd
+from admin.decorators import validate
 
 @route('/static/<filepath:path>')
 def server_static(filepath):
@@ -18,6 +19,7 @@ def server_static(filepath):
 
 @route('/admin/game_config', method=['GET', 'POST'])
 @view('game_config.html')
+@validate
 def config_view():
     this_config_name = request.query.get('config_name')
     view = {} 
@@ -31,6 +33,7 @@ def config_view():
 
 
 @route('/admin/save_config', method='POST')
+@validate
 def save_config():
     this_config_name = request.forms.get('config_name')
     this_config_value = request.forms.get('config_value')

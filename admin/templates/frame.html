@@ -13,10 +13,12 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Dashboard</a></li>
-            <li><a href="#">Settings</a></li>
-            <li><a href="#">Profile</a></li>
-            <li><a href="#">Help</a></li>
+            <li><a href="#">Hi,{{employeeRealname}}</a></li>
+            <li><a href="detail">设置</a></li>
+            {% if employeeRole == 'super' %}
+            <li><a href="#">消息</a></li>
+            {% endif %}
+            <li><a href="logout">退出</a></li>
           </ul>
           <form class="navbar-form navbar-right">
             <input type="text" class="form-control" placeholder="Search...">
@@ -29,7 +31,13 @@
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li class="active"><a href="/admin/game_config">游戏配置<span class="sr-only">(current)</span></a></li>
+            {% for perm in employeePermissionsConf %}
+                {% if perm["permission"] == this_config_name %}
+                <li class="active"><a href="{{perm['permission']}}">{{perm["description"]}}</a></li>
+                {% else %}
+                    <li><a href="{{perm['permission']}}">{{perm["description"]}}</a></li>
+                {% endif %}
+            {% endfor %}
             <li><a href="#">Reports</a></li>
             <li><a href="#">Analytics</a></li>
             <li><a href="#">Export</a></li>

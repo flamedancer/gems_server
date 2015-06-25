@@ -16,7 +16,7 @@
 body {
   padding-top: 50px;
   padding-bottom: 40px;
-  /* background-color: #eee; */
+  background-color: #eee;
 }
 
 .form-signin {
@@ -25,25 +25,29 @@ body {
   margin: 0 auto;
 }
 .form-signin .form-signin-heading,
-.form-signin .checkbox {
+.form-sigin-heading h3
+{
   margin-bottom: 10px;
+  text-align: center;
+    
 }
 .form-signin .checkbox {
   font-weight: normal;
 }
+
 .form-signin .form-control {
   position: relative;
   height: auto;
   -webkit-box-sizing: border-box;
      -moz-box-sizing: border-box;
           box-sizing: border-box;
-  padding: 10px;
   font-size: 16px;
 }
+
 .form-signin .form-control:focus {
   z-index: 2;
 }
-.form-signin input[type="email"] {
+.form-signin input[name=""] {
   margin-bottom: -1px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
@@ -54,6 +58,12 @@ body {
   border-top-right-radius: 0;
 }
 
+.more-handle a {
+    padding-left: 7px;
+}
+.more-handle span {
+    float: right;
+}
 
 /*
  * Base structure

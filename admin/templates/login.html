@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+
+    <form class="form-signin" action="" method="post" >
+        <h3 class="form-signin-heading">Gems管理后台</h3>
+        <div class="input-group has-success">
+            <input type="text" class="form-control" placeholder="ming.xing" id="inputUsername" name="inputUsername" aria-describedby="basic-addon2">
+            <span class="input-group-addon" id="basic-addon2">@honvue.com</span>
+        </div>
+            <label for="inputPassword" class="control-label sr-only" >密码:</label>
+            <input type="password" id="inputPassword" name="inputPassword" class="form-control" placeholder="Password" required="">
+        <div class="more-handle">
+        <a>忘记密码</a>
+        <a>注册账号</a>
+        <span class="label label-warning">{{ msg }} </span>
+        </div>
+
+        <button class="btn btn-lg btn-primary btn-block" type="submit">登入</button>
+    </form>
+
+</div>
+
+{% endblock %}
+

@@ -1,6 +1,6 @@
 from bottle import route, run, app, Bottle
 from logics import *
-from admin import *
+from admin.views import *
 
 @route('/hello')
 def hello1():
