@@ -12,13 +12,15 @@
           <a class="navbar-brand" href="/admin/home">Gems 后台管理系统</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Hi,{{employeeRealname}}</a></li>
-            <li><a href="detail">设置</a></li>
-            {% if employeeRole == 'super' %}
-            <li><a href="#">消息</a></li>
+          <ul class="nav navbar-nav navbar-right" role="tablist">
+            <li><a href="/admin/detail">Hi,{{selfRealname}}</a></li>
+            {% if selfIsSuper %}
+            <li role="presentation"><a href="/admin/manage">
+            {% if supermsg_num != 0 %}
+            <span class="badge label label-danger">{{supermsg_num}}</span>
+            {% endif %}管理</a></li>
             {% endif %}
-            <li><a href="logout">退出</a></li>
+            <li><a href="/admin/logout">退出</a></li>
           </ul>
           <form class="navbar-form navbar-right">
             <input type="text" class="form-control" placeholder="Search...">
@@ -31,11 +33,11 @@
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            {% for perm in employeePermissionsConf %}
+            {% for perm in selfPermissionsConf %}
                 {% if perm["permission"] == this_config_name %}
-                <li class="active"><a href="{{perm['permission']}}">{{perm["description"]}}</a></li>
+                <li class="active"><a href="/admin/{{perm['permission']}}">{{perm["description"]}}</a></li>
                 {% else %}
-                    <li><a href="{{perm['permission']}}">{{perm["description"]}}</a></li>
+                    <li><a href="/admin/{{perm['permission']}}">{{perm["description"]}}</a></li>
                 {% endif %}
             {% endfor %}
             <li><a href="#">Reports</a></li>

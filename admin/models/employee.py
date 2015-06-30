@@ -17,7 +17,7 @@ class Employee(MongoModel):
         self.register_time = datetime.datetime.now()
         self.last_login_time = datetime.datetime.now()
         self.permissions = [] # 管理员可用权限
-        self.in_review = False #帐号注册true为等待审核通过，false为通过审核
+        self.in_review = True # 帐号注册true为等待审核通过，false为通过审核
         self.new_permissions = [] # 
 
     def set_password(self, password):
@@ -25,3 +25,6 @@ class Employee(MongoModel):
 
     def check_password(self, password):
         return self.password == hashlib.md5(password).hexdigest()
+    def is_super(self):
+        return not self.in_review and self.role == 'super'
+        

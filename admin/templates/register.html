@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+    <form class="form-signin" action="" method="post">
+        <h3 class="form-signin-heading">Gems账户注册</h3>
+        <div class="input-group has-success">
+            <span class="input-group-addon">账户:</span>
+            <input type="text" class="form-control" placeholder="ming.xing" id="inputUsername" name="inputUsername" aria-describedby="basic-addon1" value="{{inputUsername}}">
+            <span class="input-group-addon">@honvue.com</span> 
+        </div>
+        <div class="input-group has-success">
+            <span class="input-group-addon">真实姓名:</span>
+            <input type="text" class="form-control" placeholder="姓名" id="inputRealname" name="inputRealname" aria-describedby="basic-addon1" value="{{inputRealname}}">
+        </div>
+        <div class="input-group has-success">
+            <span class="input-group-addon">密码:</span>
+            <input type="password" class="form-control" placeholder="password" id="inputPassword" name="inputPassword" aria-describedby="basic-addon5" value="{{inputPassword}}">
+        </div>
+        <div class="input-group has-success">
+            <span class="input-group-addon">确认密码:</span>
+            <input type="password" class="form-control" placeholder="checkPassWord" id="inputPasswordCheck" name="inputPasswordCheck" aria-describedby="basic-addon1" value="{{inputPasswordCheck}}">
+        </div>
+        <div class="input-group has-success form-control">
+            <span >角色：</span>
+            <select name="inputRole">
+                <option value=""></option>
+            {% for role_conf in all_roles %}
+                {% if role_conf['role'] == inputRole %}
+                <option value="{{role_conf['role']}}" selected="selected" >{{role_conf['description']}}</option>
+                {% else %}
+                <option value="{{role_conf['role']}}">{{role_conf['description']}}</option>
+                {% endif %}
+            {% endfor %}
+          </select>
+        </div>
+
+        <h4 class="col-sm-offset-1">申请权限：</h4>
+        {% for perm in all_permissions %}
+        <div class="checkbox row">
+            <label class="col-sm-offset-2">
+                {% if perm['permission'] in inputPermissions %}
+                <input type="checkbox" name="inputPermissions" value="{{perm['permission']}}" checked="checked">
+                {{perm['description']}}
+                {% else %}
+                <input type="checkbox" name="inputPermissions" value="{{perm['permission']}}">
+                {{perm['description']}}
+                {% endif %}
+            </label>
+        </div>
+        {% endfor %}
+<span class="label label-warning">{{msg}}</span>
+            
+<button class="btn btn-lg btn-primary btn-block" type="submit">注册</button>
+
+{% endblock %}

@@ -11,8 +11,15 @@ CONFIG_TITLES = [
     {
         'category': u'卡牌',
         'content':[
-            ('card_config', u'卡牌基本数值配置'),
+            ('card_config', u'卡牌基本配置'),
             ('update_config', u'卡牌进阶'),
          ],
     },
+    {
+        'category': u'技能',
+        'content':[
+            ('skill_config', u'技能基本配置'),
+         ],
+    },
+
 ]

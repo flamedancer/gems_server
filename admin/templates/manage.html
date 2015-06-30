@@ -1,0 +1,70 @@
+{% extends "frame.html" %}
+
+{% block main %}
+
+    <h1> 账户列表 </h1>
+    <table class="table table-hover table-condensed table-bordered">
+    <tbody>
+        <tr>
+            <th>真名</th>
+            <th>帐号</th>
+            <th>角色</th>
+            <th>状态</th>
+            <th>有新权限申请</th>
+            <th>最后登录IP</th>
+            <th>最后登录时间</th>
+            <th>详情</th>
+            <th>删除</th>
+        </tr>
+         {% for moderator in moderator_list|sort(attribute='last_login_time', reverse=True) %}
+         {% if moderator.in_review or moderator.new_permissions %}
+         <tr class="danger"> 
+         {% elif moderator.role == 'super' %}
+         <tr class="success"> 
+         {% else %}
+         <tr>
+         {% endif %}
+            <td>
+                {{ moderator.realname }}
+            </td>
+            <td>
+                {{ moderator.username }}@honvue.com
+            </td>
+             <td>
+                {{ moderator.role }}
+            </td>
+            <td>
+                {% if moderator.in_review %}
+                审核中。。。
+                {% else %}
+                正常
+                {% endif %}
+            </td>
+            <td>
+                {% if moderator.new_permissions %}
+                YES
+                {% else %}
+                NO
+                {% endif %}
+            </td>
+           <td>
+                {{ moderator.last_ip }}
+            </td>
+            <td>
+                {{ moderator.last_login_time }}
+            </td>
+            <td>
+                <a href="detail/{{moderator.username}}">详情</a>
+            </td>
+            <td>
+                <a href="/admin/manage/delete_employee?username={{ moderator.username }}">删除</a>
+             </td>
+         </tr>
+         {% endfor %}
+    </tbody>
+    </table>
+
+    <p style="color:gray">* 按最后登录时间排序. Total: {{moderator_list|length}}</p>
+
+
+{% endblock %}

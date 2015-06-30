@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+
+import settings
 from bottle import route, run, app, Bottle
 from logics import *
 from admin.views import *
@@ -8,4 +11,4 @@ def hello1():
 
 app = Bottle()
 
-run(host='192.168.1.43', reloader=False, port=8081, debug=True)
+run(host='192.168.1.36', reloader=False, port=8081, debug=settings.DEBUG)
