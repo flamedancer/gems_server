@@ -5,7 +5,7 @@ import json
 import time
 
 from common.game_config import CONFIG_TITLES 
-from common.game_config import NEED_SYNC_CONFIGS 
+from common.game_config import set_config_update_time 
 from libs.model import ConfigModel 
 
 from bottle import route, request, static_file
@@ -58,8 +58,7 @@ def save_config():
             raise Exception('This Config  Not Exist')
     config_obj.data = this_config_value
     config_obj.put()
-    if this_config_name in NEED_SYNC_CONFIGS:
-        RedisKeyValue.set(this_config_name + '_updateTime', time.time()) 
+    set_config_update_time(this_config_name)
     return ''
         
     

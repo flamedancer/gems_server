@@ -90,7 +90,6 @@ def save_pier():
 
 def modified_user_data():
     Umodified = request.user.user_modified
-    print type(Umodified)
     modified_data = Umodified.modified
     if modified_data:
         Umodified.modified = {}

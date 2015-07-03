@@ -8,8 +8,6 @@ from common.game_config import get_config_str
 from common.game_config import NEED_SYNC_CONFIGS
 
 
-def api_login():
-    print "get me"
 
 # def login(request):
 #     print "#####test dir request.forms::", dir(request.forms)
@@ -70,10 +68,22 @@ def api_login():
 #     return Uproperty.__dict__ 
 
 def api_login(last_update_time):
+    """ 游戏开始，先获取游戏基本数据，包括玩家基本数据和变动的配置
+    Args:
+        last_update_time: 客户端本地配置最后更新时间int
+    Returns:
+        user_info: 玩家基本数据, 见function user_info:
+        update_configs: 需要客户端更新的配置
+        last_update_time: 服务端配置最后更新时间
+    """
     result = {}
     Ubase = request.user
     add_user_things(Ubase, 'money', 100, 'login')
-    result['update_configs'], result['last_update_time'] = get_update_config(int(last_update_time))
+    result['user_info'] = get_user_info(Ubase)
+    
+    update_configs, update_time = get_update_config(int(last_update_time))
+    if update_time:
+        result['update_configs'], result['last_update_time'] = update_configs, update_time
     return result
     
 
@@ -89,3 +99,11 @@ def get_update_config(last_update_time):
                 new_last_update_time = this_config_update_time 
     return update_configs, new_last_update_time
 
+
+def get_user_info(uBase):
+    user_info = {}
+    user_info.update(uBase.to_dict())
+    user_info.update(uBase.user_property.to_dict())
+    user_info.update(uBase.user_cards.to_dict())
+    return user_info
+    
