@@ -34,7 +34,7 @@ def validate(func):
                     'selfInreview': em.in_review,
                     'selfPermissionsConf': {} if em.in_review else ([perm for perm in
                      ALL_PERMISSIONS if perm['permission']
-                     in em_permissions] if not em.role == 'super' else ALL_PERMISSIONS),
+                     in em_permissions] if not em.is_super() else ALL_PERMISSIONS),
                     'supermsg_num': get_supermsg_num(),
                     'selfApplyPermissmionConf': [perm for perm in ALL_PERMISSIONS if perm['permission'] in em.new_permissions],
                 },

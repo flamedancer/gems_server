@@ -2,7 +2,7 @@
 
 import settings
 from bottle import route, run, app, Bottle
-from logics import *
+from logics import api
 from admin.views import *
 
 @route('/hello')

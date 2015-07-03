@@ -116,17 +116,29 @@ class ConfigModel(BaseModel):
         self.data = {}
 
 
-class TmpModel(BaseModel):
+class RedisKeyValue(BaseModel):
     """
-    存储临时数据
+    存储reids key value数据
     """
+    pk = 'redis_key'
+    ex = None  #定义过期时间 单位秒
 
-    ex = 3600  #定义过期时间 单位秒
+    def __init__(self):
+        self.redis_key = ''
+        self.redis_value = None
 
     @classmethod
-    def get(cls, pk):
-        pk = str(pk)
-        return app.redis_store.get(cls, pk)
+    def get(cls, key):
+        obj = app.redis_store.get(cls, key)
+        return obj.redis_value if obj else '' 
+
+    @classmethod
+    def set(cls, key, value, ex=None):
+        obj = cls()
+        obj.redis_key = key
+        obj.redis_value = value
+        obj.put(ex)
+        return obj
 
     def put(self, ex=None):
         if not ex:

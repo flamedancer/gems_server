@@ -2,14 +2,17 @@
 
 import ast
 import json
+import time
 
 from common.game_config import CONFIG_TITLES 
+from common.game_config import NEED_SYNC_CONFIGS 
 from libs.model import ConfigModel 
 
 from bottle import route, request, static_file
 from bottle import jinja2_view as view
 import xlrd
 from admin.decorators import validate
+from libs.model import RedisKeyValue
 
 @route('/static/<filepath:path>')
 def server_static(filepath):
@@ -55,13 +58,15 @@ def save_config():
             raise Exception('This Config  Not Exist')
     config_obj.data = this_config_value
     config_obj.put()
+    if this_config_name in NEED_SYNC_CONFIGS:
+        RedisKeyValue.set(this_config_name + '_updateTime', time.time()) 
     return ''
         
     
 
 def make_config(excel_file):
     excel = xlrd.open_workbook(file_contents = excel_file.read())
-    sheet = excel.sheet_by_name('cardata')
+    sheet = excel.sheet_by_name('config')
     return excel_explain(sheet)
     
 
@@ -104,7 +109,7 @@ def excel_explain(sheet):
                 walk_dict = walk_dict[key]
         except Exception, e:
             print e.message
-            erro_msg = u"ERROR RAISE in line {} : {}，{}， {}".format(row_num, unicode(key), unicode(values), unicode(type_cell)) 
+            erro_msg = u"ERROR RAISE in line {}: {}, {}, {}".format(row_num, unicode(key), unicode(values), unicode(type_cell)) 
             print erro_msg
             raise Exception(erro_msg)
     return json.dumps(make_dict)

@@ -24,8 +24,25 @@ function json_format(txt,compress/*是否为压缩模式*/){/* 格式化JSON源�
             }else   if(value&&typeof value=='object'){/*处理对象*/  
                     draw.push(tab+(formObj?('"'+name+'":'):'')+'{'+line);/*缩进'{' 然后换行*/  
                     var len=0,i=0;   
-                    for(var key in value)len++;   
-                    for(var key in value)notify(key,value[key],++i==len,indent,true);   
+                    var all_keys = [];
+                    for(var key in value) {
+                        all_keys.push(key);
+                        len++;   
+                    };
+                    function sort_by_id(id_type1, id_type2) {
+                        var id1 = id_type1.split('_')[0]; 
+                        var id2 = id_type2.split('_')[0];
+                        try{var nid1=Number(id1);var nid2=Number(                        id2);}
+                        catch(e){
+                            return (id1<id2) ? -1 : 1; 
+                        };
+                        return (nid1<nid2) ? -1 : 1;
+                    };
+                    all_keys.sort(sort_by_id); 
+                    for(var index in all_keys) {
+                        key = all_keys[index];
+                        notify(key,value[key],++i==len,indent,true);   
+                    };
                     draw.push(tab+'}'+(isLast?line:(','+line)));/*缩进'}'换行,若非尾元素则添加逗号*/  
                 }else{   
                         if(typeof value=='string')value='"'+value+'"';   

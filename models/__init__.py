@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+import json
+import ast
 from libs.model import UserModel
+from libs.model import ConfigModel
 
 
 class GameModel(UserModel):
@@ -15,11 +18,18 @@ class GameModel(UserModel):
     @classmethod
     def create(cls, uid):
         return cls.get(uid) or cls(uid) 
+    
+    def get_config(self, config_name):
+        return ConfigModel.create(config_name[1:]).data
 
     def __getattr__(self, model_name):
+        if model_name.startswith('_') and model_name.endswith('_config'):
+            return self.get_config(model_name)
+        class_name = "".join([name_str.capitalize() for name_str in model_name.split('_')]) 
+        if class_name == self.__class__.__name__:
+            return self
         if model_name in self._ALL_USER_CLASSES:
             return self._ALL_USER_CLASSES[model_name].create(self.uid) 
-        class_name = "".join([name_str.capitalize() for name_str in model_name.split('_')]) 
         model_path = "models." + model_name
         try:
             model = __import__(model_path, globals(), locals(), [class_name])
