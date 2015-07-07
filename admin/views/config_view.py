@@ -5,6 +5,7 @@ import json
 import time
 
 from common.game_config import CONFIG_TITLES 
+from common.game_config import get_config_str 
 from common.game_config import set_config_update_time 
 from libs.model import ConfigModel 
 
@@ -19,6 +20,11 @@ def server_static(filepath):
     return static_file(filepath, root='./static/')
     
 
+@route('/resource_version')
+def resource_version():
+    system_conf = get_config_dir('system_config')
+    return system_conf.get('resource_version', 0)  
+
 
 @route('/admin/game_config', method=['GET', 'POST'])
 @view('game_config.html')
@@ -30,7 +36,7 @@ def config_view():
     if excel_file:
         view = make_config(excel_file.file)
     elif this_config_name:
-        view = json.dumps(ConfigModel.create(this_config_name).data)
+        view = get_config_str(this_config_name)
        
     return {'config_titles': CONFIG_TITLES, 'config_value': view, 'config_name': this_config_name}
 

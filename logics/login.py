@@ -68,7 +68,8 @@ from common.game_config import NEED_SYNC_CONFIGS
 #     return Uproperty.__dict__ 
 
 def api_login(last_update_time):
-    """ 游戏开始，先获取游戏基本数据，包括玩家基本数据和变动的配置
+    """ api/login/login 游戏开始，先获取游戏基本数据，包括玩家基本数据和变动的配置
+
     Args:
         last_update_time: 客户端本地配置最后更新时间int
     Returns:
@@ -80,7 +81,6 @@ def api_login(last_update_time):
     Ubase = request.user
     add_user_things(Ubase, 'money', 100, 'login')
     result['user_info'] = get_user_info(Ubase)
-    
     update_configs, update_time = get_update_config(int(last_update_time))
     if update_time:
         result['update_configs'], result['last_update_time'] = update_configs, update_time
