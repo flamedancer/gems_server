@@ -30,7 +30,8 @@ class UserCards(GameModel):
     """
     def __init__(self, uid=''):
         self.uid = uid
-        self.teams = []   # 编队
+        self.teams = []   # 编队序列
+        self.cur_team_index = 0 # 当前使用编队序号
         self.cards = {}   # 所有 
     
     @classmethod
@@ -75,3 +76,6 @@ class UserCards(GameModel):
         """
         self.teams[team_index] = team
         self.put()
+
+    def cur_team(self):
+        return self.teams[self.cur_team_index]

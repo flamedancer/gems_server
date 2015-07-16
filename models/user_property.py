@@ -16,13 +16,13 @@ class UserProperty(GameModel):
         self.city_jeton = 0    # 城战代币 
         self.pk_jeton = 0      # 天梯代币  
         self.heroSoul = 0      # 英魂数量
-        self.master_0 = 0       # 元素掌握度
-        self.master_1 = 0       # 元素掌握度
-        self.master_2 = 0       # 元素掌握度
-        self.master_3 = 0       # 元素掌握度
-        self.master_4 = 0       # 元素掌握度
-        self.master_5 = 0       # 元素掌握度
-        self.master_remain = 0      # 剩余元素掌握度
+        self.nature_0 = 0       # 元素掌握度
+        self.nature_1 = 0       # 元素掌握度
+        self.nature_2 = 0       # 元素掌握度
+        self.nature_3 = 0       # 元素掌握度
+        self.nature_4 = 0       # 元素掌握度
+        self.nature_5 = 0       # 元素掌握度
+        self.nature_remain = 0      # 剩余元素掌握度
 
         
     def add_thing(self, thing, num):
