@@ -30,7 +30,8 @@ class UserCards(GameModel):
     """
     def __init__(self, uid=''):
         self.uid = uid
-        self.teams = []   # 编队
+        self.teams = []   # 编队序列
+        self.cur_team_index = 0 # 当前使用编队序号
         self.cards = {}   # 所有 
     
     @classmethod
@@ -67,7 +68,7 @@ class UserCards(GameModel):
         self.put()
         return self.cards[card_id]
 
-    def update_team(team_index, team):
+    def organize_team(self, team_index, team):
         """ 修改编队
         Args:
             team_index: 要修改第几个编队
@@ -75,3 +76,7 @@ class UserCards(GameModel):
         """
         self.teams[team_index] = team
         self.put()
+
+    def cur_team(self):
+        return self.teams[self.cur_team_index]
+

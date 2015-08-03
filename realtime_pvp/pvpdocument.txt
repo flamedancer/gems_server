@@ -1,0 +1,129 @@
+version=1.0.1
+modifide-time=2015-07-13 17:24
+************************
+一. 数据格式
+    1. 传输数据为json格式
+    2. 数据字段
+        errorcode 通信错误代号int,可无
+        errormsg  通信错误具体信息str,可无
+        timestamp 时间戳 int
+        msgtype  消息类型str, 指明通信的目的
+        data      通信逻辑所需参数或服务器返回主要数据dict, 默认为{}
+
+二. 通信纪律性
+    一个完整的通信包括请求和应答，即：client 请求server时,server需要回复；server主动通知client时，client 需要发应答数据
+     
+
+三. msgtype 格式声明
+    1. client 请求 server 时, msgtype 格式为: req_xxxxx
+       server 收到后返回时, msgtype 格式为: rsp_xxxxx
+
+    2. server 主动发给 client 时, msgtype 格式为: inf_yyyy
+       client 收到后回应, msgtype 格式为: ans_yyyy
+
+
+四. 通信步骤
+    <1> client 连接 server(status -2):  ws://host  
+    <2> 1. client 发pvp请求:
+                msgtype    req_pvp    
+                data  {'uid': 'xxxx'}
+        2. server(status -1) 返回:
+                msgtype    rsp_pvp
+        3. client 处于等待对手匹配状态
+    <3> 1. server(status 0) 找到可匹配的玩家后通知:
+                msgtype    inf_readying_pvp
+        2. client 转为准备战斗状态,不能再点取消匹配
+        3. client 回复准备就绪:
+                msgtype    ans_readying_pvp
+        4. server 提供对手信息:
+                msgtype    inf_opponent_information
+                data    {
+                    "uid": "xxxx",
+                    "name": "yyyy",
+                    "team": [..],
+                    "cards": {...},
+                    "equips": {...},
+                    ...
+                }
+        5. client 展示对手界面,回复确认收到对手信息
+           提供初始珠盘
+                msgtype    ans_opponent_information
+                data    {
+                    "init_beads":[...],
+                }
+        6. 两玩家都准备就绪时, server(status 1) 确定谁先手, 并通知开始战斗:
+                msgtype    inf_start_fight 
+                data    {
+                    "attacker": "uid",
+                    "init_beads": [...],
+                    "sequence": [] # 200个0~6数字
+                }
+        7. client 回复，并进入战斗画面:
+                msgtype    ans_start_fight 
+    <4> 战斗时消息处理
+        1. client 发送战斗数据, 指令(连珠,填珠,切换attacker等)由data里字段指明,server只负责转发给对手，不干预具体的数据格式
+                msgtype    req_fight_command
+                data    { //此处只是举例，具体key和value前端自拟
+                    "command": "switch_attacker",
+                    "aaaaaa": "bbbbb"
+                    ....
+                    ....
+                }
+        2. server 应答(应答后会给对手转发数据):
+                msgtype    rsp_fight_command
+        3. server 通知对手发来的战斗数据:
+                msgtype    inf_fight_command
+                data    { //此处只是举例，具体key和value前端自拟
+                    "command": "switch_attacker",
+                    "aaaaaa": "bbbbb"
+                    ....
+                    ....
+                }
+        4. client 应答收到战斗数据:
+                msgtype    ans_fight_command
+
+    <5> 战斗结束
+        1. 战斗结束时，client发送:
+                msgtype    req_end_fight
+                data {
+                    "winner": "uid",
+                }
+        2. server 返回:
+                msgtype    rsp_end_fight
+        3. 当server(status 2) 收到双方的end_fight请求时,发送结算数据:
+                msgtype    inf_fight_result
+                data    {
+                    "winner": "xxxxx",
+                    ......
+                }
+        4. client 确认收到结算:
+                msgtype    ans_fight_result
+        5. server断开连接
+                   
+    <6> 主动取消匹配匹配或中途退出战斗
+        在<3>之前玩家可以取消匹配
+        1. client 发送:
+                msgtype    req_cancel_pvp
+        2. server 返回:
+                msgtype    rsp_cancel_pvp
+        3. server 断开连接
+    
+    <7> 获取随机种子
+        1. client 发:
+                msgtype req_random_sequence 
+        2. server 回应:
+                msgtype rsp_random_sequence
+        3. server 给两边发随机种子
+                msgtype inf_random_sequence
+                data    {
+                    "sequence": [] # 200个0~6数字
+                }
+        4. client 确认收到:
+                msgtype ans_random_sequence
+        
+           
+
+
+    
+                
+

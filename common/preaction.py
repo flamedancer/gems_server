@@ -5,7 +5,7 @@ api 请求的验证，初始化，和收尾工作
 client 用post请求服务器
 client post 数据唯一字段data, value为json格式str, 所含key如下:
 uid  玩家id  str
-timestamp 客户端请求时间 str
+timestamp 客户端请求时间 int
 剩余为 游戏逻辑所需字段  
 例:
      data={"uid":"memme",
@@ -17,7 +17,7 @@ timestamp 客户端请求时间 str
 server 返回json数据
 error_code 错误代号,可无 int
 error_msg 错误信息,可无 str 
-timestamp 服务器返回数据时间 str 
+timestamp 服务器返回数据时间 int 
 update_userInfo  玩家更新数据 dir
 data 游戏逻辑所需字段  
 例:
@@ -28,6 +28,7 @@ data 游戏逻辑所需字段
 import sys, os
 import json
 import time
+import random
 import datetime
 import traceback
 from libs.dbs import app 
@@ -44,7 +45,7 @@ def prelogic(func):
             data = json.loads(data) or {} 
             timestamp = data.pop('timestamp')
             timestamp_validation(timestamp)
-            uid = data.pop('uid')
+            uid = data.pop('uid', None)
             signature_validation(uid)
             
             request.api_data = data
@@ -76,9 +77,11 @@ def timestamp_validation(timestamp):
 
 def signature_validation(uid):
     print "signatur_uid", uid
+    # 如果没有uid, 新建
+    if not uid:
+        uid = 'test' + "{:0>6}".format(random.randrange(10000))
     user = UserBase.create(uid)
     request.user = user
-
 
 def pier_clear():
     app.pier.clear()
