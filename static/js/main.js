@@ -75,6 +75,7 @@ function save_config(config_name) {
         alert('配置格式错误无法提交！）')
         return;
     }
+    config_value = JSON.stringify(data);
 
     // ajax 发送保存配置数据
     xmlhttp=new XMLHttpRequest();
@@ -87,6 +88,7 @@ function save_config(config_name) {
             alert("保存成功！");
          }
         else {
+            alert(xmlhttp.status);
             document.getElementById("save_tag").innerHTML="保存失败！"
         }
     }

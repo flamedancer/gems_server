@@ -15,4 +15,4 @@ no mean
 
 
 pvp 支持:
-
+      (sudo) pip install geventwebsocket

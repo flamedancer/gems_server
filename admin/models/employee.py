@@ -28,3 +28,13 @@ class Employee(MongoModel):
     def is_super(self):
         return not self.in_review and self.role == 'super'
         
+
+def set_root():
+    em = Employee()
+    em.username = 'root'
+    em.realname = 'root'
+    em.role = 'super'
+    em.in_review = False
+    em.set_password('root')
+    em.put()
+    

@@ -6,6 +6,7 @@ import time
 
 from common.game_config import CONFIG_TITLES 
 from common.game_config import get_config_str 
+from common.game_config import get_config_dir 
 from common.game_config import set_config_update_time 
 from libs.model import ConfigModel 
 
