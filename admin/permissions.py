@@ -5,6 +5,10 @@ ALL_PERMISSIONS = [
         'permission': 'game_config',
         'description': u'游戏配置',        
     },
+    {
+        'permission': 'server_doc',
+        'description': u'后端接口文档',        
+    },
 #    {
 #        'permission':'edit_user',
 #        'description':u'修改用户数据'

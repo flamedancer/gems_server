@@ -1,6 +1,9 @@
 #-*- coding: utf-8 -*-
+import os
 
 DEBUG = True #False
+
+CURDIR = os.getcwd()
 
 
 #港台和国服标识
