@@ -1,0 +1,22 @@
+{% extends "frame.html" %}
+{% block main %}
+{% for model in doc %}
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">{{doc[model]['title']}}: {{model}}</h3>
+  </div>
+  <div class="panel-body">
+    <div><pre>
+    {% for docs in doc[model]['functions'].values() %}
+        {{docs}}
+    {% endfor %}
+    </pre>
+    </div>
+     
+  </div>
+</div>
+{% endfor %}
+
+
+{% endblock %}
+
