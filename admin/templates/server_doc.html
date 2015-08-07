@@ -1,22 +1,30 @@
 {% extends "frame.html" %}
 {% block main %}
-{% for model in doc %}
-<div class="panel panel-primary">
-  <div class="panel-heading">
-    <h3 class="panel-title">{{doc[model]['title']}}: {{model}}</h3>
-  </div>
-  <div class="panel-body">
-    <div><pre>
-    {% for docs in doc[model]['functions'].values() %}
-        {{docs}}
-    {% endfor %}
-    </pre>
-    </div>
-     
-  </div>
-</div>
-{% endfor %}
 
+
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+{% for model in doc %}
+  <div class="panel panel-primary">
+    <div class="panel-heading" rote="tab" id={{model}}>
+      <h3 class="panel-title">
+        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#content-{{model}}"  aria-expanded="true" aria-controls="content-{{model}}">
+            {{doc[model]['title']}}: {{model}}
+        </a>
+      </h3>
+    </div>
+    <div id="content-{{model}}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="{{model}}">
+      
+      <div class="panel-body"><pre>
+      {% for docs in doc[model]['functions'].values() %}
+          {{docs}}
+      {% endfor %}
+      </pre>
+      </div>
+       
+     </div>
+  </div>
+{% endfor %}
+</div>
 
 {% endblock %}
 

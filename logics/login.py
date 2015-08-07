@@ -72,17 +72,17 @@ from common.game_config import NEED_SYNC_CONFIGS
 #     return Uproperty.__dict__ 
 
 def api_login(last_update_time):
-    """
-    API: api/login/login
+    """  api/login/login
 
-    Desc: 游戏开始，先获取游戏基本数据，
-          包括玩家基本数据和变动的配置
+    游戏开始，先获取游戏基本数据，
+    包括玩家基本数据和变动的配置
     Args:
-        last_update_time: 客户端本地配置最后更新时间int
+        last_update_time(int): 客户端本地配置最后更新时间
     Returns:
-        user_info: 玩家基本数据, 见function user_info:
-        update_configs: 需要客户端更新的配置
-        last_update_time: 服务端配置最后更新时间
+        user_info(dict): 玩家基本数据, 见function user_info:
+        update_configs(dict): 需要客户端更新的配置
+        last_update_time(int): 服务端配置最后更新时间
+            如果为0，代表没有需要更新的配置
     """
     result = {}
     Ubase = request.user
