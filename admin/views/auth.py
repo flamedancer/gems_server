@@ -137,7 +137,7 @@ def review_employee():
 @view('detail.html')
 @validate
 def change_password(username=''):
-    if username != request.employee.username and not request.employee.is_super():
+    if username != request.employee.username or not request.employee.is_super():
         return {}
     em = Employee.get(username)
     if not em:

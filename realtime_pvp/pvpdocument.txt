@@ -108,7 +108,7 @@ modifide-time=2015-07-13 17:24
                 msgtype    rsp_cancel_pvp
         3. server 断开连接
     
-    <7> 获取随机种子
+    <7> 获取随机掉落珠子序列(为了同步两边的珠子掉落)
         1. client 发:
                 msgtype req_random_sequence 
         2. server 回应:
@@ -120,6 +120,26 @@ modifide-time=2015-07-13 17:24
                 }
         4. client 确认收到:
                 msgtype ans_random_sequence
+
+    <8> 获取随机数
+        广播一个随机数num,  num1<=num<=num2
+        1. client 发:
+                msgtype req_random_num 
+                data    {
+                    "min": num1,
+                    "max": num2,
+                }
+        2. server 回应:
+                msgtype rsp_random_num
+        3. server 给两边发随机种子
+                msgtype inf_random_num
+                data    {
+                    "random_num": random_num # 200个0~6数字
+                }
+        4. client 确认收到:
+                msgtype ans_random_num
+
+
         
            
 

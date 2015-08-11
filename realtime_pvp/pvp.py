@@ -284,8 +284,19 @@ class Player(object):
     
     def ans_random_sequence(self, data):
         pass
-        
-        
+
+    def req_random_num(self, data):
+        min_num = data['min']
+        max_num = data['max']
+        random_num = random.randint(min_num, max_num)
+        self.send('rsp_random_num')
+        data = {
+            'random_num': random_num,
+        }
+        self.braod('inf_random_num', data)
+
+    def ans_random_num(self, data):
+        pass
 
 
 def disconnect_player(player, reason=''):
