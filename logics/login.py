@@ -9,6 +9,7 @@ from models.user_base import UserBase
 from common.tools import add_user_things
 from common.game_config import get_config_update_time
 from common.game_config import get_config_str
+from common.game_config import get_config_dir
 from common.game_config import NEED_SYNC_CONFIGS
 
 
