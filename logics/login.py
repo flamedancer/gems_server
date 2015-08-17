@@ -207,5 +207,14 @@ def get_user_info(uBase):
     user_info.update(uBase.to_dict())
     user_info.update(uBase.user_property.to_dict())
     user_info.update(uBase.user_cards.to_dict())
+    # 调整user_cards 格式
+    new_cards_info = []
+    for card_id in user_info['cards']:
+        card_info = {}
+        card_info['id'] = card_id
+        card_info.update(user_info['cards'][card_id])
+        new_cards_info.append(card_info)
+    user_info['cards'] = new_cards_info
+        
     return user_info
     

@@ -5,6 +5,7 @@ from bottle import request, route
 from bottle import jinja2_view as view
 from models.user_base import UserBase 
 from admin.decorators import validate
+from common import tools
 
 
 @route('/admin/player_detail/<player_uid>', method='GET')
@@ -21,8 +22,13 @@ def player_detail(player_uid=''):
     print "ubase", ubase
     if not ubase:
         return {'uid': ''}
-    detail.update(ubase.to_dict())
-    detail.update(ubase.user_property.to_dict())
+    category = request.query.get('category')
+    if not category:
+        detail.update(ubase.to_dict())
+        detail.update(ubase.user_property.to_dict())
+    elif category == 'cards':
+        detail.update(ubase.user_cards.to_dict())
+        detail['detail_category'] = 'cards'
     return detail
 
 def can_modify():
@@ -49,5 +55,11 @@ def modify_player():
         ubase.name = newname
         ubase.put()
         return newname
+    else:
+        thing = modify_type[1:]
+        num = int(request.forms.get('add' + thing))
+        return tools.add_user_things(ubase, thing, num, 'addby_admin') 
+    
+
         
 

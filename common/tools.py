@@ -15,6 +15,8 @@ def add_user_things(user, thing, num, way):
          'master_5', 'master_remain']:
         new_num = user.user_property.add_thing(thing, num)
         Umodified.modified[thing] = new_num
+        Umodified.put()
+        return new_num
     elif thing.endswith('_card'):
         new_card_info = user.user_cards.add_card(thing, num)
         Umodified.modified['card'] = {thing: new_card_info}
