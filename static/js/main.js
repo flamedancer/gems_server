@@ -66,6 +66,15 @@ function set_ace_editor() {
     editor.getSession().setValue(json_format(editor.getSession().getValue(), false))
 }
 
+function send_ajax(url, method, send_msg, callback) {
+    xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = callback;
+    xmlhttp.open(method,url,true);
+    xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+    xmlhttp.send(send_msg);
+    
+}
+
 function save_config(config_name) { 
     var editor = ace.edit('ace-editor');
     config_value = editor.getSession().getValue();
@@ -78,8 +87,7 @@ function save_config(config_name) {
     config_value = JSON.stringify(data);
 
     // ajax 发送保存配置数据
-    xmlhttp=new XMLHttpRequest();
-    xmlhttp.onreadystatechange=function() {
+    function recall() {
         if (xmlhttp.readyState !=4) {
             document.getElementById("save_tag").innerHTML="正在保存..."
         }
@@ -92,9 +100,33 @@ function save_config(config_name) {
             document.getElementById("save_tag").innerHTML="保存失败！"
         }
     }
-    xmlhttp.open("POST","/admin/save_config",true);
-    xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
     send_msg = "config_name="+config_name+"&config_value="+config_value;    
-    xmlhttp.send(send_msg);
+    send_ajax("/admin/save_config", "POST", send_msg, recall)
+    
 
+}
+
+function modify_user(can_modify, type, key) {
+    alert(can_modify);
+    if (can_modify != 'True') {
+        alert("只有管理员可以修改玩家数据！");
+        return;
+    }
+    uid = document.getElementById("uid").value;
+    value = document.getElementById(key).value;
+    host = "/admin/modify_player";
+    send_msg = "uid="+uid+"&type="+type+"&"+key+"="+value;
+    url = host + send_msg;
+    function recall() {
+        if (xmlhttp.readyState == 4) {
+            if (xmlhttp.status==200) {
+                document.getElementById(type).innerHTML=xmlhttp
+.responseText;
+                alert("修改成功!");
+            }
+            else
+                alert("修改玩家数据失败!");
+        }
+    }
+    send_ajax(host, "POST", send_msg, recall);
 }

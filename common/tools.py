@@ -3,7 +3,7 @@
 from models import GameModel
 
 def log(thing, num, way):
-    print "add thing num way", thing, num, way 
+    print "******add thing num way", thing, num, way 
     pass
 
 def add_user_things(user, thing, num, way):

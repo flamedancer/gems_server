@@ -35,7 +35,7 @@ def config_view():
     view = {} 
     excel_file = request.files.get('xls')
     if excel_file:
-        view = make_config(excel_file.file)
+        view = make_config(excel_file.file, this_config_name)
     elif this_config_name:
         view = get_config_str(this_config_name)
        
@@ -70,14 +70,14 @@ def save_config():
         
     
 
-def make_config(excel_file):
+def make_config(excel_file, this_config_name):
     excel = xlrd.open_workbook(file_contents = excel_file.read())
     sheet = excel.sheet_by_name('config')
-    return excel_explain(sheet)
+    return excel_explain(sheet, this_config_name)
     
 
 
-def excel_explain(sheet):
+def excel_explain(sheet, this_config_name):
     make_dict = {}
     first_column = sheet.col_values(0)
     first_row = sheet.row_values(0)
@@ -118,5 +118,17 @@ def excel_explain(sheet):
             erro_msg = u"ERROR RAISE in line {}: {}, {}, {}".format(row_num, unicode(key), unicode(values), unicode(type_cell)) 
             print erro_msg
             raise Exception(erro_msg)
+    if this_config_name in ['card_config']:
+        return json.dumps(dirtolist(make_dict))
     return json.dumps(make_dict)
 
+
+def dirtolist(old_dict):
+    new_list = []
+    keys = sorted(old_dict.keys(), cmp=lambda x,y:cmp(int(x.split('_',1)[0]),int(y.split('_',1)[0])))
+    for key in keys:
+        this_info = {'id': key}
+        this_info.update(old_dict[key])
+        new_list.append(this_info)
+    return new_list
+        

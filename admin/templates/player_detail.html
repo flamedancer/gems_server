@@ -1,0 +1,118 @@
+{% extends "frame.html" %}
+{% block main %}
+<script type="text/javascript" src="/static/js/main.js"></script>
+<div>
+  {% if uid == '' %} 
+  <div class="alert alert-danger" role="alert">无此uid玩家!</div>
+  {% endif %}
+<!--
+  <div>
+    <form class="form-inline">
+      <div class="form-group input-group">
+        <span class="input-group-addon" id="uid-input">查询uid: </span>
+      <input type="text" class="form-control" aria-describedby="uid-input">
+      </div>
+      <button type="submit" class="btn">查找</button>
+    </form>
+  </div>
+</div>
+-->
+
+<div class="container-fluid"> 
+  <div class="row">
+    <div class="col-md-5">
+      <table class="table table-bordered">
+        <tr>
+          <td class="col-md-2"><label>用户uid</label></td>
+          <form>
+          <td class="col-md-5"><input type="text" id="uid" name="uid" value="{{uid}}"></td>
+          <td class="col-md-5"><button class="btn btn-primary btn-sm" type="submit">查询</button></td>
+          </form>
+        </tr>
+        <tr>
+          <td class="col-md-2"><label>用户名</label></td>
+          <td class="col-md-4" id='uname'>{{name}}</td>
+          <td class="col-md-6"><input type="text" id="newname"><button onclick="modify_user('{{can_modify}}','uname','newname')">修改</button></td>
+        </tr>
+<!--
+        <tr>
+          <td class="col-md-3"><label>性别</label></td>
+          <td class="col-md-5">{{gender}}<span class="glyphicon glyphicon-align-right" aria-hidden="true"></span></td>
+        </tr>
+        <tr>
+          <td class="col-md-3"><label>经验值</label></td>
+          <td class="col-md-5">{{exp}}</td>
+        </tr>
+        <tr>
+          <td class="col-md-3"><label>角色等级</label></td>
+          <td class="col-md-5">{{lv}}</td>
+        </tr>
+        <tr>
+          <td class="col-md-3"><label>vip等级</label></td>
+          <td class="col-md-5">{{vip_lv}}</td>
+        </tr>
+        <tr>
+          <td class="col-md-3"><label>体力</label></td>
+          <td class="col-md-5">{{stamina}}</td>
+        </tr>
+        <tr>
+          <td class="col-md-3"><label>砖石</label></td>
+          <td class="col-md-5">{{diamond}}</td>
+        </tr>
+        <tr>
+          <td class="col-md-3"><label>金钱</label></td>
+          <td class="col-md-5">{{money}}</td>
+        </tr>
+        <tr>
+          <td class="col-md-3"><label>城市代币</label></td>
+          <td class="col-md-5">{{city_jeton}}</td>
+        </tr>
+        <tr>
+          <td class="col-md-3"><label>天梯代币</label></td>
+          <td class="col-md-5">{{pk_jeton}}</td>
+        </tr>
+        <tr>
+          <td class="col-md-3"><label>英魂</label></td>
+          <td class="col-md-5">{{heroSoul}}</td>
+        </tr>
+        <tr>
+          <td class="col-md-3"><label>元素掌握度</label></td>
+          <td class="col-md-5">{{nature_0}}</td>
+        </tr>
+        <tr>
+          <td class="col-md-3"><label>元素掌握度</label></td>
+          <td class="col-md-5">{{nature_1}}</td>
+        </tr>
+        <tr>
+          <td class="col-md-3"><label>元素掌握度</label></td>
+          <td class="col-md-5">{{nature_1}}</td>
+        </tr>
+        <tr>
+          <td class="col-md-3"><label>元素掌握度</label></td>
+          <td class="col-md-5">{{nature_1}}</td>
+        </tr>
+        <tr>
+          <td class="col-md-3"><label>元素掌握度</label></td>
+          <td class="col-md-5">{{nature_1}}</td>
+        </tr>
+        <tr>
+          <td class="col-md-3"><label>元素掌握度</label></td>
+          <td class="col-md-5">{{nature_1}}</td>
+        </tr>
+        <tr>
+          <td class="col-md-3"><label>剩余元素掌握度</label></td>
+          <td class="col-md-5">{{nature_remain}}</td>
+        </tr>
+-->
+      </table>
+    </div>
+    <div class="col-md-3 col-md-offset-4"">
+           sdfsafasfsad
+    </div>
+  </div>
+</div>
+    
+
+
+
+{% endblock %}

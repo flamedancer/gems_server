@@ -2,6 +2,10 @@
 # 权限列表
 ALL_PERMISSIONS = [
     {
+        'permission': 'player_detail',
+        'description': u'玩家数据',        
+    },
+    {
         'permission': 'game_config',
         'description': u'游戏配置',        
     },

@@ -92,7 +92,8 @@ def api_login(last_update_time):
     update_configs, update_time = get_update_config(int(last_update_time))
     if update_time:
         result['update_configs'], result['last_update_time'] = update_configs, update_time
-    result['enemy'] = get_config_dir('userInit_config').get('enemy_team', {})
+        if 'card_config' in result['update_configs']:
+            result['all_card_len'] = len(result['update_configs']['card_config'])
     return result
     
 

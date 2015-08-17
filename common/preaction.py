@@ -49,7 +49,6 @@ def prelogic(func):
             signature_validation(uid)
             
             request.api_data = data
-            pier_clear()
             result = {}
             result['data'] = func(*args, **kargs)
         except Error as e:
@@ -81,6 +80,7 @@ def signature_validation(uid):
     if not uid:
         uid = 'test' + "{:0>6}".format(random.randrange(10000))
     user = UserBase.create(uid)
+    user.put()
     request.user = user
 
 def pier_clear():
