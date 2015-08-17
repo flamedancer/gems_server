@@ -13,65 +13,6 @@ from common.game_config import get_config_dir
 from common.game_config import NEED_SYNC_CONFIGS
 
 
-
-# def login(request):
-#     print "#####test dir request.forms::", dir(request.forms)
-#     uid = str(request.forms.get('uid', ''))
-#     print uid
-#     # test list
-#     list_data = request.forms.get('list_data')
-#     print "#####test list_data:: by get", list_data 
-#     list_data = request.forms.getlist('list_data')
-#     print "#####test list_data:: by getlist", list_data 
-# 
-#     list_data = request.forms.getall('list_data')
-#     print "#####test list_data:: by getall", list_data 
-# 
-#     # test dir
-#     dir_data = request.forms.get('dir_data')
-#     print "#####test dir_data:: by get", dir_data 
-#     dir_data = request.forms.getall('dir_data')
-#     print "#####test dir_data:: by getall", dir_data 
-# 
-#     # test normal
-#     uid_data = request.forms.get('uid')
-#     print "#####test uid_data:: by get", uid_data 
-#     uid_data = request.forms.getall('uid')
-#     print "#####test uid_data:: by get", uid_data 
-# 
-# 
-#     print "#####test allvalues:: values", request.forms.values() 
-#     print "#####test allvalues:: items", request.forms.items() 
-# 
-#     print "###### test dict", request.forms.dict
-#     print "###### test dict", request.forms.allitems()
-#     Ubase = UserBase.get(uid)
-#     if not Ubase:
-#         print "create new uid", uid
-#        
-#             
-#         Ubase = UserBase.create(uid)
-#         Ubase.put()
-#     add_user_things(Ubase, 'money', 100, 'login')
-#     Ucards = Ubase.user_cards
-#      
-#         
-# 
-#     return Ucards.__dict__ 
-# 
-#     Ubase = UserBase.get(uid)
-#     if not Ubase:
-#         print "create new uid", uid
-#        
-#             
-#         Ubase = UserBase.create(uid)
-#         Ubase.put()
-#     Uproperty = Ubase.user_property
-#     #Uproperty.add_thing('money', 100)
-#         
-# 
-#     return Uproperty.__dict__ 
-
 def api_login(last_update_time):
     """  api/login/login
 
@@ -81,21 +22,143 @@ def api_login(last_update_time):
         last_update_time(int): 客户端本地配置最后更新时间
     Returns:
         user_info(dict): 玩家基本数据, 见function user_info:
+        all_cards(list): 卡片信息
+
+         例:
+            [
+              {
+                "status": 2, # 卡片状态 0 未拥有  1 可召唤 2 已拥有 
+                "wrap_defense":0.2,
+                "race":1,
+                "attack":[
+                    2,
+                    3,
+                    3,
+                    3,
+                    4,
+                    4,
+                    4,
+                    5,
+                    5,
+                    6,
+                    6,
+                    6,
+                    7,
+                    7,
+                    8
+                ],
+                "f_maxmp":8,
+                "type":[
+                    2
+                ],
+                "words_2":"你这是自寻死路",
+                "stun_defense":0.2,
+                "skill":[
+                    "1_skill",
+                    "300_skill",
+                    "301_skill",
+                    "302_skill"
+                ],
+                "picture":"1_card.png",
+                "id":"1_card",
+                "description":"希腊神话中的怪物。外形为双头犬,且尾巴是一条蛇,在“日落之岛”上负责看守牛群。英雄赫拉克勒斯在完成其十件任务的过程中将它杀死。",
+                "attack_type":0,
+                "myth":1,
+                "maxmp":[
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    2,
+                    2,
+                    2,
+                    2,
+                    3,
+                    4,
+                    4,
+                    5,
+                    5,
+                    6
+                ],
+                "hp":[
+                    3,
+                    3,
+                    3,
+                    4,
+                    4,
+                    4,
+                    5,
+                    5,
+                    5,
+                    5,
+                    5,
+                    6,
+                    6,
+                    7,
+                    7
+                ],
+                "lv":1,
+                "defense":[
+                    1,
+                    1,
+                    2,
+                    3,
+                    3,
+                    4,
+                    5,
+                    5,
+                    6,
+                    6,
+                    7,
+                    7,
+                    8,
+                    8,
+                    8
+                ],
+                "frozen_defense":0.2,
+                "camp":0,
+                "burn_defense":0.2,
+                "name":"欧特鲁斯",
+                "quality":0,
+                "words_1":"已经不在是恶魔或是精灵,甚至已经不知是什么生物",
+                "poison_defense":0.2,
+                "favor":0,
+                "silence_defense":0.2
+                  }, 
+                 .......
+               ]
+
+
         update_configs(dict): 需要客户端更新的配置
         last_update_time(int): 服务端配置最后更新时间
             如果为0，代表没有需要更新的配置
     """
     result = {}
-    Ubase = request.user
-    add_user_things(Ubase, 'money', 100, 'login')
-    result['user_info'] = get_user_info(Ubase)
+    ubase = request.user
+    add_user_things(ubase, 'money', 100, 'login')
+    result['user_info'] = get_user_info(ubase)
     update_configs, update_time = get_update_config(int(last_update_time))
     if update_time:
         result['update_configs'], result['last_update_time'] = update_configs, update_time
-        if 'card_config' in result['update_configs']:
-            result['all_card_len'] = len(result['update_configs']['card_config'])
+    result['all_cards'] = get_all_cards_info(ubase)
     return result
-    
+
+def get_all_cards_info(ubase):
+    user_cards = ubase.user_cards.to_dict()
+    all_cards_info = get_config_dir('card_config')
+    for card in all_cards_info:
+        card_id = card['id']
+        # 卡片状态 0 未拥有  1 可召唤 2 已拥有 
+        status = 0
+        if card_id in user_cards:
+            card.update(user_cards[card_id])
+            if card['num'] == 0:
+                status = 1
+            else:
+                status = 2
+        card['status'] = status
+    return all_cards_info
 
 
 def get_update_config(last_update_time):

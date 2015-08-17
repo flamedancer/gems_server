@@ -37,7 +37,7 @@ CONFIG_TITLES = [
 
 
 NEED_SYNC_CONFIGS = [
-    'card_config',
+    # 'card_config',
     'skill_config',
 ]
 

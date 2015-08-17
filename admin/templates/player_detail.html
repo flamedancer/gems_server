@@ -23,90 +23,104 @@
     <div class="col-md-5">
       <table class="table table-bordered">
         <tr>
-          <td class="col-md-2"><label>用户uid</label></td>
+          <td class="col-md-4"><label>用户uid</label></td>
           <form>
-          <td class="col-md-5"><input type="text" id="uid" name="uid" value="{{uid}}"></td>
+          <td class="col-md-3"><input type="text" id="uid" name="uid" value="{{uid}}"></td>
           <td class="col-md-5"><button class="btn btn-primary btn-sm" type="submit">查询</button></td>
           </form>
         </tr>
         <tr>
-          <td class="col-md-2"><label>用户名</label></td>
-          <td class="col-md-4" id='uname'>{{name}}</td>
-          <td class="col-md-6"><input type="text" id="newname"><button onclick="modify_user('{{can_modify}}','uname','newname')">修改</button></td>
-        </tr>
-<!--
-        <tr>
-          <td class="col-md-3"><label>性别</label></td>
-          <td class="col-md-5">{{gender}}<span class="glyphicon glyphicon-align-right" aria-hidden="true"></span></td>
+          <td class="col-md-4"><label>用户名</label></td>
+          <td class="col-md-3" id="uname">{{name}}</td>
+          <td class="col-md-5"><input type="text" id="newname"><button onclick="modify_user('{{can_modify}}','uname','newname')">修改</button></td>
         </tr>
         <tr>
-          <td class="col-md-3"><label>经验值</label></td>
-          <td class="col-md-5">{{exp}}</td>
+          <td class="col-md-4"><label>性别</label></td>
+          <td class="col-md-3">{{gender}}</td>
         </tr>
         <tr>
-          <td class="col-md-3"><label>角色等级</label></td>
-          <td class="col-md-5">{{lv}}</td>
+          <td class="col-md-4"><label>经验值</label></td>
+          <td class="col-md-3" id="uexp">{{exp}}</td>
+          <td class="col-md-5"><input type="text" id="addexp"><button onclick="modify_user('{{can_modify}}','uexp','addexp')">增加</button></td>
         </tr>
         <tr>
-          <td class="col-md-3"><label>vip等级</label></td>
-          <td class="col-md-5">{{vip_lv}}</td>
+          <td class="col-md-4"><label>角色等级</label></td>
+          <td class="col-md-3" id="ulv">{{lv}}</td>
+          <td class="col-md-5"><input type="text" id="newlv"><button onclick="modify_user('{{can_modify}}','ulv','newlv')">修改</button></td>
         </tr>
         <tr>
-          <td class="col-md-3"><label>体力</label></td>
-          <td class="col-md-5">{{stamina}}</td>
+          <td class="col-md-4"><label>vip等级</label></td>
+          <td class="col-md-3" id="uviplv">{{vip_lv}}</td>
+          <td class="col-md-5"><input type="text" id="newviplv"><button onclick="modify_user('{{can_modify}}','uviplv','newviplv')">修改</button></td>
         </tr>
         <tr>
-          <td class="col-md-3"><label>砖石</label></td>
-          <td class="col-md-5">{{diamond}}</td>
+          <td class="col-md-4"><label>体力</label></td>
+          <td class="col-md-3" id="ustamina">{{stamina}}</td>
+          <td class="col-md-5"><input type="text" id="addstamina"><button onclick="modify_user('{{can_modify}}','ustatmina','addstamina')">添加</button></td>
         </tr>
         <tr>
-          <td class="col-md-3"><label>金钱</label></td>
-          <td class="col-md-5">{{money}}</td>
+          <td class="col-md-4"><label>砖石</label></td>
+          <td class="col-md-3" id="udiamond">{{diamond}}</td>
+          <td class="col-md-5"><input type="text" id="adddiamond"><button onclick="modify_user('{{can_modify}}','udiamond','adddiamond')">添加</button></td>
         </tr>
         <tr>
-          <td class="col-md-3"><label>城市代币</label></td>
-          <td class="col-md-5">{{city_jeton}}</td>
+          <td class="col-md-4"><label>金钱</label></td>
+          <td class="col-md-3" id="umoney">{{money}}</td>
+          <td class="col-md-5"><input type="text" id="addmoney"><button onclick="modify_user('{{can_modify}}','umoney','addmoney')">添加</button></td>
         </tr>
         <tr>
-          <td class="col-md-3"><label>天梯代币</label></td>
-          <td class="col-md-5">{{pk_jeton}}</td>
+          <td class="col-md-4"><label>城市代币</label></td>
+          <td class="col-md-3" id="ucityjeton">{{city_jeton}}</td>
+          <td class="col-md-5"><input type="text" id="addcityjeton"><button onclick="modify_user('{{can_modify}}','ucityjeton','addcityjeton')">添加</button></td>
         </tr>
         <tr>
-          <td class="col-md-3"><label>英魂</label></td>
-          <td class="col-md-5">{{heroSoul}}</td>
+          <td class="col-md-4"><label>天梯代币</label></td>
+          <td class="col-md-3" id="upkjeton">{{pk_jeton}}</td>
+          <td class="col-md-5"><input type="text" id="addpkjeton"><button onclick="modify_user('{{can_modify}}','upkjeton','addpkjeton')">添加</button></td>
         </tr>
         <tr>
-          <td class="col-md-3"><label>元素掌握度</label></td>
-          <td class="col-md-5">{{nature_0}}</td>
+          <td class="col-md-4"><label>英魂</label></td>
+          <td class="col-md-3" id="uherosoul">{{heroSoul}}</td>
+          <td class="col-md-5"><input type="text" id="addherosoul"><button onclick="modify_user('{{can_modify}}','uherosoul','addherosoul')">添加</button></td>
         </tr>
         <tr>
-          <td class="col-md-3"><label>元素掌握度</label></td>
-          <td class="col-md-5">{{nature_1}}</td>
+          <td class="col-md-4"><label>蓝元素掌握度</label></td>
+          <td class="col-md-3" id="unature0">{{nature_0}}</td>
+          <td class="col-md-5"><input type="text" id="addnature0"><button onclick="modify_user('{{can_modify}}','unature0','addnature0')">添加</button></td>
         </tr>
         <tr>
-          <td class="col-md-3"><label>元素掌握度</label></td>
-          <td class="col-md-5">{{nature_1}}</td>
+          <td class="col-md-4"><label>红元素掌握度</label></td>
+          <td class="col-md-3" id="unature1">{{nature_1}}</td>
+          <td class="col-md-5"><input type="text" id="addnature1"><button onclick="modify_user('{{can_modify}}','unature1','addnature1')">添加</button></td>
         </tr>
         <tr>
-          <td class="col-md-3"><label>元素掌握度</label></td>
-          <td class="col-md-5">{{nature_1}}</td>
+          <td class="col-md-4"><label>绿元素掌握度</label></td>
+          <td class="col-md-3" id="unature2">{{nature_2}}</td>
+          <td class="col-md-5"><input type="text" id="addnature2"><button onclick="modify_user('{{can_modify}}','unature2','addnature2')">添加</button></td>
         </tr>
         <tr>
-          <td class="col-md-3"><label>元素掌握度</label></td>
-          <td class="col-md-5">{{nature_1}}</td>
+          <td class="col-md-4"><label>褐元素掌握度</label></td>
+          <td class="col-md-3" id="unature3">{{nature_3}}</td>
+          <td class="col-md-5"><input type="text" id="addnature3"><button onclick="modify_user('{{can_modify}}','unature3','addnature3')">添加</button></td>
         </tr>
         <tr>
-          <td class="col-md-3"><label>元素掌握度</label></td>
-          <td class="col-md-5">{{nature_1}}</td>
+          <td class="col-md-4"><label>黄元素掌握度</label></td>
+          <td class="col-md-3" id="unature4">{{nature_4}}</td>
+          <td class="col-md-5"><input type="text" id="addnature4"><button onclick="modify_user('{{can_modify}}','unature4','addnature4')">添加</button></td>
         </tr>
         <tr>
-          <td class="col-md-3"><label>剩余元素掌握度</label></td>
-          <td class="col-md-5">{{nature_remain}}</td>
+          <td class="col-md-4"><label>紫元素掌握度</label></td>
+          <td class="col-md-3" id="unature5">{{nature_5}}</td>
+          <td class="col-md-5"><input type="text" id="addnature5"><button onclick="modify_user('{{can_modify}}','unature5','addnature5')">添加</button></td>
         </tr>
--->
+        <tr>
+          <td class="col-md-4"><label>剩余元素掌握度</label></td>
+          <td class="col-md-3" id="unatureremain">{{nature_remain}}</td>
+          <td class="col-md-5"><input type="text" id="addnatureremian"><button onclick="modify_user('{{can_modify}}','unatureremain','addnatureremain')">添加</button></td>
+        </tr>
       </table>
     </div>
-    <div class="col-md-3 col-md-offset-4"">
+    <div class="col-md-3 col-md-offset-4">
            sdfsafasfsad
     </div>
   </div>
