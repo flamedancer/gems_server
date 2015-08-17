@@ -65,7 +65,7 @@ def prelogic(func):
         result['update_userInfo'] = modified_user_data()
         result['uid'] = request.user.uid
         result['timestamp'] = time.time()
-        save_pier()
+        app.pier.save()
         return result
     return wrap_func
 
@@ -85,10 +85,6 @@ def signature_validation(uid):
 
 def pier_clear():
     app.pier.clear()
-
-
-def save_pier():
-    app.pier.save()
 
 
 def modified_user_data():

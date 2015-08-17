@@ -107,7 +107,6 @@ function save_config(config_name) {
 }
 
 function modify_user(can_modify, type, key) {
-    alert(can_modify);
     if (can_modify != 'True') {
         alert("只有管理员可以修改玩家数据！");
         return;

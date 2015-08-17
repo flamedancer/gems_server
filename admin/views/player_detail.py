@@ -34,6 +34,8 @@ def can_modify():
 @route('/admin/modify_player', method="POST")
 @validate
 def modify_player():
+    if not can_modify():
+        raise
     player_uid = request.forms.get('uid')
     ubase = UserBase.get(player_uid)
     if not ubase:

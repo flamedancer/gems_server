@@ -4,6 +4,7 @@ import datetime
 from bottle import request, redirect
 from admin.models.employee import Employee
 from admin.permissions import ALL_PERMISSIONS
+from libs.dbs import app
 
 
 def validate(func):
@@ -25,6 +26,8 @@ def validate(func):
         em.last_login_time = login_time
         em.put()
         result = func(*args, **kwargs)
+        # * 保存数据
+        app.pier.save()
         if isinstance(result, dict):
             em_permissions = em.permissions
             result.update(

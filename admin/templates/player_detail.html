@@ -1,6 +1,14 @@
 {% extends "frame.html" %}
 {% block main %}
 <script type="text/javascript" src="/static/js/main.js"></script>
+
+<form class="form-inline">
+  <div class="form-group col-md-offset-1">
+    <label><h4>查询玩家信息</h4></label>
+    <input type="text" class="form-control" id="uid" name='uid' placeholder="" value={{uid}}>
+  </div>
+  <button type="submit" class="btn btn-warning">确定</button>
+</form>
 <div>
   {% if uid == '' %} 
   <div class="alert alert-danger" role="alert">无此uid玩家!</div>
@@ -25,18 +33,20 @@
         <tr>
           <td class="col-md-4"><label>用户uid</label></td>
           <form>
-          <td class="col-md-3"><input type="text" id="uid" name="uid" value="{{uid}}"></td>
-          <td class="col-md-5"><button class="btn btn-primary btn-sm" type="submit">查询</button></td>
+          <td class="col-md-3">{{uid}}</td>
+          <td class="col-md-5"></td>
           </form>
         </tr>
         <tr>
           <td class="col-md-4"><label>用户名</label></td>
-          <td class="col-md-3" id="uname">{{name}}</td>
+          <td class="col-md-3" >{{name}}</td>
           <td class="col-md-5"><input type="text" id="newname"><button onclick="modify_user('{{can_modify}}','uname','newname')">修改</button></td>
         </tr>
         <tr>
           <td class="col-md-4"><label>性别</label></td>
           <td class="col-md-3">{{gender}}</td>
+          <td class="col-md-5"></td>
+          </form>
         </tr>
         <tr>
           <td class="col-md-4"><label>经验值</label></td>
@@ -121,8 +131,11 @@
       </table>
     </div>
     <div class="col-md-3 col-md-offset-4">
-           sdfsafasfsad
-    </div>
+      <div class="list-group">
+        <a href="/admin/player_detail?uid={{uid}}" class="list-group-item active">
+           基本数据
+        </a>
+        <a href="/admin/player_detail?uid={{uid}}&category=cards" class="list-group-item">卡片编队</a>
   </div>
 </div>
     

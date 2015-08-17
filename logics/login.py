@@ -22,9 +22,9 @@ def api_login(last_update_time):
         last_update_time(int): 客户端本地配置最后更新时间
     Returns:
         user_info(dict): 玩家基本数据, 见function user_info:
-        all_cards(list): 卡片信息
+        update_configs(dict): 需要客户端更新的配置
 
-         例:
+         例如卡牌配置:
             [
               {
                 "status": 2, # 卡片状态 0 未拥有  1 可召唤 2 已拥有 
@@ -130,7 +130,6 @@ def api_login(last_update_time):
                ]
 
 
-        update_configs(dict): 需要客户端更新的配置
         last_update_time(int): 服务端配置最后更新时间
             如果为0，代表没有需要更新的配置
     """
@@ -141,24 +140,24 @@ def api_login(last_update_time):
     update_configs, update_time = get_update_config(int(last_update_time))
     if update_time:
         result['update_configs'], result['last_update_time'] = update_configs, update_time
-    result['all_cards'] = get_all_cards_info(ubase)
+    #result['all_cards'] = get_all_cards_info(ubase)
     return result
 
-def get_all_cards_info(ubase):
-    user_cards = ubase.user_cards.to_dict()
-    all_cards_info = get_config_dir('card_config')
-    for card in all_cards_info:
-        card_id = card['id']
-        # 卡片状态 0 未拥有  1 可召唤 2 已拥有 
-        status = 0
-        if card_id in user_cards:
-            card.update(user_cards[card_id])
-            if card['num'] == 0:
-                status = 1
-            else:
-                status = 2
-        card['status'] = status
-    return all_cards_info
+#def get_all_cards_info(ubase):
+#    user_cards = ubase.user_cards.to_dict()
+#    all_cards_info = get_config_dir('card_config')
+#    for card in all_cards_info:
+#        card_id = card['id']
+#        # 卡片状态 0 未拥有  1 可召唤 2 已拥有 
+#        status = 0
+#        if card_id in user_cards:
+#            card.update(user_cards[card_id])
+#            if card['num'] == 0:
+#                status = 1
+#            else:
+#                status = 2
+#        card['status'] = status
+#    return all_cards_info
 
 
 def get_update_config(last_update_time):
