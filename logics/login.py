@@ -22,6 +22,36 @@ def api_login(last_update_time):
         last_update_time(int): 客户端本地配置最后更新时间
     Returns:
         user_info(dict): 玩家基本数据, 见function user_info:
+         例如:
+            {'cards': {'10_card': {'exp': 0, 'favor': 0, 'lv': 0, 'num': 1},
+                       '1_card': {'exp': 0, 'favor': 0, 'lv': 0, 'num': 1},
+                       '43_card': {'exp': 0, 'favor': 0, 'lv': 0, 'num': 1},
+                       '7_card': {'exp': 0, 'favor': 0, 'lv': 0, 'num': 1}},
+             'city_jeton': 0,
+             'cur_team_index': 0,
+             'diamond': 0,
+             'exp': 0,
+             'gender': 'man',
+             'heroSoul': 0,
+             'lv': 0,
+             'money': 1400,
+             'name': '',
+             'nature_0': 0,
+             'nature_1': 0,
+             'nature_2': 0,
+             'nature_3': 0,
+             'nature_4': 0,
+             'nature_5': 0,
+             'nature_remain': 0,
+             'picture': 1,
+             'pk_jeton': 0,
+             'stamina': 0,
+             'subpicture': 0,
+             'teams': [['1_card', '7_card', '10_card', '43_card'], [], []],
+             'uid': '333333111',
+             'vip_lv': 0}
+
+
         update_configs(dict): 需要客户端更新的配置
 
          例如卡牌配置:
