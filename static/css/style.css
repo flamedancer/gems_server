@@ -148,3 +148,9 @@ body {
 #config_lists > .btn-toolbar {
     padding-top: 5px;
 }
+
+
+.sm-input {
+    width: 50px;
+}
+

@@ -25,10 +25,10 @@
   </div>
 </div>
 -->
-{% if not detail_category %}
 <div class="container-fluid"> 
   <div class="row">
-    <div class="col-md-5">
+    <div class="col-md-7">
+    {% if not detail_category %}
       <table class="table table-bordered">
         <tr>
           <td class="col-md-4"><label>用户uid</label></td>
@@ -129,11 +129,83 @@
           <td class="col-md-5"><input type="text" id="addnature_remian"><button onclick="modify_user('{{can_modify}}','unature_remain','addnature_remain')">添加</button></td>
         </tr>
       </table>
-{% elif detail_category == 'cards' %}
-asfasdf
-{% endif %}
+      {% elif detail_category == 'cards' %}
+      {% for team in teams %}
+      {% if team %}
+      <table class="table table-bordered table-condensed table-striped">
+        <caption> 编队{{loop.index}} </caption>
+        <tr>
+          <th>武将</th>
+          <th>品质</th>
+          <th>等级</th>
+          <th>好感度</th>
+          <th>元素</th>
+          <th>攻击模式</th>
+          <th>阵营</th>
+          <th>神话</th>
+        </tr>
+        {% for card_id in team %}
+        <tr>
+          <td><label>{{card_config[card_id]['name']}}</label></td>
+          <td>{{card_words['quality'][card_config[card_id]['quality']]}}</td>
+          <td>{{cards[card_id]['lv']}}</td>
+          <td>{{cards[card_id]['favor']}}</td>
+          <td>
+            {% for type in card_config[card_id]['type'] %}
+                {{card_words['type'][type]}} 
+            {% endfor %}
+          </td>
+          <td>{{card_words['attack_type'][card_config[card_id]['attack_type']]}}</td>
+          <td>{{card_words['camp'][card_config[card_id]['camp']]}}</td>
+          <td>{{card_words['myth'][card_config[card_id]['myth']]}}</td>
+        </tr>
+        {% endfor %}
+      </table>
+      {% endif %}  {# end judge empty team #}
+      {% endfor %} {# end loop teams #}
+      <table id="has_cards" class="table table-bordered table-condensed table-striped">
+        <caption> 拥有卡牌 </caption>
+        <tr>
+          <th>武将</th>
+          <th>品质</th>
+          <th>等级</th>
+          <th>好感度</th>
+          <th>元素</th>
+          <th>攻击模式</th>
+          <th>阵营</th>
+          <th>神话</th>
+          <th>数量</th>
+          <th>召唤 | 释放</th>
+        </tr>
+        {% for card_id in cards %}
+        <tr>
+          <td><label>{{card_config[card_id]['name']}}</label></td>
+          <td>{{card_words['quality'][card_config[card_id]['quality']]}}</td>
+          <td><input class="sm-input" type="text" id="{{card_id}}_lv" value="{{cards[card_id]['lv']}}"><button onclick="modify_user('{{can_modify}}','{{card_id}}_lv','{{card_id}}_lv')">改</button></td>
+          <td><input class="sm-input" type="text" id="{{card_id}}_favor" value="{{cards[card_id]['favor']}}"><button onclick="modify_user('{{can_modify}}','{{card_id}}_favor','{{card_id}}_favor')">改</button></td>
+          <td>
+            {% for type in card_config[card_id]['type'] %}
+                {{card_words['type'][type]}} 
+            {% endfor %}
+          </td>
+          <td>{{card_words['attack_type'][card_config[card_id]['attack_type']]}}</td>
+          <td>{{card_words['camp'][card_config[card_id]['camp']]}}</td>
+          <td>{{card_words['myth'][card_config[card_id]['myth']]}}</td>
+          <td><input class="sm-input" type="text" id="{{card_id}}_num" value="{{cards[card_id]['num']}}"><button onclick="modify_user('{{can_modify}}','{{card_id}}_num','{{card_id}}_num')">改</button></td>
+          <td>
+            {% if cards[card_id]['num'] %}
+             <input class="sm-input" type="text" id="dismiss_{{card_id}}" value="1"><button onclick="modify_user('{{can_modify}}','dismiss_{{card_id}}','dismiss_{{card_id}}')">释放</button></td>
+            {% else %}
+            <button onclick="modify_user('{{can_modify}}','summon_{{card_id}}','summon_{{card_id}}')">召唤</button></td>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+
+      {% endif %}  {# end swich detail_category #}
     </div>
-    <div class="col-md-3 col-md-offset-4">
+    <div class="col-md-3 col-md-offset-2">
       <div class="list-group">
         <a href="/admin/player_detail?uid={{uid}}" class="list-group-item active">
            基本数据

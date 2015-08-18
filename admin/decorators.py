@@ -43,6 +43,8 @@ def validate(func):
                 },
                     
             )
+        elif isinstance(result, (int, float)):
+            result = str(result)
         return result
     return warp_func
           

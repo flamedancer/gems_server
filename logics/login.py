@@ -3,7 +3,7 @@
     玩家登入逻辑
 """
 
-
+import json
 from bottle import request
 from models.user_base import UserBase 
 from common.tools import add_user_things
@@ -196,25 +196,49 @@ def get_update_config(last_update_time):
     for config_name in NEED_SYNC_CONFIGS:
         this_config_update_time = get_config_update_time(config_name)
         if this_config_update_time > last_update_time:
-            update_configs[config_name] = get_config_str(config_name)    
+            update_configs[config_name] = to_frontend_config(config_name)    
             if this_config_update_time > new_last_update_time:
                 new_last_update_time = this_config_update_time 
     return update_configs, new_last_update_time
 
+def dirtolist(old_dict):
+    new_list = []
+    keys = sorted(old_dict.keys(), cmp=lambda x,y:cmp(int(x.split('_',1)[0]),int(y.split('_',1)[0])))
+    for key in keys:
+        this_info = {'id': key}
+        this_info.update(old_dict[key])
+        new_list.append(this_info)
+    return new_list
 
-def get_user_info(uBase):
+
+def to_frontend_config(config_name):
+    """ 对有些配置进行特殊处理以方便前端解析
+    """
+    if config_name == 'card_config':
+        config_dir = get_config_dir(config_name)
+        config_list = dirtolist(config_dir)
+        return json.dumps(config_list)
+    return get_config_str(config_name)
+
+def get_user_info(ubase):
     user_info = {}
-    user_info.update(uBase.to_dict())
-    user_info.update(uBase.user_property.to_dict())
-    user_info.update(uBase.user_cards.to_dict())
-    # 调整user_cards 格式
-    new_cards_info = []
-    for card_id in user_info['cards']:
-        card_info = {}
-        card_info['id'] = card_id
-        card_info.update(user_info['cards'][card_id])
-        new_cards_info.append(card_info)
-    user_info['cards'] = new_cards_info
-        
+    user_info.update(ubase.to_dict())
+    user_info.update(ubase.user_property.to_dict())
+    user_info.update(ubase.user_cards.to_dict())
+    user_info.update(get_user_cardinfo(ubase))
     return user_info
+
+def get_user_cardinfo(ubase):
+    cards_info = ubase.user_cards.to_dict()
+    
+    # 调整user_cards 格式
+    new_cards_list = []
+    for card_id in cards_info['cards']:
+        card = {}
+        card['id'] = card_id
+        card.update(cards_info['cards'][card_id])
+        new_cards_list.append(card)
+    cards_info['cards'] = new_cards_list
+    return cards_info
+   
     

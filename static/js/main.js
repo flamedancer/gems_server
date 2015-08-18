@@ -119,9 +119,9 @@ function modify_user(can_modify, type, key) {
     function recall() {
         if (xmlhttp.readyState == 4) {
             if (xmlhttp.status==200) {
-                document.getElementById(type).innerHTML=xmlhttp
-.responseText;
+                //document.getElementById(type).innerHTML=xmlhttp.responseText;
                 alert("修改成功!");
+                location.reload(); 
             }
             else
                 alert("修改玩家数据失败!");

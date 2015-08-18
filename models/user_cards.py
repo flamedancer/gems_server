@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from common.exceptions import *
 from models import GameModel
 from common.tools import add_user_things
 
@@ -56,6 +57,8 @@ class UserCards(GameModel):
         
 
     def add_card(self, card_id, num=1):
+        if num <= 0:
+            raise ParamsErro
         if card_id in self.cards:
             self.cards[card_id]['num'] += num
         else:
@@ -63,8 +66,16 @@ class UserCards(GameModel):
                 'lv': 0,
                 'exp': 0,
                 'favor': 0,
-                'num': 1,
+                'num': num,
             }
+        self.put()
+        return self.cards[card_id]
+
+    def del_card(self, card_id, num=1):
+        if num <= 0 or not card_id in self.cards or \
+            self.cards[card_id]['num'] < num:
+            raise ParamsErro
+        self.cards[card_id]['num'] -= num
         self.put()
         return self.cards[card_id]
 
