@@ -1,4 +1,6 @@
 #-*- coding: utf-8 -*-
+""" 主角系统
+"""
 
 from bottle import request
 from common.tools import *
