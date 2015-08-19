@@ -5,7 +5,7 @@
 from bottle import request
 from common.tools import *
 
-def rename(new_name):
+def api_rename(new_name):
     """ api/charactor/rename
     重命名
     
@@ -15,7 +15,7 @@ def rename(new_name):
     return {}
 
 
-def allot_nature(nature_type, num):
+def api_allot_nature(nature_type, num):
     """ api/charactor/allot_nature
     元素掌握度加点
 
