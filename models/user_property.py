@@ -2,6 +2,7 @@
 
 from libs.model import BaseModel
 from models import GameModel
+from common.exceptions import *
 
 
 class UserProperty(GameModel):
@@ -30,7 +31,15 @@ class UserProperty(GameModel):
         new_num = max(old_num + num, 0)
         setattr(self, thing, new_num)
         self.put()
-        
         return new_num
+
+    def del_thing(self, thing, num):
+        old_num = getattr(self, thing)
+        new_num = old_num - num  
+        if new_num < 0:
+            raise LackError('Not enough thing')
+        setattr(self, thing, new_num)
+        self.put()
+        
             
         

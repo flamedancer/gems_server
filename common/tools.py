@@ -9,10 +9,9 @@ def log(thing, num, way):
 def add_user_things(user, thing, num, way):
     umodified = user.user_modified
 
-    if thing in ['lv', 'vip_lv', 'exp', 'stamina', 'diamond',          'money',
-        'city_jeton', 'pk_jeton', 'heroSoul', 'master_0',
-         'master_1', 'master_2', 'master_3', 'master_4',
-         'master_5', 'master_remain']:
+    if thing in ['lv', 'vip_lv', 'exp', 'stamina', 'diamond',          'money', 'city_jeton', 'pk_jeton', 'heroSoul', 'nature_0',
+         'nature_1', 'nature_2', 'nature_3', 'nature_4',
+         'nature_5', 'nature_remain']:
         new_num = user.user_property.add_thing(thing, num)
         umodified.set_modify_info(thing, new_num)
         return new_num
@@ -24,7 +23,13 @@ def add_user_things(user, thing, num, way):
 
 def del_user_things(user, thing, num, way):
     umodified = user.user_modified
-    if thing.endswith('_card'):
+    if thing in ['lv', 'vip_lv', 'exp', 'stamina', 'diamond',          'money', 'city_jeton', 'pk_jeton', 'heroSoul', 'nature_0',
+         'nature_1', 'nature_2', 'nature_3', 'nature_4',
+         'nature_5', 'nature_remain']:
+        new_num = user.user_property.del_thing(thing, num)
+        umodified.set_modify_info(thing, new_num)
+        return new_num
+    elif thing.endswith('_card'):
         new_card_info = user.user_cards.del_card(thing, num)
         umodified.set_modify_info('card', new_card_info)
     
