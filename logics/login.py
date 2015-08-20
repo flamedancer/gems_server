@@ -227,21 +227,16 @@ def get_user_info(ubase):
     user_info = {}
     user_info.update(ubase.to_dict())
     user_info.update(ubase.user_property.to_dict())
-    user_info.update(ubase.user_cards.to_dict())
     user_info.update(get_user_cardinfo(ubase))
     return user_info
 
 def get_user_cardinfo(ubase):
+    new_cards_info = {}
     cards_info = ubase.user_cards.to_dict()
+    new_cards_info.update(cards_info)
     
     # 调整user_cards 格式
-    new_cards_list = []
-    for card_id in cards_info['cards']:
-        card = {}
-        card['id'] = card_id
-        card.update(cards_info['cards'][card_id])
-        new_cards_list.append(card)
-    cards_info['cards'] = new_cards_list
-    return cards_info
+    new_cards_info['cards'] = dirtolist(cards_info['cards'])
+    return new_cards_info
    
     

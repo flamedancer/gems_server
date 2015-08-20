@@ -1,6 +1,15 @@
 {% extends "frame.html" %}
 {% block main %}
 <script type="text/javascript" src="/static/js/main.js"></script>
+<script type="text/javascript">
+    // 反选
+    function turn_select() {
+        var all_select = document.getElementsByClassName("select_card"); 
+        for(var i=0;i<all_select.length;i++){
+            all_select[i].checked = !all_select[i].checked;
+        }
+    } 
+</script>
 
 <form class="form-inline">
   <div class="form-group col-md-offset-1">
@@ -202,6 +211,29 @@
         </tr>
         {% endfor %}
       </table>
+      <form class="form-inline" method="post" action="/admin/modify_player/add_cards/{{uid}}">
+      <table id="add_cards" class="table table-bordered table-condensed table-striped">
+        <caption> 添加卡片 </caption>
+        {% for card_info in sorted_cards %}
+          {% if (loop.index) % 6 == 1 %}
+            <tr>
+          {% endif %}
+          <td>
+            <input class="select_card" type="checkbox" name="new_cards" value={{card_info.id}}>
+            {{card_info.id|replace("_card", "")}}:{{card_info.name}}</td>
+          {% if (loop.index) % 6 == 6 %}
+            </tr>
+          {% endif %}
+        {% endfor %} 
+      </table>
+      <div style="float:right">
+        <button type="button" onclick="turn_select()" class="btn btn btn-primary">反选</button>
+        <button type="submit" class="btn btn-success">添加所选</button>
+        <label for="card_num">数量:</label>
+        <input type="text" class="form-control" id="card_num" name="card_num"  value="1" >
+      </div>
+      </form>
+    
 
       {% endif %}  {# end swich detail_category #}
     </div>
@@ -211,6 +243,7 @@
            基本数据
         </a>
         <a href="/admin/player_detail?uid={{uid}}&category=cards" class="list-group-item">卡片编队</a>
+      </div>
   </div>
 </div>
     

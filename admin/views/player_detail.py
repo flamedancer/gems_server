@@ -1,12 +1,13 @@
 #-*- coding:utf-8 -*-
 
 import settings
-from bottle import request, route
+from bottle import request, route, redirect
 from bottle import jinja2_view as view
 from models.user_base import UserBase 
 from admin.decorators import validate
 from common import tools
 from logics import card as card_logic
+from logics import login
 
 card_words = {
     # 品质
@@ -45,8 +46,10 @@ def player_detail(player_uid=''):
     elif category == 'cards':
         detail['detail_category'] = 'cards'
         detail.update(ubase.user_cards.to_dict())
+        print detail
         detail['card_config'] = ubase._card_config
         detail['card_words'] = card_words
+        detail['sorted_cards'] = login.dirtolist(detail['card_config'])
     return detail
 
 def can_modify():
@@ -54,6 +57,19 @@ def can_modify():
         return True 
     return False
 
+
+@route('/admin/modify_player/add_cards/<player_uid>', method="POST")
+@validate
+def add_cards(player_uid):
+    if not can_modify():
+        raise
+    ubase = UserBase.get(player_uid)
+    new_cards = request.forms.getlist('new_cards')
+    card_num = int(request.forms.get('card_num', 1))
+    for card_id in new_cards:
+        tools.add_user_things(ubase, card_id, card_num, 'admin')
+    redirect("/admin/player_detail?uid=%s&category=cards" % player_uid)
+    
 
 @route('/admin/modify_player', method="POST")
 @validate
