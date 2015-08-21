@@ -12,6 +12,8 @@ def api_rename(new_name):
     Args:
         new_name(str): 新的玩家名字
     """
+    ubase = request.user
+    update_user_info(ubase, 'name', new_name, 'api_rename')
     return {}
 
 

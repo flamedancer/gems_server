@@ -85,10 +85,9 @@ def modify_player():
         raise
     print "modfiy_type", modify_type
     if modify_type == 'uname':
-        newname = request.forms.get('newname')
-        ubase.name = newname
-        ubase.put()
-        return newname
+        new_name = request.forms.get('newname')
+        update_name = tools.update_user_info(ubase, 'name', new_name, 'admin')
+        return update_name
 
     elif modify_type.endswith('_card_lv'):
         ucards = ubase.user_cards
