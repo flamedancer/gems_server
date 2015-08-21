@@ -5,6 +5,35 @@
 from bottle import request
 from common import tools
 
+
+def api_switch_team_index(team_index):
+    """ api/card/switch_team
+    切换编队
+    
+    Args:
+        team_index(int): 新的当前编队序号
+    """
+    umodified = request.user.user_modified
+    ucards = request.user.user_cards
+    index = ucards.set_cur_team_index(team_index)
+    umodified.set_modify_info('cur_team_index', index)
+    return {}
+
+def api_set_team(team_index, new_team):
+    """ api/card/set_team
+    切换编队
+    
+    Args:
+        team_index(int): 要修改的编队序号
+        new_team(list): 新的编队
+    """
+    umodified = request.user.user_modified
+    ucards = request.user.user_cards
+    teams = ucards.set_team(team_index, new_team)
+    umodified.set_modify_info('teams', teams)
+    return {}
+    
+
 def api_dismiss(card_id, num):
     """ api/card/dismiss
     3)  分解所得英魂值只与卡牌的品质有关。

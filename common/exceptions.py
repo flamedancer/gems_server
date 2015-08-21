@@ -13,7 +13,8 @@ class ParamsError(Error):
     或不符要求，抛出此异常
     """
     error_code = 6
-    error_msg = 'ParamsError'
+    def __init__(self, error_msg):
+        self.error_msg = error_msg
 
 
 class TimeError(Error):

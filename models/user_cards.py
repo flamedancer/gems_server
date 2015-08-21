@@ -79,14 +79,34 @@ class UserCards(GameModel):
         self.put()
         return self.cards[card_id]
 
-    def organize_team(self, team_index, team):
+    def set_team(self, team_index, team):
         """ 修改编队
         Args:
             team_index: 要修改第几个编队
             team: 新的编队list
         """
+        team_len = self._common_config['team_length'] 
+        if len(team) != team_len:
+            raise ParamsError('Team length error!')
+        if set(team) == set(['']):
+            raise ParmasError('Can\'t set empty team !')
+        for card_id in team:
+            if card_id == '':
+                continue
+            elif card_id not in self.cards:
+                raise LackError("Hasn't got card_id %s" % card_id)
+            elif self.cards[card_id]['num'] <= 0:
+                raise LackError("Cards: %s num is 0" % card_id)
+                
         self.teams[team_index] = team
         self.put()
+        return self.teams
+
+    def set_cur_team_index(self, team_index):
+        if not (0<= team_index < len(self.teams)):
+            raise LogicError("No this index") 
+        self.put()
+        self.cur_team_index = team_index
 
     def cur_team(self):
         return self.teams[self.cur_team_index]
