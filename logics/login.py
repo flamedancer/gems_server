@@ -165,10 +165,10 @@ def api_login(last_update_time):
     """
     result = {}
     ubase = request.user
-    add_user_things(ubase, 'money', 100, 'login')
+    # add_user_things(ubase, 'money', 100, 'login')
     card_config = ubase._card_config
-    for card_id in card_config:
-        add_user_things(ubase, card_id, 1, 'login')
+    # for card_id in card_config:
+    #    add_user_things(ubase, card_id, 1, 'login')
     result['user_info'] = get_user_info(ubase)
     update_configs, update_time = get_update_config(int(last_update_time))
     if update_time:

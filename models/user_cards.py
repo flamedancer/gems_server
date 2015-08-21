@@ -47,7 +47,7 @@ class UserCards(GameModel):
         """
         init_team = self._userInit_config['init_team']
         for card_id in init_team:
-            add_user_things(self, card_id, 1, 'init_team')
+            self.add_card(card_id, 1)
         team_len = self._common_config['team_length'] 
         init_team.extend([''] * (team_len - len(init_team)))
         self.teams.append(init_team)
