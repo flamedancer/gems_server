@@ -37,7 +37,7 @@ class UserCards(GameModel):
     
     @classmethod
     def create(cls, uid):
-        obj = UserCards(uid)
+        obj = cls(uid)
         obj.init_team()
         obj.put()
         return obj

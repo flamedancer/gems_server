@@ -26,6 +26,17 @@ class UserProperty(GameModel):
         self.nature_5 = 0       # 元素掌握度
         self.nature_remain = 0      # 剩余元素掌握度
 
+    @classmethod
+    def create(cls, uid):
+        obj = cls(uid)
+        obj.init()
+        obj.put()
+        return obj
+
+    def init(self):
+        init_property = self._userInit_config.get('init_property', {})
+        self.__dict__.update(init_property)
+
     def get_topfull_exp(self):
         return self.exp * 2 + 1
 
