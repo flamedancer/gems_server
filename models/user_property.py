@@ -9,6 +9,7 @@ class UserProperty(GameModel):
     def __init__(self, uid=None):
         self.uid = uid
         self.exp = 0           # 经验值
+        self.topfull_exp = self.get_topfull_exp()   # 当前等级最大经验
         self.lv = 0            # 玩家等级
         self.vip_lv = 0        # vip 等级
         self.stamina = 0       # 体力值
@@ -24,6 +25,9 @@ class UserProperty(GameModel):
         self.nature_4 = 0       # 元素掌握度
         self.nature_5 = 0       # 元素掌握度
         self.nature_remain = 0      # 剩余元素掌握度
+
+    def get_topfull_exp(self):
+        return self.exp * 2 + 1
 
         
     def add_thing(self, thing, num):
