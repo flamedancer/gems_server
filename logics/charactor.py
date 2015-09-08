@@ -3,7 +3,7 @@
 """
 
 from bottle import request
-from common.tools import *
+from common import tools
 from common.exceptions import *
 
 def api_rename(new_name):
@@ -14,7 +14,7 @@ def api_rename(new_name):
         new_name(str): 新的玩家名字
     """
     ubase = request.user
-    update_user_info(ubase, 'name', new_name, 'api_rename')
+    tools.update_user_info(ubase, 'name', new_name, 'api_rename')
     return {}
 
 
