@@ -2,14 +2,17 @@
 
 from models import GameModel
 
+
 def log(thing, num, way):
     print "******add thing num way", thing, num, way 
+
 
 def add_user_things(user, thing, num, way):
     umodified = user.user_modified
     change_info = None
 
-    if thing in ['lv', 'vip_lv', 'exp', 'stamina', 'diamond',          'money', 'city_jeton', 'pk_jeton', 'heroSoul', 'nature_0',
+    if thing in ['lv', 'vip_lv', 'exp', 'stamina', 'diamond',
+         'money', 'city_jeton', 'pk_jeton', 'heroSoul', 'nature_0',
          'nature_1', 'nature_2', 'nature_3', 'nature_4',
          'nature_5', 'nature_remain']:
         new_num = user.user_property.add_thing(thing, num)
@@ -26,7 +29,8 @@ def add_user_things(user, thing, num, way):
 def del_user_things(user, thing, num, way):
     umodified = user.user_modified
     change_info = None
-    if thing in ['lv', 'vip_lv', 'exp', 'stamina', 'diamond',          'money', 'city_jeton', 'pk_jeton', 'heroSoul', 'nature_0',
+    if thing in ['lv', 'vip_lv', 'exp', 'stamina', 'diamond',
+         'money', 'city_jeton', 'pk_jeton', 'heroSoul', 'nature_0',
          'nature_1', 'nature_2', 'nature_3', 'nature_4',
          'nature_5', 'nature_remain']:
         new_num = user.user_property.del_thing(thing, num)
@@ -47,7 +51,16 @@ def update_user_info(user, thing, new_info, way):
     if thing in ['name',]:
         new_name = user.user_base.change_name(new_info)
         umodified.set_modify_info(thing, new_name)
-        change_info = new_name
+    elif thing in ['lv', 'vip_lv', 'exp', 'stamina', 'diamond',
+         'money', 'city_jeton', 'pk_jeton', 'heroSoul', 'nature_0',
+         'nature_1', 'nature_2', 'nature_3', 'nature_4',
+         'nature_5', 'nature_remain']:
+        new_num = new_info
+        uproperty = user.user_property 
+        setattr(uproperty, thing, new_num)
+        uproperty.put()
+        umodified.set_modify_info(thing, new_num)
+        change_info = new_num
+        return new_num
     print "******update user info way", thing, new_info, way 
-    return new_name
-    
+

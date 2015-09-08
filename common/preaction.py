@@ -39,6 +39,9 @@ from models.user_base import UserBase
 
 def prelogic(func):
     def wrap_func(*args, **kargs):
+        result = {}
+        result['uid'] = request.user.uid
+        result['timestamp'] = int(time.time())
         try:
             data = request.forms.get('data')
             print data
@@ -47,24 +50,20 @@ def prelogic(func):
             timestamp_validation(timestamp)
             uid = data.pop('uid', None)
             signature_validation(uid)
-            
             request.api_data = data
-            result = {}
             result['data'] = func(*args, **kargs)
         except Error as e:
-            result = {}
             result['error_code'] = e.error_code
             result['error_msg'] = e.error_msg
             return result
         except Exception as e:
             print_err()
-            return {
+            result.update({
                 'error_code': 4,
                 'error_msg': 'system erro!'
-            }
+            })
+            return result
         result['update_userInfo'] = modified_user_data()
-        result['uid'] = request.user.uid
-        result['timestamp'] = int(time.time())
         app.pier.save()
         return result
     return wrap_func
