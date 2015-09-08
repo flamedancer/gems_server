@@ -77,7 +77,7 @@ def signature_validation(uid):
     print "signatur_uid", uid
     # 如果没有uid, 新建
     if not uid:
-        uid = 'test' + "{:0>6}".format(random.randrange(10000))
+        uid = 'test' + "{:0>6}".format(random.randrange(100000000))
     user = UserBase.create(uid)
     user.put()
     request.user = user
