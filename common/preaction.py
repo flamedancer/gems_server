@@ -40,7 +40,6 @@ from models.user_base import UserBase
 def prelogic(func):
     def wrap_func(*args, **kargs):
         result = {}
-        result['uid'] = request.user.uid
         result['timestamp'] = int(time.time())
         try:
             data = request.forms.get('data')
@@ -63,6 +62,7 @@ def prelogic(func):
                 'error_msg': 'system erro!'
             })
             return result
+        result['uid'] = request.user.uid
         result['update_userInfo'] = modified_user_data()
         app.pier.save()
         return result
