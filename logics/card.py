@@ -32,6 +32,19 @@ def api_set_team(team_index, new_team):
     teams = ucards.set_team(team_index, new_team)
     umodified.set_modify_info('teams', teams)
     return {}
+
+
+def api_upgrade(card_id, lv_num):
+    """ api/card/upgrade
+    升级卡片
+
+    Args:
+        card_id(str): 要升级的卡片id
+        lv_num(int): 要升级的等级
+    """
+    ucards = request.user.user_cards
+    ucards.add_card_lv(card_id, lv_num)
+    return {}
     
 
 def api_dismiss(card_id, num):

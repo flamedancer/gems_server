@@ -94,9 +94,9 @@ class UserCards(GameModel):
             if card_id == '':
                 continue
             elif card_id not in self.cards:
-                raise LackError("Hasn't got card_id %s" % card_id)
+                raise LogicError("Hasn't got card_id %s" % card_id)
             elif self.cards[card_id]['num'] <= 0:
-                raise LackError("Cards: %s num is 0" % card_id)
+                raise LogicError("Cards: %s num is 0" % card_id)
                 
         self.teams[team_index] = team
         self.put()
@@ -111,3 +111,9 @@ class UserCards(GameModel):
     def cur_team(self):
         return self.teams[self.cur_team_index]
 
+    def add_card_lv(self, card_id, num):
+        if card_id not in self.cards:
+            raise LogicError("Card not find")
+        self.cards[card_id]['lv'] += num
+        self.put()
+        
