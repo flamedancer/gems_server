@@ -55,9 +55,9 @@ def api_reallot_nature(natures):
     uproperty = ubase.user_property
     nature_types = ["0", "1", "2", "3", "4", "5", "remain"]
     has_nature_num = sum([getattr(uproperty, "nature_" + nature_type, 0) for nature_type in nature_types])
-    consume_nature_num = sum(natures.keys())
+    consume_nature_num = sum(natures.values())
     remain_nature = has_nature_num - consume_nature_num
-    if reamin_nature < 0:
+    if remain_nature < 0:
         raise LogicError("Not enough natures!") 
     for nature_type, num in natures.items():
         if nature_type not in nature_types[:-1]:
