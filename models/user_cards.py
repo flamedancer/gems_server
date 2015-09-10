@@ -63,7 +63,7 @@ class UserCards(GameModel):
             self.cards[card_id]['num'] += num
         else:
             self.cards[card_id] = {
-                'lv': 0,
+                'lv': 1,
                 'exp': 0,
                 'favor': 0,
                 'num': num,

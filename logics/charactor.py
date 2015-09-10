@@ -18,7 +18,7 @@ def api_rename(new_name):
     return {}
 
 
-def api_allot_nature(nature_type):
+def api_allot_nature(nature_type, allot_num=1):
     """ api/charactor/allot_nature
     元素掌握度加点, 每次加一点
             蓝 "0"
@@ -30,11 +30,12 @@ def api_allot_nature(nature_type):
 
     Args:
         nature_type(str): 元素类型代号
+        allot_num(str): 给该元素分配点数，缺省为1 
     """
     ubase = request.user
-    need_remain_num = 1
+    need_remain_num = allot_num 
     tools.del_user_things(ubase, 'nature_remain', need_remain_num, 'allot_nature') 
-    tools.add_user_things(ubase, "nature_" + nature_type, 1, 'allot_nature') 
+    tools.add_user_things(ubase, "nature_" + nature_type, allot_num, 'allot_nature') 
     return {}
 
 
