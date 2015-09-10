@@ -83,4 +83,5 @@ def api_summon(card_id):
 
     """
     print "summon_cards", card_id
+    ubase = request.user
     tools.add_user_things(ubase, card_id, 1, 'summon_card')
