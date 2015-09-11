@@ -73,7 +73,7 @@ def api_dismiss(dismiss_type, card_id=''):
     ucards = ubase.user_cards
     get_heroSoul = 20
     if dismiss_type == 'dismiss_one': 
-        tools.del_user_things(ubase, card_id, num, 'dismiss_card')
+        tools.del_user_things(ubase, card_id, 1, 'dismiss_card')
     elif dismiss_type == 'keep_one':
         now_num = ucards.cards.get(card_id, {}).get('num', 0)
         del_num = now - 1
