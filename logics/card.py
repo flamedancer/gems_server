@@ -45,7 +45,7 @@ def api_upgrade(card_id, lv_num):
     umodified = request.user.user_modified
     ucards = request.user.user_cards
     new_card_info = ucards.add_card_lv(card_id, lv_num)
-    umodified.set_modify_info('cards', {card_id, new_card_info})
+    umodified.set_modify_info('cards', {card_id: new_card_info})
     return {}
     
 
@@ -70,7 +70,7 @@ def api_dismiss(dismiss_type, card_id=''):
     """
     print "dismiss_cards", card_id, dismiss_type 
     ubase = request.user
-    ucards = ubase.ucards
+    ucards = ubase.user_cards
     get_heroSoul = 20
     if dismiss_type == 'dismiss_one': 
         tools.del_user_things(ubase, card_id, num, 'dismiss_card')
