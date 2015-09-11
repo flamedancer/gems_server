@@ -4,6 +4,7 @@
 
 from bottle import request
 from common import tools
+from common.exceptions import *
 
 
 def api_switch_team_index(team_index):
@@ -76,7 +77,7 @@ def api_dismiss(dismiss_type, card_id=''):
         tools.del_user_things(ubase, card_id, 1, 'dismiss_card')
     elif dismiss_type == 'keep_one':
         now_num = ucards.cards.get(card_id, {}).get('num', 0)
-        del_num = now - 1
+        del_num = now_num - 1
         tools.del_user_things(ucards, card_id, del_num, 'dismiss_card')
     elif dismiss_type == 'all_keep_one':
         for cid, cinfo in ucards.cards.items():
@@ -103,4 +104,25 @@ def api_summon(card_id):
     """
     print "summon_cards", card_id
     ubase = request.user
-    tools.add_user_things(ubase, card_id, 1, 'summon_card')
+    new_info = tools.add_user_things(ubase, card_id, 1, 'summon_card')
+    # 召唤后数量应该为 1
+    if new_info['num'] != 1:
+        raise LogicError("The num of this card sould be 0") 
+    return {}
+
+
+def api_off_new(card_id):
+    """ api/card/off_new
+    首次查看新的卡片后，将new的标记去除
+    Args:
+        card_id: 卡牌id
+    """
+    umodified = request.user.user_modified
+    ucards = request.user.user_cards
+    if card_id not in ucards.cards:
+        raise LogicError("Not exist card") 
+    if 'is_new' in ucards.cards[card_id]:
+        ucards.cards[card_id]['is_new'] = False
+    umodified.set_modify_info('cards', {card_id: ucards.cards[card_id]})
+    return {}
+    

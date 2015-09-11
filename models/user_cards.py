@@ -67,6 +67,7 @@ class UserCards(GameModel):
                 'exp': 0,
                 'favor': 0,
                 'num': num,
+                'is_new': True,
             }
         self.put()
         return self.cards[card_id]
