@@ -120,7 +120,6 @@ def modify_player():
     elif modify_type.startswith('summon_'):
         ucards = ubase.user_cards
         card_id = modify_type.split('summon_', 1)[1]
-        num = int(request.forms.get(modify_type)) 
         request.user = ubase
         card_logic.api_summon(card_id)
         
