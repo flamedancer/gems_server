@@ -12,11 +12,11 @@ class UserModified(GameModel):
         self.modified = {} 
 
     def set_modify_info(self, thing, info=None):
-        if thing == 'card':
-            if 'card' in self.modified:
-                self.modified['card'].update(info)
+        if thing == 'cards':
+            if 'cards' in self.modified:
+                self.modified['cards'].update(info)
             else:
-                self.modified['card'] = info
+                self.modified['cards'] = info
         else:
             self.modified[thing] = info 
         self.put()

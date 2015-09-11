@@ -42,8 +42,10 @@ def api_upgrade(card_id, lv_num):
         card_id(str): 要升级的卡片id
         lv_num(int): 要升级的等级
     """
+    umodified = request.user.user_modified
     ucards = request.user.user_cards
-    ucards.add_card_lv(card_id, lv_num)
+    new_card_info = ucards.add_card_lv(card_id, lv_num)
+    umodified.set_modify_info('cards', {card_id, new_card_info})
     return {}
     
 

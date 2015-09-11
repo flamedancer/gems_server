@@ -116,4 +116,5 @@ class UserCards(GameModel):
             raise LogicError("Card not find")
         self.cards[card_id]['lv'] += num
         self.put()
+        return self.cards[card_id]
         
