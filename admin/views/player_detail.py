@@ -113,9 +113,9 @@ def modify_player():
     elif modify_type.startswith('dismiss_'):
         ucards = ubase.user_cards
         card_id = modify_type.split('dismiss_', 1)[1]
-        num = int(request.forms.get(modify_type)) 
+        dismiss_type = request.forms.get(modify_type)
         request.user = ubase
-        card_logic.api_dismiss(card_id, num)
+        card_logic.api_dismiss(dismiss_type, card_id)
 
     elif modify_type.startswith('summon_'):
         ucards = ubase.user_cards

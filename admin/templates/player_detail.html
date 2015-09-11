@@ -203,7 +203,7 @@
           <td><input class="sm-input" type="text" id="{{card_id}}_num" value="{{cards[card_id]['num']}}"><button onclick="modify_user('{{can_modify}}','{{card_id}}_num','{{card_id}}_num')">改</button></td>
           <td>
             {% if cards[card_id]['num'] %}
-             <input class="sm-input" type="text" id="dismiss_{{card_id}}" value="1"><button onclick="modify_user('{{can_modify}}','dismiss_{{card_id}}','dismiss_{{card_id}}')">释放</button></td>
+             <input class="sm-input" type="text" id="dismiss_{{card_id}}" value="dismiss_one"><button onclick="modify_user('{{can_modify}}','dismiss_{{card_id}}','dismiss_{{card_id}}')">释放</button></td>
             {% else %}
             <button onclick="modify_user('{{can_modify}}','summon_{{card_id}}','summon_{{card_id}}')">召唤</button></td>
             {% endif %}

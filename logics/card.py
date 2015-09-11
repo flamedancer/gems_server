@@ -45,6 +45,9 @@ def api_upgrade(card_id, lv_num):
     """
     umodified = request.user.user_modified
     ucards = request.user.user_cards
+    max_card_lv = ucards._common_config.get("max_card_lv", 15)
+    if ucards.cards.get(card_id, {}).get('lv', 1) >= max_card_lv:
+        raise LogicError("The card got the top lv")
     new_card_info = ucards.add_card_lv(card_id, lv_num)
     umodified.set_modify_info('cards', {card_id: new_card_info})
     return {}
