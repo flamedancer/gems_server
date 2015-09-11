@@ -75,7 +75,7 @@ class UserCards(GameModel):
     def del_card(self, card_id, num=1):
         if num <= 0 or not card_id in self.cards or \
             self.cards[card_id]['num'] < num:
-            raise ParamsErro
+            raise ParamsError
         self.cards[card_id]['num'] -= num
         self.put()
         return self.cards[card_id]

@@ -85,7 +85,7 @@ def api_dismiss(dismiss_type, card_id=''):
             if cnum <= 1:
                 continue
             del_num = cnum - 1
-            tools.del_user_things(ucards, card_id, del_num, 'dismiss_card')
+            tools.del_user_things(ucards, cid, del_num, 'dismiss_card')
     tools.add_user_things(ubase, 'heroSoul', get_heroSoul, 'dismiss_card')
     
     return {'get_heroSoul': 20}
