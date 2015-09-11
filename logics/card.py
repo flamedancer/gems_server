@@ -49,25 +49,42 @@ def api_upgrade(card_id, lv_num):
     return {}
     
 
-def api_dismiss(card_id, num):
+def api_dismiss(dismiss_type, card_id=''):
     """ api/card/dismiss
-    3)  分解所得英魂值只与卡牌的品质有关。
+    1) 有三种分解方式    
+    2)  分解所得英魂值只与卡牌的品质有关。
          i   普通：5
          ii  精良：10
          iii 稀有：25
          iv  史诗：50
          v   传说：100
     Args:
-        card_id: 卡片id
-        num:     要分解的数量
+        dismiss_type(str): 分解方式
+            "dismiss_one" : 分解一张此卡
+            "keep_one"    : 只保留一张此卡，其他分解
+            "all_keep_one": 所有卡牌只保留一张,其余全分解,card_id 缺省
+        card_id(str): 卡片id
     Returns:
         get_heroSoul: 分解后产生的英魂
 
     """
-    print "dismiss_cards", card_id, num
+    print "dismiss_cards", card_id, dismiss_type 
     ubase = request.user
-    tools.del_user_things(ubase, card_id, num, 'dismiss_card')
+    ucards = ubase.ucards
     get_heroSoul = 20
+    if dismiss_type == 'dismiss_one': 
+        tools.del_user_things(ubase, card_id, num, 'dismiss_card')
+    elif dismiss_type == 'keep_one':
+        now_num = ucards.cards.get(card_id, {}).get('num', 0)
+        del_num = now - 1
+        tools.del_user_things(ucards, card_id, del_num, 'dismiss_card')
+    elif dismiss_type == 'all_keep_one':
+        for cid, cinfo in ucards.cards.items():
+            cnum = cinfo['num']
+            if cnum <= 1:
+                continue
+            del_num = cnum - 1
+            tools.del_user_things(ucards, card_id, del_num, 'dismiss_card')
     tools.add_user_things(ubase, 'heroSoul', get_heroSoul, 'dismiss_card')
     
     return {'get_heroSoul': 20}
