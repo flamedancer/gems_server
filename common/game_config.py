@@ -32,13 +32,19 @@ CONFIG_TITLES = [
             ('skill_config', u'技能基本配置'),
          ],
     },
-
+    {
+        'category': u'城市',
+        'content':[
+            ('city_config', u'城市基础配置'),
+         ],
+    },
 ]
 
 
 NEED_SYNC_CONFIGS = [
     'card_config',
     'skill_config',
+    'city_config',
 ]
 
 
