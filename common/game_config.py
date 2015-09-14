@@ -36,6 +36,8 @@ CONFIG_TITLES = [
         'category': u'城市',
         'content':[
             ('city_config', u'城市基础配置'),
+            ('conquer_config', u'征服模式配置'),
+            ('challenge_config', u'挑战模式配置'),
          ],
     },
 ]
