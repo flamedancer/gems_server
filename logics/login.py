@@ -173,6 +173,7 @@ def api_login(last_update_time):
     update_configs, update_time = get_update_config(int(last_update_time))
     if update_time:
         result['update_configs'], result['last_update_time'] = update_configs, update_time
+    print "xxxxxx", update_configs.keys()
     #result['all_cards'] = get_all_cards_info(ubase)
     return result
 

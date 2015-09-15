@@ -12,9 +12,10 @@ class UserCities(GameModel):
                 为战争迷雾状态
             value 为城市dict:
                 status:  0未开启  1开启  2已征服
+                cur_conquer: 征服模式当前战场index
                 lv    ： 等级
                 team  :  城市卫队
-                jeton :  该城市经费（城时代币）
+                jeton :  该城市经费（城市代币）
                 reputation: 声望值
                 reputation_lv: 声望等级
     """
@@ -38,7 +39,7 @@ class UserCities(GameModel):
         """ 打开战争迷雾
         """
         if city_id in self.cities:
-            raise LogicError("The city has showed")
+            return
         self.cities[city_id] = {
             'status': 0, 
             'lv': 1,
@@ -46,6 +47,7 @@ class UserCities(GameModel):
             'reputation': 0,
             'reputation_lv': 0,
             'team': [],
+            'cur_conquer': 1,
         }
             
 
