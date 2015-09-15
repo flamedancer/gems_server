@@ -198,6 +198,8 @@ def get_update_config(last_update_time):
     new_last_update_time = 0
     for config_name in NEED_SYNC_CONFIGS:
         this_config_update_time = get_config_update_time(config_name)
+        if not this_config_update_time:
+            continue
         if this_config_update_time > last_update_time:
             update_configs[config_name] = to_frontend_config(config_name)    
             if this_config_update_time > new_last_update_time:
@@ -228,6 +230,7 @@ def get_user_info(ubase):
     user_info.update(ubase.to_dict())
     user_info.update(ubase.user_property.to_dict())
     user_info.update(get_user_cardinfo(ubase))
+    user_info.update(ubase.user_cities.to_dict())
     return user_info
 
 def get_user_cardinfo(ubase):
