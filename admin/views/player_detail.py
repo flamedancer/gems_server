@@ -46,6 +46,7 @@ def player_detail(player_uid=''):
     elif category == 'cards':
         detail['detail_category'] = 'cards'
         detail.update(ubase.user_cards.to_dict())
+        detail.update(ubase.user_cities.to_dict())
         print detail
         detail['card_config'] = ubase._card_config
         detail['card_words'] = card_words

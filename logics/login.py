@@ -55,111 +55,8 @@ def api_login(last_update_time):
         update_configs(dict): 需要客户端更新的配置
 
          例如卡牌配置:
-            [
-              {
-                "status": 2, # 卡片状态 0 未拥有  1 可召唤 2 已拥有 
-                "wrap_defense":0.2,
-                "race":1,
-                "attack":[
-                    2,
-                    3,
-                    3,
-                    3,
-                    4,
-                    4,
-                    4,
-                    5,
-                    5,
-                    6,
-                    6,
-                    6,
-                    7,
-                    7,
-                    8
-                ],
-                "f_maxmp":8,
-                "type":[
-                    2
-                ],
-                "words_2":"你这是自寻死路",
-                "stun_defense":0.2,
-                "skill":[
-                    "1_skill",
-                    "300_skill",
-                    "301_skill",
-                    "302_skill"
-                ],
-                "picture":"1_card.png",
-                "id":"1_card",
-                "description":"希腊神话中的怪物。外形为双头犬,且尾巴是一条蛇,在“日落之岛”上负责看守牛群。英雄赫拉克勒斯在完成其十件任务的过程中将它杀死。",
-                "attack_type":0,
-                "myth":1,
-                "maxmp":[
-                    1,
-                    1,
-                    1,
-                    1,
-                    1,
-                    2,
-                    2,
-                    2,
-                    2,
-                    3,
-                    4,
-                    4,
-                    5,
-                    5,
-                    6
-                ],
-                "hp":[
-                    3,
-                    3,
-                    3,
-                    4,
-                    4,
-                    4,
-                    5,
-                    5,
-                    5,
-                    5,
-                    5,
-                    6,
-                    6,
-                    7,
-                    7
-                ],
-                "lv":1,
-                "defense":[
-                    1,
-                    1,
-                    2,
-                    3,
-                    3,
-                    4,
-                    5,
-                    5,
-                    6,
-                    6,
-                    7,
-                    7,
-                    8,
-                    8,
-                    8
-                ],
-                "frozen_defense":0.2,
-                "camp":0,
-                "burn_defense":0.2,
-                "name":"欧特鲁斯",
-                "quality":0,
-                "words_1":"已经不在是恶魔或是精灵,甚至已经不知是什么生物",
-                "poison_defense":0.2,
-                "favor":0,
-                "silence_defense":0.2
-                  }, 
-                 .......
-               ]
-
-
+             卡牌配置: "card_config": {...}
+    
         last_update_time(int): 服务端配置最后更新时间
             如果为0，代表没有需要更新的配置
     """
@@ -173,7 +70,6 @@ def api_login(last_update_time):
     update_configs, update_time = get_update_config(int(last_update_time))
     if update_time:
         result['update_configs'], result['last_update_time'] = update_configs, update_time
-    print "xxxxxx", update_configs.keys()
     #result['all_cards'] = get_all_cards_info(ubase)
     return result
 

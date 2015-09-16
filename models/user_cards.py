@@ -31,28 +31,22 @@ class UserCards(GameModel):
     """
     def __init__(self, uid=''):
         self.uid = uid
-        self.teams = []   # 编队序列
-        self.cur_team_index = 0 # 当前使用编队序号
+        self.cur_team_index = "0" # 当前使用城市卫队号
         self.cards = {}   # 所有 
     
     @classmethod
     def create(cls, uid):
         obj = cls(uid)
-        obj.init_team()
+        obj.init()
         obj.put()
         return obj
 
-    def init_team(self):
+    def init(self):
         """ 初始玩家卡牌
         """
         init_team = self._userInit_config['init_team']
         for card_id in init_team:
             self.add_card(card_id, 1)
-        team_len = self._common_config['team_length'] 
-        init_team.extend([''] * (team_len - len(init_team)))
-        self.teams.append(init_team)
-        team_number = self._common_config['team_number']
-        self.teams.extend([[]] * (team_number - 1))
         self.put()
         
 
@@ -83,7 +77,7 @@ class UserCards(GameModel):
     def set_team(self, team_index, team):
         """ 修改编队
         Args:
-            team_index: 要修改第几个编队
+            team_index: 要修改第几个城市编队
             team: 新的编队list
         """
         team_len = self._common_config['team_length'] 
@@ -97,20 +91,26 @@ class UserCards(GameModel):
             elif card_id not in self.cards:
                 raise LogicError("Hasn't got card_id %s" % card_id)
             elif self.cards[card_id]['num'] <= 0:
-                raise LogicError("Cards: %s num is 0" % card_id)
-                
-        self.teams[team_index] = team
-        self.put()
-        return self.teams
+                raise LogicError(" %s num is 0" % card_id)
+            elif self.cards[card_id]['num'] < team.count(card_id):
+                raise LogicError("%s num is not enough" % card_id)
+        ucity = self.user_cities
+        if not ucity.has_open_city(team_index): 
+            raise LogicError("This city has't opened")
+        ucity.cities[team_index]['team'] = team
+        ucity.put()
+        return team
 
     def set_cur_team_index(self, team_index):
-        if not (0<= team_index < len(self.teams)):
-            raise LogicError("No this index") 
-        self.put()
+        ucity = self.user_cities
+        if not ucity.has_open_city(team_index): 
+            raise LogicError("This city has't opened")
         self.cur_team_index = team_index
+        self.put()
 
     def cur_team(self):
-        return self.teams[self.cur_team_index]
+        ucity = self.user_cities
+        return ucity.cities[cur_team_index]['team']
 
     def add_card_lv(self, card_id, num):
         if card_id not in self.cards:

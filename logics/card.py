@@ -30,8 +30,10 @@ def api_set_team(team_index, new_team):
     """
     umodified = request.user.user_modified
     ucards = request.user.user_cards
-    teams = ucards.set_team(team_index, new_team)
-    umodified.set_modify_info('teams', teams)
+    team = ucards.set_team(team_index, new_team)
+    ucards.set_cur_team_index(team_index)
+    umodified.set_modify_info('cities', {team_index: {'team': team}})
+    umodified.set_modify_info('cur_team_index', team_index)
     return {}
 
 

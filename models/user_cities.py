@@ -34,6 +34,11 @@ class UserCities(GameModel):
     def init(self):
         self.show_city('0')
         self.open_city('0')
+        init_team = self._userInit_config['init_team']
+        team_len = self._common_config['team_length']
+        init_team.extend([''] * (team_len - len(init_team)))
+        self.cities['0']['team'] = init_team
+        self.put()
 
     def show_city(self, city_id):
         """ 打开战争迷雾
@@ -50,7 +55,6 @@ class UserCities(GameModel):
             'cur_conquer': 1,
         }
             
-
     def open_city(self, city_id):
         """ 开城
         """
@@ -62,4 +66,10 @@ class UserCities(GameModel):
         if allies_cities:
             for allies_city in allies_cities:
                 self.show_city(allies_city)
+    
+    def has_open_city(self, city_id):
+        if city_id in self.cities and \
+            self.cities[city_id]['status'] > 0:
+            return True
+        return False
     

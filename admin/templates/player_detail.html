@@ -18,22 +18,13 @@
   </div>
   <button type="submit" class="btn btn-warning">确定</button>
 </form>
+
 <div>
   {% if uid == '' %} 
   <div class="alert alert-danger" role="alert">无此uid玩家!</div>
   {% endif %}
-<!--
-  <div>
-    <form class="form-inline">
-      <div class="form-group input-group">
-        <span class="input-group-addon" id="uid-input">查询uid: </span>
-      <input type="text" class="form-control" aria-describedby="uid-input">
-      </div>
-      <button type="submit" class="btn">查找</button>
-    </form>
-  </div>
 </div>
--->
+
 <div class="container-fluid"> 
   <div class="row">
     <div class="col-md-7">
@@ -135,10 +126,10 @@
         </tr>
       </table>
       {% elif detail_category == 'cards' %}
-      {% for team in teams %}
-      {% if team %}
+      {% for city_id, city in cities|dictsort %}
+      {% if city["team"] %}
       <table class="table table-bordered table-condensed table-striped">
-        <caption> 编队{{loop.index}} </caption>
+        <caption>城{{city_id}}编队 </caption>
         <tr>
           <th>武将</th>
           <th>品质</th>
@@ -149,7 +140,7 @@
           <th>阵营</th>
           <th>神话</th>
         </tr>
-        {% for card_id in team %}
+        {% for card_id in city["team"] %}
         <tr>
           <td><label>{{card_config[card_id]['name']}}</label></td>
           <td>{{card_words['quality'][card_config[card_id]['quality']]}}</td>
