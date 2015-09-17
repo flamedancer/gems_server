@@ -34,6 +34,7 @@ class UserCities(GameModel):
     def init(self):
         self.show_city('0')
         self.open_city('0')
+        self.conquer_city('0')
         init_team = self._userInit_config['init_team']
         team_len = self._common_config['team_length']
         init_team.extend([''] * (team_len - len(init_team)))
@@ -46,7 +47,7 @@ class UserCities(GameModel):
         if city_id in self.cities:
             return
         self.cities[city_id] = {
-            'status': 0, 
+            'status': 0,
             'lv': 1,
             'jeton': 0,
             'reputation': 0,
@@ -54,7 +55,7 @@ class UserCities(GameModel):
             'team': [],
             'cur_conquer': 1,
         }
-            
+
     def open_city(self, city_id):
         """ 开城
         """
@@ -62,14 +63,21 @@ class UserCities(GameModel):
             raise LogicError("Should show it first")
         self.cities[city_id]['status'] = 1
         city_config = self._city_config
-        allies_cities = city_config[city_id]['allies'] 
+        allies_cities = city_config[city_id]['allies']
         if allies_cities:
             for allies_city in allies_cities:
                 self.show_city(allies_city)
-    
+
+    def conquer_city(self, city_id):
+        """ 开城
+        """
+        if city_id not in self.cities or not self.has_open_city(city_id):
+            raise LogicError("Should open it first")
+        self.cities[city_id]['status'] = 2
+
     def has_open_city(self, city_id):
         if city_id in self.cities and \
             self.cities[city_id]['status'] > 0:
             return True
         return False
-    
+

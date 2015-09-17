@@ -28,8 +28,10 @@ def api_set_team(team_index, new_team):
         team_index(int): 要修改的编队序号
         new_team(list): 新的编队
     """
-    umodified = request.user.user_modified
     ucards = request.user.user_cards
+    if ucards.cur_team == new_team:
+        return {} 
+    umodified = request.user.user_modified
     team = ucards.set_team(team_index, new_team)
     ucards.set_cur_team_index(team_index)
     umodified.set_modify_info('cities', {team_index: {'team': team}})

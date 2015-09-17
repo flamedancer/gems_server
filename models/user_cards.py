@@ -110,7 +110,7 @@ class UserCards(GameModel):
 
     def cur_team(self):
         ucity = self.user_cities
-        return ucity.cities[cur_team_index]['team']
+        return ucity.cities[self.cur_team_index]['team']
 
     def add_card_lv(self, card_id, num):
         if card_id not in self.cards:
