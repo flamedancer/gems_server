@@ -45,6 +45,7 @@ CONFIG_TITLES = [
 
 
 NEED_SYNC_CONFIGS = [
+    'commom_config',
     'card_config',
     'skill_config',
     'city_config',
