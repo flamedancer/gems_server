@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
-
 """ 战斗
 """
+
+from bottle import request
+from logics import card
+
+def check_can_start():
+    pass
 
 
 def api_start(dungeon_type, city_id, team_index='', new_team=None):
@@ -18,10 +23,15 @@ def api_start(dungeon_type, city_id, team_index='', new_team=None):
         enemy_lv(list->int): 各敌将等级
         enemy_favor(int): 敌将全元素好感度
     """
-    return {'enemy_team': ['1_card', '2_card', '3_card', '4_card'],
+    check_can_start()
+    card.api_set_team(team_index, new_team)
+
+    
+    result = {'enemy_team': ['1_card', '2_card', '3_card', '4_card'],
             'enemy_lv': [1, 2, 3, 4, 5],
             'enemy_favor': 3,
     }
+    return result
 
 
 def api_end(dungeon_type, city_id):

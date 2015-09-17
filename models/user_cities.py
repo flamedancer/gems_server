@@ -67,6 +67,8 @@ class UserCities(GameModel):
         if allies_cities:
             for allies_city in allies_cities:
                 self.show_city(allies_city)
+        return {city_id: {'status': 1}}
+
 
     def conquer_city(self, city_id):
         """ 开城
@@ -74,6 +76,7 @@ class UserCities(GameModel):
         if city_id not in self.cities or not self.has_open_city(city_id):
             raise LogicError("Should open it first")
         self.cities[city_id]['status'] = 2
+        return {city_id: {'status': 2}}
 
     def has_open_city(self, city_id):
         if city_id in self.cities and \

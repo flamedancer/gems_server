@@ -62,5 +62,7 @@ def update_user_info(user, thing, new_info, way):
         umodified.set_modify_info(thing, new_num)
         change_info = new_num
         return new_num
+        
+        
     print "******update user info way", thing, new_info, way 
 

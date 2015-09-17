@@ -8,7 +8,7 @@ from common.exceptions import *
 
 
 def api_switch_team_index(team_index):
-    """ api/card/switch_team
+    """ api/card/switch_team_index
     切换编队
     
     Args:

@@ -14,9 +14,22 @@ class UserModified(GameModel):
     def set_modify_info(self, thing, info=None):
         if thing == 'cards':
             if 'cards' in self.modified:
-                self.modified['cards'].update(info)
+                for card_id in info:
+                    if card_id in self.modified['cards']:
+                        self.modified['cards'][card_id].update(info[card_id])
+                    else:
+                        self.modified['cards'][card_id] = info[card_id]
             else:
                 self.modified['cards'] = info
+        elif thing == 'cities':
+            if 'cities' in self.modified:
+                for city_id in info:
+                    if city_id in self.modified['cities']:
+                        self.modified['cities'][city_id].update(info[city_id])
+                    else:
+                        self.modified['cards'][city_id] = info[city_id]
+            else:
+                self.modified['cities'] = info
         else:
             self.modified[thing] = info 
         self.put()
