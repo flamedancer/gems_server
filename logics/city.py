@@ -17,9 +17,9 @@ def api_open_city(city_id):
     umodified = request.user.user_modified
     ucities = request.user.user_cities
     need_coin_conf = ucities._common_config["open_city_cost_coin"]
-    has_opened_num = len(ucities.cities)
+    has_opened_num = ucities.get_opened_city_num()
     need_coin = need_coin_conf[has_opened_num]
-    tools.del_user_things(ucities, 'coin', need_coin)  
+    tools.del_user_things(ucities, 'coin', need_coin, 'open_city')
     new_info = ucities.open_city(city_id)
     umodified.set_modify_info('cities', new_info)
     return {}
