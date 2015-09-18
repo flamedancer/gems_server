@@ -131,7 +131,8 @@
       <table class="table table-bordered table-condensed table-striped">
         <caption>城{{city_id}}编队 </caption>
         <tr>
-          <th>武将</th>
+          <th></th>
+          <th>卡名</th>
           <th>品质</th>
           <th>等级</th>
           <th>好感度</th>
@@ -142,6 +143,10 @@
         </tr>
         {% for card_id in city["team"] %}
         <tr>
+        <td>{{loop.index}}</td>
+        {% if not card_id %}
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        {% else %}
           <td><label>{{card_config[card_id]['name']}}</label></td>
           <td>{{card_words['quality'][card_config[card_id]['quality']]}}</td>
           <td>{{cards[card_id]['lv']}}</td>
@@ -155,6 +160,7 @@
           <td>{{card_words['camp'][card_config[card_id]['camp']]}}</td>
           <td>{{card_words['myth'][card_config[card_id]['myth']]}}</td>
         </tr>
+        {% endif %}
         {% endfor %}
       </table>
       {% endif %}  {# end judge empty team #}
@@ -162,7 +168,7 @@
       <table id="has_cards" class="table table-bordered table-condensed table-striped">
         <caption> 拥有卡牌 </caption>
         <tr>
-          <th>武将</th>
+          <th>卡名</th>
           <th>品质</th>
           <th>等级</th>
           <th>好感度</th>

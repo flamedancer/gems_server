@@ -82,10 +82,12 @@ def api_dismiss(dismiss_type, card_id=''):
     get_heroSoul = 20
     if dismiss_type == 'dismiss_one': 
         tools.del_user_things(ubase, card_id, 1, 'dismiss_card')
+        adjust_team(ucards, card_id)
     elif dismiss_type == 'keep_one':
         now_num = ucards.cards.get(card_id, {}).get('num', 0)
         del_num = now_num - 1
         tools.del_user_things(ucards, card_id, del_num, 'dismiss_card')
+        adjust_team(ucards, card_id)
     elif dismiss_type == 'all_keep_one':
         for cid, cinfo in ucards.cards.items():
             cnum = cinfo['num']
@@ -93,12 +95,35 @@ def api_dismiss(dismiss_type, card_id=''):
                 continue
             del_num = cnum - 1
             tools.del_user_things(ucards, cid, del_num, 'dismiss_card')
+            adjust_team(ucards, cid)
     tools.add_user_things(ubase, 'heroSoul', get_heroSoul, 'dismiss_card')
-    
     return {'get_heroSoul': 20}
 
 
-
+def adjust_team(ucards, card_id):
+    cur_num = ucards.cards[card_id]['num']
+    if cur_num >= 4:
+        return
+    ucities = ucards.user_cities
+    umodified = ucards.user_modified
+    for city_id in ucities.cities:
+        team = ucities.cities[city_id]['team']
+        inteam_num = team.count(card_id)
+        if inteam_num <= cur_num:
+            continue
+        should_drop_num = inteam_num - cur_num
+        new_team = []
+        for cid in team:
+            if cid != card_id or should_drop_num <= 0:
+                new_team.append(cid)
+            else:
+                new_team.append('')
+                should_drop_num -= 1
+        ucities.cities[city_id]['team'] = new_team
+        umodified.set_modify_info('cities', {city_id: {'team': new_team}})
+    ucities.put()
+        
+            
 def api_summon(card_id):
     """ api/card/summon
     4)  卡牌的召唤费用由以下要素决定：
