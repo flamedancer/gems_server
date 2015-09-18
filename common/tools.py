@@ -12,7 +12,7 @@ def add_user_things(user, thing, num, way):
     change_info = None
 
     if thing in ['lv', 'vip_lv', 'exp', 'stamina', 'diamond',
-         'money', 'city_jeton', 'pk_jeton', 'heroSoul', 'nature_0',
+         'coin', 'city_jeton', 'pk_jeton', 'heroSoul', 'nature_0',
          'nature_1', 'nature_2', 'nature_3', 'nature_4',
          'nature_5', 'nature_remain']:
         new_num = user.user_property.add_thing(thing, num)
@@ -30,7 +30,7 @@ def del_user_things(user, thing, num, way):
     umodified = user.user_modified
     change_info = None
     if thing in ['lv', 'vip_lv', 'exp', 'stamina', 'diamond',
-         'money', 'city_jeton', 'pk_jeton', 'heroSoul', 'nature_0',
+         'coin', 'city_jeton', 'pk_jeton', 'heroSoul', 'nature_0',
          'nature_1', 'nature_2', 'nature_3', 'nature_4',
          'nature_5', 'nature_remain']:
         new_num = user.user_property.del_thing(thing, num)
@@ -52,7 +52,7 @@ def update_user_info(user, thing, new_info, way):
         new_name = user.user_base.change_name(new_info)
         umodified.set_modify_info(thing, new_name)
     elif thing in ['lv', 'vip_lv', 'exp', 'stamina', 'diamond',
-         'money', 'city_jeton', 'pk_jeton', 'heroSoul', 'nature_0',
+         'coin', 'city_jeton', 'pk_jeton', 'heroSoul', 'nature_0',
          'nature_1', 'nature_2', 'nature_3', 'nature_4',
          'nature_5', 'nature_remain']:
         new_num = new_info
