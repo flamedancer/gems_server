@@ -60,7 +60,7 @@ class UserCities(GameModel):
     def open_city(self, city_id):
         """ 开城
         """
-        if city_id not in self.cities:
+        if not self.has_show_city(city_id):
             raise LogicError("Should show it first")
         self.cities[city_id]['status'] = 1
         city_config = self._city_config
@@ -71,22 +71,39 @@ class UserCities(GameModel):
         self.put()
         return {city_id: {'status': 1}}
 
-
     def conquer_city(self, city_id):
         """ 开城
         """
-        if city_id not in self.cities or not self.has_open_city(city_id):
+        if not self.has_open_city(city_id):
             raise LogicError("Should open it first")
         self.cities[city_id]['status'] = 2
         self.put()
         return {city_id: {'status': 2}}
 
+    def has_show_city(self, city_id):
+        if city_id in self.cities:
+            return True
+        return False
+
     def has_open_city(self, city_id):
-        if city_id in self.cities and \
+        if self.has_show_city(city_id) and \
             self.cities[city_id]['status'] > 0:
+            return True
+        return False
+
+    def can_conquer_city(self, city_id):
+        if self.has_open_city(city_id) and \
+            self.cities[city_id]['status'] == 1:
             return True
         return False
 
     def get_opened_city_num(self):
         return len([city for city in self.cities if self.cities[city]['status'] >=1])
+
+    def cur_conquer_stage(self, city_id):
+        return str(self.cities[city_id]['cur_conquer'])
+
+    def up_conquer_stage(self, city_id):
+        self.cities[city_id]['cur_conquer'] += 1
+        
 

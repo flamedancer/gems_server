@@ -83,8 +83,6 @@ class UserCards(GameModel):
         team_len = self._common_config['team_length'] 
         if len(team) != team_len:
             raise ParamsError('Team length error!')
-        if set(team) == set(['']):
-            raise ParmasError('Can\'t set empty team !')
         for card_id in team:
             if card_id == '':
                 continue

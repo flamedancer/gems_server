@@ -4,12 +4,15 @@ from models import GameModel
 
 
 class UserModified(GameModel):
-    """ 玩家基本属性
+    """ 1.处理需通知前端及时更新的数据
+        2.临时数据，例如保存进战场时的信息，
+            以便出战场时的结算 
     """ 
     def __init__(self, uid=''):
         # 玩家 属性数据
         self.uid = uid 
         self.modified = {} 
+        self.temp = {} 
 
     def set_modify_info(self, thing, info=None):
         if thing == 'cards':
