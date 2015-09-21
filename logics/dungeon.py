@@ -42,8 +42,8 @@ def api_start(dungeon_type, city_id, team_index='', new_team=None):
             raise LogicError("Can't conquer this city")
         cur_stage = ucities.cur_conquer_stage(city_id)
         stage_conf = conquer_config[city_id][cur_stage]
-        enemey_favor = stage_conf['enemy_favor'] 
-        enemey_nature = stage_conf['enemy_nature'] 
+        enemy_favor = stage_conf['enemy_favor'] 
+        enemy_nature = stage_conf['enemy_nature'] 
         enemy_team = []
         enemy_lv = []
         for enemy_cid, lv in stage_conf['enemy']:
