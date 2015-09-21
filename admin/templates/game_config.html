@@ -54,13 +54,11 @@
         <h4 class="modal-title" id="myModalLabel">配置{{config_name}} 解释</h4>
       </div>
       <div class="modal-body">
-      <pre>
-      {% if config_note %}
+      <pre>{% if config_note %}
         {{ config_note }}
       {% else %}
          没什么可以说的
-      {% endif %}
-      </pre>
+      {% endif %}</pre>
       </div>
       <div class="modal-footer">
         <button data-dismiss="modal" type="button" class="btn btn-primary">知道了</button>
