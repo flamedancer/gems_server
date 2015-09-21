@@ -56,6 +56,7 @@ class UserCities(GameModel):
             'cur_conquer': 1,
         }
         self.put()
+        return {city_id: self.cities[city_id]}
 
     def open_city(self, city_id):
         """ 开城
@@ -64,12 +65,15 @@ class UserCities(GameModel):
             raise LogicError("Should show it first")
         self.cities[city_id]['status'] = 1
         city_config = self._city_config
+        modified = {}
         allies_cities = city_config[city_id]['allies']
         if allies_cities:
             for allies_city in allies_cities:
-                self.show_city(allies_city)
+                new_city = self.show_city(allies_city)
+                modified.update(new_city)
         self.put()
-        return {city_id: {'status': 1}}
+        modified[city_id] = {'status': 1}
+        return modified
 
     def conquer_city(self, city_id):
         """ 开城

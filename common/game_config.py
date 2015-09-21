@@ -11,6 +11,7 @@ CONFIG_TITLES = [
         'content':[
             ('system_config', u'系统配置'),
             ('common_config', u'通用配置'),
+            ('language_config', u'前端语言包配置'),
          ],
     },
     {
@@ -46,9 +47,11 @@ CONFIG_TITLES = [
 
 NEED_SYNC_CONFIGS = [
     'common_config',
+    'language_config',
     'card_config',
     'skill_config',
     'city_config',
+    'conversation_config',
 ]
 
 
