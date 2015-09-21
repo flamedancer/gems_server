@@ -42,8 +42,8 @@ def api_start(dungeon_type, city_id, team_index='', new_team=None):
             raise LogicError("Can't conquer this city")
         cur_stage = ucities.cur_conquer_stage(city_id)
         stage_conf = conquer_config[city_id][cur_stage]
-        enmey_favor = stage_conf['enemy_favor'] 
-        enmey_nature = stage_conf['enemy_nature'] 
+        enemey_favor = stage_conf['enemy_favor'] 
+        enemey_nature = stage_conf['enemy_nature'] 
         enemy_team = []
         enemy_lv = []
         for enemy_cid, lv in stage_conf['enemy']:
@@ -77,6 +77,19 @@ def api_end(dungeon_type, city_id):
 
     Returns:
         award(dir): 奖励
+            例:
+             'award' :{
+                "coin":170,
+                "exp":10,
+                "diamond":10,
+                "heroSoul":70,
+                "card":[
+                    [
+                        "10_card",
+                        1
+                    ]
+                ]
+            },
 
     """
     ubase = request.user

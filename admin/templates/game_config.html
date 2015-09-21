@@ -28,7 +28,7 @@
 {% if config_name %}
 
 <div class="row" id="config_utiles">
-    <button class="btn btn-primary col-md-2">当前配置：{{ config_name }}</button>
+    <button class="btn btn-primary col-md-2" data-toggle="modal" data-target="#myModal">当前配置：{{ config_name }}</button>
 
 <div class="col-md-6 col-md-offset-1">
 <form class="form-inline" action="?config_name={{config_name}}" method="post" enctype="multipart/form-data">
@@ -43,6 +43,30 @@
 <button name='save' class="btn btn-danger" onClick="save_config('{{ config_name }}')" >保存所做修改</button>
 <span id="save_tag" name='save_tag' class="label label-warning"></span>
 </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">配置{{config_name}} 解释</h4>
+      </div>
+      <div class="modal-body">
+      <pre>
+      {% if config_note %}
+        {{ config_note }}
+      {% else %}
+         没什么可以说的
+      {% endif %}
+      </pre>
+      </div>
+      <div class="modal-footer">
+        <button data-dismiss="modal" type="button" class="btn btn-primary">知道了</button>
+      </div>
+    </div>
+  </div>
 </div>
        
 <div id='ace-editor'>{{ config_value }}</div>

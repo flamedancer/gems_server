@@ -5,6 +5,7 @@ import json
 import time
 
 from common.game_config import CONFIG_TITLES 
+from common.game_config import NOTE 
 from common.game_config import get_config_str 
 from common.game_config import get_config_dir 
 from common.game_config import set_config_update_time 
@@ -39,7 +40,7 @@ def config_view():
     elif this_config_name:
         view = get_config_str(this_config_name)
        
-    return {'config_titles': CONFIG_TITLES, 'config_value': view, 'config_name': this_config_name}
+    return {'config_titles': CONFIG_TITLES, 'config_value': view, 'config_name': this_config_name, 'config_note': NOTE.get(this_config_name, '')}
 
 
 @route('/admin/save_config', method='POST')
