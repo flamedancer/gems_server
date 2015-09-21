@@ -28,10 +28,10 @@ def api_start(dungeon_type, city_id, team_index='', new_team=None):
         enemy_nature(int): 敌将全元素掌握度
     """
     check_can_start()
-    if set(new_team) == set(['']):
-        raise ParmasError('Can\'t set empty team !')
-    card.api_set_team(team_index, new_team)
-
+    if team_index != '' and new_team is not None:
+        if set(new_team) == set(['']):
+            raise ParmasError('Can\'t set empty team !')
+        card.api_set_team(team_index, new_team)
     ubase = request.user
     ucities = ubase.user_cities
     if dungeon_type == 'conquer':

@@ -70,6 +70,7 @@ def api_login(last_update_time):
     update_configs, update_time = get_update_config(int(last_update_time))
     if update_time:
         result['update_configs'], result['last_update_time'] = update_configs, update_time
+        print "#####COnfig_keys:", result['update_configs'].keys()
     #result['all_cards'] = get_all_cards_info(ubase)
     # 登入游戏时不需要发已修改的信息
     umodified = ubase.user_modified

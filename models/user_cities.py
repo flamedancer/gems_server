@@ -45,7 +45,7 @@ class UserCities(GameModel):
         """ 打开战争迷雾
         """
         if city_id in self.cities:
-            return
+            return {}
         self.cities[city_id] = {
             'status': 0,
             'lv': 1,

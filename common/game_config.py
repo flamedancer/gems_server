@@ -51,6 +51,7 @@ NEED_SYNC_CONFIGS = [
     'card_config',
     'skill_config',
     'city_config',
+    'conquer_config',
     'conversation_config',
 ]
 
