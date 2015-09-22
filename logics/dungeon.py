@@ -78,7 +78,7 @@ def api_start(dungeon_type, city_id, team_index='', new_team=None):
 
 
 def api_end(dungeon_type, city_id):
-    """ api/dungeopn/end
+    """ api/dungeon/end
     结束战斗
     Args:
         dungeon_type(str): 战斗类型 "conquer"征服模式 "challenge"挑战模式 
@@ -103,8 +103,8 @@ def api_end(dungeon_type, city_id):
     """
     ubase = request.user
     ucities = ubase.user_cities
-    umodified = ubase.user_modifed 
-    if 'dungeon' not in umodified.teamp:
+    umodified = ubase.user_modified 
+    if 'dungeon' not in umodified.temp:
         raise LogicError
     start_info = umodified.temp['dungeon']
     if start_info['type'] != dungeon_type or \
