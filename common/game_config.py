@@ -25,7 +25,7 @@ CONFIG_TITLES = [
         'category': u'卡牌',
         'content':[
             ('card_config', u'卡牌基本配置'),
-            ('cardup_config', u'升级|分解'),
+            ('cardup_config', u'升级|进阶|分解'),
             ('gacha_config', u'抽卡配置'),
          ],
     },

@@ -44,9 +44,8 @@ class UserProperty(GameModel):
         self.exp >= userlv_config[str(self.lv + 1)]:
             self.lv += 1
         if str(self.lv + 1) not in userlv_config and \
-        self.exp > userlv_config[str(self.lv):
-            self.exp = userlv_config[str(self.lv) 
-            
+        self.exp > userlv_config[str(self.lv)]:
+            self.exp = userlv_config[str(self.lv)]
         modified = {'exp': self.exp}
         if old_lv != self.lv:
             modified['lv'] = self.lv

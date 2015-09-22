@@ -71,6 +71,7 @@ def api_start(dungeon_type, city_id, team_index='', new_team=None):
             'enemy_lv': enemy_lv,
             'enemy_favor': enemy_favor,
             'enemy_nature': enemy_nature,
+            'add_exp': add_exp,
         }
         return result
     return {}
