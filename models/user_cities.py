@@ -33,8 +33,6 @@ class UserCities(GameModel):
 
     def init(self):
         self.show_city('0')
-        self.open_city('0')
-        self.conquer_city('0')
         init_team = self._userInit_config['init_team']
         team_len = self._common_config['team_length']
         init_team.extend([''] * (team_len - len(init_team)))

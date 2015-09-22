@@ -11,13 +11,17 @@ def add_user_things(user, thing, num, way):
     umodified = user.user_modified
     change_info = None
 
-    if thing in ['lv', 'vip_lv', 'exp', 'stamina', 'diamond',
+    if thing in ['lv', 'vip_lv', 'stamina', 'diamond',
          'coin', 'city_jeton', 'pk_jeton', 'heroSoul', 'nature_0',
          'nature_1', 'nature_2', 'nature_3', 'nature_4',
          'nature_5', 'nature_remain']:
         new_num = user.user_property.add_thing(thing, num)
         umodified.set_modify_info(thing, new_num)
         change_info = new_num
+    elif thing == 'exp':
+        modified_info = user.user_property.add_exp(num)
+        umodified.update_modify(modified_info)
+        change_info = user.user_property.exp
     elif thing.endswith('_card'):
         new_card_info = user.user_cards.add_card(thing, num)
         umodified.set_modify_info('cards', {thing: new_card_info})

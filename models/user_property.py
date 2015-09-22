@@ -35,6 +35,22 @@ class UserProperty(GameModel):
     def init(self):
         init_property = self._userInit_config.get('init_property', {})
         self.__dict__.update(init_property)
+    
+    def add_exp(self, num):
+        self.exp += num
+        userlv_config = self._userlv_config
+        old_lv = self.lv
+        while str(self.lv + 1) in userlv_config and \
+        self.exp >= userlv_config[str(self.lv + 1)]:
+            self.lv += 1
+        if str(self.lv + 1) not in userlv_config and \
+        self.exp > userlv_config[str(self.lv):
+            self.exp = userlv_config[str(self.lv) 
+            
+        modified = {'exp': self.exp}
+        if old_lv != self.lv:
+            modified['lv'] = self.lv
+        return modified            
 
     def add_thing(self, thing, num):
         old_num = getattr(self, thing)

@@ -36,4 +36,9 @@ class UserModified(GameModel):
         else:
             self.modified[thing] = info 
         self.put()
+
+    def update_modify(self, new_info_dict):
+        for item, info in new_info_dict.items():
+            self.set_modify_info(item, info)
+        self.put()
     

@@ -36,8 +36,6 @@ def gacha(gacha_type):
         add_user_things(user, card_id, 1, gacha_type)
 
     return get_cards
-    
-
 
 
 def api_coin_gacha():
