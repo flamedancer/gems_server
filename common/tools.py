@@ -51,6 +51,7 @@ def update_user_info(user, thing, new_info, way):
     if thing in ['name',]:
         new_name = user.user_base.change_name(new_info)
         umodified.set_modify_info(thing, new_name)
+        return new_name
     elif thing in ['lv', 'vip_lv', 'exp', 'stamina', 'diamond',
          'coin', 'city_jeton', 'pk_jeton', 'heroSoul', 'nature_0',
          'nature_1', 'nature_2', 'nature_3', 'nature_4',

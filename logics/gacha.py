@@ -1,8 +1,42 @@
 # -*- coding: utf-8 -*-
 """ 抽卡
 """
-#from common.utils import get_items_by_weight_dict
+import random
+from common.utils import get_key_by_weight_dict
 from common.tools import *
+
+
+def gacha(gacha_type):
+    """ 两种gacha_type
+        金币抽: coin_gacha
+        钻石抽: diamond_gacha
+    """
+    user = request.user
+    get_cards = []
+
+    gacha_conf = self._gacha_config[gacha_type]
+    color_rate_dict = {key: value['weight'] for key,value in gacha_conf.items()}
+    get_green = False
+    for cnt in range(0, 3):
+        # 前两张没拿到绿卡，第三张必出
+        if cnt == 2 and not get_green:
+            color = '1'
+        else:
+            color = get_key_by_weight_dict(color_rate_dict) 
+        if color == '1':
+            get_green = True
+        cid_rate_dict = {key: value['weigth'] for key, value in gahca_conf[color].items()}
+        card_key = get_key_by_weight_dict(cid_rate_dict) 
+        get_card = gacha[color][card_key]['id']
+        get_cards.append(get_card)
+        color_rate_dict[color] -= 1
+        
+        
+    for card_id in get_cards:
+        add_user_things(user, card_id, 1, gacha_type)
+
+    return get_cards
+    
 
 
 
@@ -13,11 +47,7 @@ def api_coin_gacha():
     Returns:
        get_cards(list): 获得的卡牌序列 
     """
-    user = request.user
-    get_cards = ['1_card', '2_card', '3_card']
-    for card_id in get_cards:
-        add_user_things(user, card_id, 1, 'coin_gacha')
-    return {'get_cards': get_cards}
+    return {'get_cards': gacha('coin_type')}
 
 
 def api_diamond_gacha():
@@ -27,4 +57,4 @@ def api_diamond_gacha():
     Returns:
        get_cards(list): 获得的卡牌序列 
     """
-    return {'get_cards': ['1_card', '2_card', '3_card']}
+    return {'get_cards': gacha('diamond_type')}

@@ -15,6 +15,8 @@ def check_can_start():
 def api_start(dungeon_type, city_id, team_index='', new_team=None):
     """ api/dungeon/start
     进战场
+    1.进战场先扣体力 
+    2.进战场会先给1/3经验值
     Args:
         dungeon_type(str): 战斗类型 "conquer"征服模式 "challenge"挑战模式 
         city_id(str): 要打哪个城，城市id
@@ -42,6 +44,12 @@ def api_start(dungeon_type, city_id, team_index='', new_team=None):
             raise LogicError("Can't conquer this city")
         cur_stage = ucities.cur_conquer_stage(city_id)
         stage_conf = conquer_config[city_id][cur_stage]
+        need_stamina = stage_conf['stamina']
+        # 扣体力
+        tools.del_user_things(ubase, 'stamina', need_stamina, 'conquer')
+        # 加1/3经验 
+        add_exp = int((1.0 / 3) * stage_conf['award'].get('exp', 0))
+        tools.add_user_things(ubase, 'exp', add_exp, 'conquer')
         enemy_favor = stage_conf['enemy_favor'] 
         enemy_nature = stage_conf['enemy_nature'] 
         enemy_team = []
@@ -108,6 +116,10 @@ def api_end(dungeon_type, city_id):
         cur_stage = ucities.cur_conquer_stage(city_id)
         stage_conf = conquer_config[city_id][cur_stage]
         award = stage_conf.get('award', {})
+        if 'exp' in award:
+            # 加2/3经验 
+            add_exp = award['exp'] - int((1.0 / 3) * award['exp'])
+            award['exp'] = add_exp
         if str(ucities.cur_conquer_stage(city_id) + 1) not in stage_conf[city_id]:
             ucities.conquer_city(city_id)
         else:
@@ -120,4 +132,4 @@ def api_end(dungeon_type, city_id):
             else:
                 tools.add_user_things(ubase, thing, info, 'conquer')
         return award
-                
+

@@ -44,9 +44,13 @@ class UserCards(GameModel):
     def init(self):
         """ 初始玩家卡牌
         """
-        init_team = self._userInit_config['init_team']
+        userInit_conf = self._userInit_config 
+        init_team = userInit_conf['init_team']
+        init_cards_conf = userInit_conf.get('init_cards', {})
         for card_id in init_team:
             self.add_card(card_id, 1)
+        for card_id,num in init_cards_conf.items(): 
+            self.add_card(card_id, num)
         self.put()
         
 

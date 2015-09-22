@@ -106,6 +106,7 @@ u'''
     'cardup_config': \
 u'''
 ***卡牌养成有关配置***
+卡牌品质分为：普通卡（白）、精良卡（绿）、稀有卡（蓝）、史诗卡（紫）、传说卡（橙）。
 
 
 卡牌升级消耗英魂配置 lvup_consume_heroSoul
@@ -207,6 +208,7 @@ u'''
 NEED_SYNC_CONFIGS = [
     'common_config',
     'language_config',
+    'userlv_config',
     'card_config',
     'update_config',
     'cardother_config',
