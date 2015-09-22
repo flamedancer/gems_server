@@ -114,6 +114,7 @@ def api_end(dungeon_type, city_id):
     if now - start_info['time'] <= 10:
         raise LogicError
     if dungeon_type == 'conquer':
+        conquer_config = ubase._conquer_config  
         cur_stage = ucities.cur_conquer_stage(city_id)
         stage_conf = conquer_config[city_id][cur_stage]
         award = stage_conf.get('award', {})

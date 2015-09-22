@@ -109,7 +109,7 @@ class UserCities(GameModel):
         return len([city for city in self.cities if self.cities[city]['status'] >=1])
 
     def cur_conquer_stage(self, city_id):
-        return str(self.cities[city_id]['cur_conquer'])
+        return self.cities[city_id]['cur_conquer']
 
     def up_conquer_stage(self, city_id):
         self.cities[city_id]['cur_conquer'] += 1
