@@ -52,6 +52,8 @@ class LogicError(Error):
     """
     error_code = 4
     error_msg = u"系统错误，请重进游戏！"
+    def __init__(self, error_msg):
+        self.error_msg = error_msg
 
 class LackError(Error):
     """ 行为条件未满足

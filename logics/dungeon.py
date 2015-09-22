@@ -111,8 +111,8 @@ def api_end(dungeon_type, city_id):
        start_info['city_id'] != city_id:
         raise LogicError
     now = int(time.time())
-    if now - start_info['time'] <= 10:
-        raise LogicError
+    if now - start_info['time'] <= 1:
+        raise LogicError("rush a dungeon to quick")
     if dungeon_type == 'conquer':
         conquer_config = ubase._conquer_config  
         cur_stage = ucities.cur_conquer_stage(city_id)
@@ -122,7 +122,7 @@ def api_end(dungeon_type, city_id):
             # 加2/3经验 
             add_exp = award['exp'] - int((1.0 / 3) * award['exp'])
             award['exp'] = add_exp
-        if str(int(ucities.cur_conquer_stage(city_id)) + 1) not in stage_conf[city_id]:
+        if str(int(ucities.cur_conquer_stage(city_id)) + 1) not in stage_conf:
             ucities.conquer_city(city_id)
         else:
             ucities.up_conquer_stage(city_id)
