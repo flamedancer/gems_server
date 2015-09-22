@@ -7,6 +7,20 @@ from common import tools
 from common.exceptions import *
 
 
+def api_set_capital(city_id):
+    """ api/city/set_capital
+    设置主城
+
+    Args:
+        city_id(str): 要设置的主城id
+    """
+    ucities = request.user.user_cities
+    ucities.set_capital(city_id)
+    umodified = ucities.user_modified
+    umodified.set_modify_info('capital_city', city_id)
+    return {}
+    
+
 def api_open_city(city_id):
     """ api/city/open_city
     解锁城市
