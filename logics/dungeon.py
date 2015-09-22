@@ -42,7 +42,7 @@ def api_start(dungeon_type, city_id, team_index='', new_team=None):
             raise LogicError("Has no this city")
         if not ucities.can_conquer_city(city_id):
             raise LogicError("Can't conquer this city")
-        cur_stage = ucities.cur_conquer_stage(city_id)
+        cur_stage = str(ucities.cur_conquer_stage(city_id))
         stage_conf = conquer_config[city_id][cur_stage]
         need_stamina = stage_conf['stamina']
         # 扣体力
@@ -122,7 +122,7 @@ def api_end(dungeon_type, city_id):
             # 加2/3经验 
             add_exp = award['exp'] - int((1.0 / 3) * award['exp'])
             award['exp'] = add_exp
-        if str(ucities.cur_conquer_stage(city_id) + 1) not in stage_conf[city_id]:
+        if str(int(ucities.cur_conquer_stage(city_id)) + 1) not in stage_conf[city_id]:
             ucities.conquer_city(city_id)
         else:
             ucities.up_conquer_stage(city_id)
