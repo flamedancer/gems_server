@@ -44,6 +44,12 @@ CONFIG_TITLES = [
             ('challenge_config', u'挑战模式配置'),
          ],
     },
+    {
+        'category': u'物品',
+        'content':[
+            ('prop_config', u'道具配置'),
+         ],
+    },
 ]
 
 NOTE = {
@@ -83,14 +89,14 @@ u'''
 4.例：
 {
   "1": {
-        "exp":0,            
-        "lv_add_stamina":0, 
-        "stamina":30,       
+        "exp":0,
+        "lv_add_stamina":0,
+        "stamina":30,
   },
   "2": {
-        "exp":10,            
-        "lv_add_stamina":1, 
-        "stamina":50,       
+        "exp":10,
+        "lv_add_stamina":1,
+        "stamina":50,
   },
  ......
 }
@@ -102,19 +108,19 @@ u'''
 ***卡牌养成有关配置***
 
 
-卡牌升级消耗英魂配置
+卡牌升级消耗英魂配置 lvup_consume_heroSoul
 1.卡片升级只消耗英魂,消耗数和卡片品质和升的等级有关
 2.key为品质id, value 为长度14的数组,
 3.value的index为等级数,对应项为当前等级升到下一等级需消耗的英魂
   按下配置为例，普通卡当前为8级，则它升到9级需花费8英魂
 4.例如：
-{
+"lvup_consume_heroSoul":{
    "0": [1,2,3,4,5,6,7,8,9,10,11,12,13,14],
    ......
 }
 
 
-分解卡片产生英魂配置dismiss_prod_heroSoul
+分解卡片产生英魂配置dismiss_product_heroSoul
 1.分解所得英魂值只与卡牌的品质有关
 2.key为品质id, value 为所得英魂数量
 3. '0'普通
@@ -122,14 +128,19 @@ u'''
    '2'稀有
    '3'史诗
    '4'传说
+4.例:
+"dismiss_product_heroSoul":{
+    "0": 4,
+    ......
+}
 
 
-卡牌召唤 品质系数配置
-1.卡牌召唤和品质、等级、好感度有关          
+卡牌召唤 品质系数配置 summon_coe
+1.卡牌召唤和品质、等级、好感度有关
 2.所需金币=品质系数+200*(当前等级-1)+800*当前好感度,好感度=0、1、2、3
 3.品质系数key 为品质id,value为系数
 4.例:
-{
+"summon_coe":{
    "0": 1,
    "1": 2,
    ......
