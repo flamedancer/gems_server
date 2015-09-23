@@ -48,16 +48,16 @@ def api_upgrade(card_id, lv_num):
         lv_num(int): 要升级的等级
     """
     ucards = request.user.user_cards
-    consume_conf = self._cardup_config['lvup_consume_heroSoul']
-    max_card_lv = self._common_config.get('max_card_lv', 15)
-    card_type = self._card_config[card_id]["quality"]
+    consume_conf = ucards._cardup_config['lvup_consume_heroSoul']
+    max_card_lv = ucards._common_config.get('max_card_lv', 15)
+    card_quality = str(ucards._card_config[card_id]["quality"])
     now_lv = ucards.get_card_lv(card_id)
     if now_lv + lv_num >= max_card_lv:
         raise LogicError("The card got the top lv")
     need_heroSoul = 0
     # 计算需消耗英魂
     for add_lv_cnt in range(lv_num): 
-        need_herSoul += consume_conf[card_type][now_lv]
+        need_herSoul += consume_conf[card_quality][now_lv]
         now_lv += 1
     tools.del_user_things(ucards, 'heroSoul', need_heroSoul, 'card_upgrade')
     new_card_info = ucards.add_card_lv(card_id, lv_num)
@@ -74,7 +74,7 @@ def api_add_favor(card_id):
         card_id(str): 要进阶的卡片id
     """
     ucards = request.user.user_cards
-    ucards.add_card_favor(card_id)
+    new_card_info = ucards.add_card_favor(card_id)
     umodified = request.user.user_modified
     umodified.set_modify_info('cards', {card_id: new_card_info})
     return {}
@@ -102,14 +102,20 @@ def api_dismiss(dismiss_type, card_id=''):
     print "dismiss_cards", card_id, dismiss_type 
     ubase = request.user
     ucards = ubase.user_cards
-    get_heroSoul = 20
+    get_heroSoul = 0
+    product_conf = ubase._cardup_config['dismiss_product_heroSoul']
+    card_config = ubase._card_config
     if dismiss_type == 'dismiss_one': 
         tools.del_user_things(ubase, card_id, 1, 'dismiss_card')
+        card_quality = str(card_config[card_id]['quality'])
+        get_heroSoul += product_conf[card_quality]
         adjust_team(ucards, card_id)
     elif dismiss_type == 'keep_one':
         now_num = ucards.cards.get(card_id, {}).get('num', 0)
         del_num = now_num - 1
         tools.del_user_things(ucards, card_id, del_num, 'dismiss_card')
+        card_quality = str(card_config[card_id]['quality'])
+        get_heroSoul += del_num * product_conf[card_quality]
         adjust_team(ucards, card_id)
     elif dismiss_type == 'all_keep_one':
         for cid, cinfo in ucards.cards.items():
@@ -118,12 +124,17 @@ def api_dismiss(dismiss_type, card_id=''):
                 continue
             del_num = cnum - 1
             tools.del_user_things(ucards, cid, del_num, 'dismiss_card')
+            card_quality = str(card_config[cid]['quality'])
+            get_heroSoul += del_num * product_conf[card_quality]
             adjust_team(ucards, cid)
     tools.add_user_things(ubase, 'heroSoul', get_heroSoul, 'dismiss_card')
-    return {'get_heroSoul': 20}
+    return {'get_heroSoul': get_heroSoul}
 
 
 def adjust_team(ucards, card_id):
+    """ 调整编队
+    当原编队中卡片数量不足时，从头到尾剔除不再满足数量条件的卡片
+    """
     cur_num = ucards.cards[card_id]['num']
     if cur_num >= 4:
         return
@@ -149,17 +160,20 @@ def adjust_team(ucards, card_id):
             
 def api_summon(card_id):
     """ api/card/summon
-    4)  卡牌的召唤费用由以下要素决定：
-         i   卡牌品质
-         ii  卡牌等级
-         iii 卡牌好感度
+    召唤所需金币=品质系数+200*(当前等级-1)+800*当前好感度
     Args:
         card_id: 卡牌id
 
     """
     print "summon_cards", card_id
-    ubase = request.user
-    new_info = tools.add_user_things(ubase, card_id, 1, 'summon_card')
+    ucards = request.user.user_cards
+    summon_coe =ucards._cardup_config['summon_coe'] 
+    card_quality = str(ucards._card_config[card_id]["quality"])
+    card_lv = ucards.get_card_lv(card_id)
+    now_favor = int(ucards.cards[card_id]['favor'])
+    need_coin = summon_coe[card_quality] + 200 * (card_lv - 1) + 800 * now_favor
+    tools.del_user_things(ucards, 'coin', need_coin, 'summon_card')
+    new_info = tools.add_user_things(ucards, card_id, 1, 'summon_card')
     # 召唤后数量应该为 1
     if new_info['num'] != 1:
         raise LogicError("The num of this card sould be 0") 

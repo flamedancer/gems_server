@@ -127,7 +127,7 @@
       </table>
       {% elif detail_category == 'cards' %}
       {% for city_id, city in cities|dictsort %}
-      {% if city["team"] %}
+      {% if city["team"] or city["status"] == 2 %}
       <table class="table table-bordered table-condensed table-striped">
         <caption>城{{city_id}}编队 </caption>
         <tr>
@@ -232,10 +232,10 @@
     </div>
     <div class="col-md-3 col-md-offset-2">
       <div class="list-group">
-        <a href="/admin/player_detail?uid={{uid}}" class="list-group-item active">
+        <a href="/admin/player_detail?uid={{uid}}" class="list-group-item list-group-item-info {{'active' if not detail_category else ''}}">
            基本数据
         </a>
-        <a href="/admin/player_detail?uid={{uid}}&category=cards" class="list-group-item">卡片编队</a>
+        <a href="/admin/player_detail?uid={{uid}}&category=cards" class="list-group-item list-group-item-info {{'active' if detail_category == 'cards' else ''}}">卡片编队</a>
       </div>
   </div>
 </div>

@@ -114,7 +114,7 @@ class UserCards(GameModel):
         ucity = self.user_cities
         return ucity.cities[self.cur_team_index]['team']
 
-    def get_card_lv(self, card_id, num):
+    def get_card_lv(self, card_id):
         if card_id not in self.cards:
             raise LogicError("Card not find")
         return self.cards[card_id]['lv']
