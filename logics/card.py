@@ -47,12 +47,35 @@ def api_upgrade(card_id, lv_num):
         card_id(str): 要升级的卡片id
         lv_num(int): 要升级的等级
     """
-    umodified = request.user.user_modified
     ucards = request.user.user_cards
-    max_card_lv = ucards._common_config.get("max_card_lv", 15)
-    if ucards.cards.get(card_id, {}).get('lv', 1) >= max_card_lv:
+    consume_conf = self._cardup_config['lvup_consume_heroSoul']
+    max_card_lv = self._common_config.get('max_card_lv', 15)
+    card_type = self._card_config[card_id]["quality"]
+    now_lv = ucards.get_card_lv(card_id)
+    if now_lv + lv_num >= max_card_lv:
         raise LogicError("The card got the top lv")
+    need_heroSoul = 0
+    # 计算需消耗英魂
+    for add_lv_cnt in range(lv_num): 
+        need_herSoul += consume_conf[card_type][now_lv]
+        now_lv += 1
+    tools.del_user_things(ucards, 'heroSoul', need_heroSoul, 'card_upgrade')
     new_card_info = ucards.add_card_lv(card_id, lv_num)
+    umodified = request.user.user_modified
+    umodified.set_modify_info('cards', {card_id: new_card_info})
+    return {}
+
+
+def api_add_favor(card_id):
+    """ api/card/add_favor
+    卡片进阶(增加好感度)
+
+    Args:
+        card_id(str): 要进阶的卡片id
+    """
+    ucards = request.user.user_cards
+    ucards.add_card_favor(card_id)
+    umodified = request.user.user_modified
     umodified.set_modify_info('cards', {card_id: new_card_info})
     return {}
     
