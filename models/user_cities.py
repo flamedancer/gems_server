@@ -113,5 +113,7 @@ class UserCities(GameModel):
 
     def up_conquer_stage(self, city_id):
         self.cities[city_id]['cur_conquer'] += 1
+        self.put()
+        return {city_id: {'cur_conquer': self.cities[city_id]['cur_conquer']}}
         
 

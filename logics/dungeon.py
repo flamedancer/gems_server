@@ -125,7 +125,8 @@ def api_end(dungeon_type, city_id):
         if str(int(ucities.cur_conquer_stage(city_id)) + 1) not in conquer_config[city_id]:
             ucities.conquer_city(city_id)
         else:
-            ucities.up_conquer_stage(city_id)
+            new_info = ucities.up_conquer_stage(city_id)
+            umodified.set_modified_info('cities', new_info)
         for thing, info in award.items():
             # 'card' : [['1_card', 1]...
             if thing == 'card':
