@@ -41,7 +41,7 @@ class UserProperty(GameModel):
         userlv_config = self._userlv_config
         old_lv = self.lv
         while str(self.lv + 1) in userlv_config and \
-        self.exp >= userlv_config[str(self.lv + 1)]:
+        self.exp >= userlv_config[str(self.lv + 1)]['exp']:
             self.lv += 1
         if str(self.lv + 1) not in userlv_config and \
         self.exp > userlv_config[str(self.lv)]:
@@ -49,6 +49,7 @@ class UserProperty(GameModel):
         modified = {'exp': self.exp}
         if old_lv != self.lv:
             modified['lv'] = self.lv
+        self.put()
         return modified            
 
     def add_thing(self, thing, num):

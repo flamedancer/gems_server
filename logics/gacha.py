@@ -36,6 +36,8 @@ def gacha(gacha_type):
     for card_id in get_cards:
         add_user_things(user, card_id, 1, gacha_type)
 
+    # 打乱顺序
+    random.shuffle(get_cards)
     return get_cards
 
 

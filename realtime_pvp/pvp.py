@@ -17,7 +17,7 @@ from libs.dbs import app
 from logics.login import get_user_info
 from models.user_base import UserBase
 
-port = "9041"
+port = "9081"
 
 all_players = []  # 所有连接成功的玩家
 all_players_lock = Semaphore()
