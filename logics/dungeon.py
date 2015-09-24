@@ -122,7 +122,7 @@ def api_end(dungeon_type, city_id):
             # 加2/3经验 
             add_exp = award['exp'] - int((1.0 / 3) * award['exp'])
             award['exp'] = add_exp
-        if str(int(ucities.cur_conquer_stage(city_id)) + 1) not in stage_conf:
+        if str(int(ucities.cur_conquer_stage(city_id)) + 1) not in conquer_config[city_id]:
             ucities.conquer_city(city_id)
         else:
             ucities.up_conquer_stage(city_id)
