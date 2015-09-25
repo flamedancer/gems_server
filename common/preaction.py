@@ -65,7 +65,7 @@ def prelogic(func):
         result['uid'] = request.user.uid
         result['update_userInfo'] = modified_user_data()
         app.pier.save()
-        print "response=====", result 
+        print "debug_return", result
         return result
     return wrap_func
 

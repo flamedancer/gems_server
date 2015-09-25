@@ -53,10 +53,11 @@ def api_start(dungeon_type, city_id, team_index='', new_team=None):
         enemy_favor = stage_conf['enemy_favor'] 
         enemy_nature = stage_conf['enemy_nature'] 
         enemy_team = []
-        enemy_lv = []
+        base_enemy_lv = []
         for enemy_cid, lv in stage_conf['enemy']:
             enemy_team.append(enemy_cid)
-            enemy_lv.append(lv)
+            base_enemy_lv.append(lv)
+        enemy_lv = calcu_enemy_lv(ubase.user_cards, base_enemy_lv)
 
         umodified = ubase.user_modified
         umodified.temp['dungeon'] = {
@@ -75,6 +76,44 @@ def api_start(dungeon_type, city_id, team_index='', new_team=None):
         }
         return result
     return {}
+
+
+def calcu_enemy_lv(ucards, base_lv):
+    """
+    A敌将最终等级=MIN(15,A敌将最低等级+MAX(0,B))                            
+    A敌将最低等级>=所有敌将平均等级时                           
+        B=f(我方卡牌等级总数)-0.5*g(我方卡牌等级总数)，四舍五入，保留到整数                     
+    A敌将最低等级<所有敌将平均等级时                            
+        B=f(我方卡牌等级总数)+0.5*g(我方卡牌等级总数)，四舍五入，保留到整数                     
+                                
+    其中    A敌将最低等级，后台配置                     
+        所有敌将平均等级=所有敌将等级总和/敌将个数                      
+                                
+        其中当x<15时，f(x)=0.02*x^2-0.04*x+0.02，g(x)=0                     
+        其中当x>=15时，f(x)=0.1*x+2.5，g(x)=0.07*x-1                        
+    """
+    top_lv = ucards._common_config.get('max_card_lv', 15)
+    user_team = ucards.cur_team()
+    user_card_lv = [ucards.get_card_lv(cid) for cid in user_team]
+    aulv = sum(user_card_lv)
+    average = sum(base_lv) * 0.1 / len(base_lv)
+    return_lv = []
+
+    if aulv < top_lv:
+        F = 0.02*aulv**2-0.04*aulv+0.02
+        G = 0
+    else:
+        F = 0.1*aulv+2.5
+        G = 0.07*aulv-1
+
+    for elv in base_lv:
+        if elv >= average:
+            B = F - 0.5*G
+        else:
+            B = F + 0.5*G
+        B = int(round(B)) 
+        return_lv.append(min(top_lv, elv + max(0, B)))
+    return return_lv
 
 
 def api_end(dungeon_type, city_id):

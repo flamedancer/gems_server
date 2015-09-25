@@ -210,8 +210,6 @@ NEED_SYNC_CONFIGS = [
     'language_config',
     'userlv_config',
     'card_config',
-    'update_config',
-    'cardother_config',
     'skill_config',
     'city_config',
     'conquer_config',

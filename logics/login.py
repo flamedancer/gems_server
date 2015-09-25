@@ -100,6 +100,7 @@ def get_update_config(last_update_time):
     new_last_update_time = 0
     for config_name in NEED_SYNC_CONFIGS:
         this_config_update_time = get_config_update_time(config_name)
+        print "config_update_check", config_name, str(this_config_update_time), last_update_time
         if not this_config_update_time:
             continue
         if this_config_update_time > last_update_time:

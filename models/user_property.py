@@ -49,6 +49,9 @@ class UserProperty(GameModel):
         modified = {'exp': self.exp}
         if old_lv != self.lv:
             modified['lv'] = self.lv
+            # 升一级加一点剩余元素掌握度 
+            modified['nature_remain'] = self.add_thing('nature_remain', 
+                self.lv - old_lv)
         self.put()
         return modified            
 
