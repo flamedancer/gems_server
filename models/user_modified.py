@@ -30,7 +30,7 @@ class UserModified(GameModel):
                     if city_id in self.modified['cities']:
                         self.modified['cities'][city_id].update(info[city_id])
                     else:
-                        self.modified['cards'][city_id] = info[city_id]
+                        self.modified['cities'][city_id] = info[city_id]
             else:
                 self.modified['cities'] = info
         else:

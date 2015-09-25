@@ -124,9 +124,13 @@ def api_end(dungeon_type, city_id):
         city_id(str): 要打哪个城，城市id
 
     Returns:
-        award(dir): 奖励
+        coin(int): 奖励 铜钱
+        exp(int): 奖励 经验
+        diamond(int): 奖励 钻石
+        heroSoul(int): 奖励 英魂
+        card(list): 奖励 卡牌 [card_id, num]  卡牌id, 数量
             例:
-             'award' :{
+             {
                 "coin":170,
                 "exp":10,
                 "diamond":10,
