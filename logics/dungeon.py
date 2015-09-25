@@ -94,7 +94,7 @@ def calcu_enemy_lv(ucards, base_lv):
     """
     top_lv = ucards._common_config.get('max_card_lv', 15)
     user_team = ucards.cur_team()
-    user_card_lv = [ucards.get_card_lv(cid) for cid in user_team]
+    user_card_lv = [ucards.get_card_lv(cid) for cid in user_team if cid]
     aulv = sum(user_card_lv)
     average = sum(base_lv) * 0.1 / len(base_lv)
     return_lv = []
