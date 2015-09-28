@@ -19,8 +19,11 @@ from models.user_base import UserBase
 
 port = "9081"
 
-all_players = []  # 所有连接成功的玩家
-all_players_lock = Semaphore()
+ready_players = []  # 所有连接成功的玩家
+ready_players_lock = Semaphore()
+
+pear_dict = {}  # 配对信息
+pear_dict_lock = Semaphore()
 
 INIT_BEAD_LIST = []
 [INIT_BEAD_LIST.extend([i] * 40) for i in range(7)]
@@ -30,15 +33,26 @@ def _make_bead_list():
     random.shuffle(INIT_BEAD_LIST)
     return INIT_BEAD_LIST[:200]
 
-def add_player(player):
-    all_players_lock.acquire()
-    all_players.append(player)
-    all_players_lock.release()
+def add_ready_player(player):
+    ready_players_lock.acquire()
+    ready_players.append(player)
+    ready_players_lock.release()
 
-def del_player(player):
-    all_players_lock.acquire()
-    all_players.remove(player)
-    all_players_lock.release()
+
+def del_ready_player(player):
+   ready_players_lock.acquire()
+   ready_players.remove(player)
+   ready_players_lock.release()
+
+def add_pear_dict(player):
+    pear_dict_lock.acquire()
+    pear_dict[player.uid] = pear_dict[player.opponent]
+    pear_dict_lock.release()
+
+def del_pear_dict(player):
+    pear_dict_lock.acquire()
+    pear_dict.pop(player.uid, None)
+    pear_dict_lock.release()
 
 def pier_clear(*uids):
     """玩家退出pvp的善后处
@@ -143,8 +157,8 @@ class Player(object):
             response_fuc(msg_dict['data'])
 
     def get_suitable_opponent(self):
-        for player in all_players:
-            if player is not self:
+        for player in ready_players:
+            if player is not self and player.fight_status == -2:
                 return player
 
     def req_pvp(self, data):
@@ -172,6 +186,10 @@ class Player(object):
         """
         self.opponent = opponent
         self.opponent.opponent = self
+        del_ready_player(self)
+        del_ready_player(opponent)
+        add_pear_dict(self)
+        add_pear_dict(opponent)
         self.say_log('I get oppoent ' + self.opponent.uid + '|', self.uid)
         self.broad('inf_readying_pvp')
 
@@ -307,7 +325,7 @@ def disconnect_player(player, reason=''):
     player.connecting = False
     player.websocket.close()
 
-    del_player(player)
+    del_pear_dict(player.opponent)
 
     # 如果自己掉线或投降  判定对手胜利
     if player.fight_status == 1 and player.opponent and player.opponent.connecting:
@@ -338,7 +356,7 @@ def application(environ, start_response):
         return ''
     core_id = environ['HTTP_SEC_WEBSOCKET_KEY']
     player = Player(core_id, websocket)
-    add_player(player)
+    add_all_player(player)
     print "\n##Connecting#########################websockets...", core_id, datetime.datetime.now()
 
     try:
