@@ -19,8 +19,8 @@ from models.user_base import UserBase
 
 port = "9081"
 
-ready_players = []  # 所有连接成功的玩家
-ready_players_lock = Semaphore()
+all_players = []  # 所有连接成功的玩家
+all_players_lock = Semaphore()
 
 pear_dict = {}  # 配对信息
 pear_dict_lock = Semaphore()
@@ -33,16 +33,18 @@ def _make_bead_list():
     random.shuffle(INIT_BEAD_LIST)
     return INIT_BEAD_LIST[:200]
 
-def add_ready_player(player):
-    ready_players_lock.acquire()
-    ready_players.append(player)
-    ready_players_lock.release()
+def add_all_player(player:
+    all_players_lock.acquire()
+    all_players.append(player)
+    all_players_lock.release()
 
 
-def del_ready_player(player):
-   ready_players_lock.acquire()
-   ready_players.remove(player)
-   ready_players_lock.release()
+def del_all_player(player):
+   if player not in all_players:
+       return 
+   all_players_lock.acquire()
+   all_players.remove(player)
+   all_players_lock.release()
 
 def add_pear_dict(player):
     pear_dict_lock.acquire()
@@ -50,6 +52,8 @@ def add_pear_dict(player):
     pear_dict_lock.release()
 
 def del_pear_dict(player):
+    if player.uid not in pear_dict:
+        return
     pear_dict_lock.acquire()
     pear_dict.pop(player.uid, None)
     pear_dict_lock.release()
@@ -157,7 +161,7 @@ class Player(object):
             response_fuc(msg_dict['data'])
 
     def get_suitable_opponent(self):
-        for player in ready_players:
+        for player in all_players:
             if player is not self and player.fight_status == -2:
                 return player
 
@@ -186,8 +190,7 @@ class Player(object):
         """
         self.opponent = opponent
         self.opponent.opponent = self
-        del_ready_player(self)
-        del_ready_player(opponent)
+
         add_pear_dict(self)
         add_pear_dict(opponent)
         self.say_log('I get oppoent ' + self.opponent.uid + '|', self.uid)
@@ -318,8 +321,10 @@ class Player(object):
 
 
 def disconnect_player(player, reason=''):
-    if not player.connecting and not player in all_players:
+    if not player.connecting:
         return
+    del_all_player(player)
+    del_pear_dict(player.opponent)
     pier_clear(player.uid)
 
     player.connecting = False
