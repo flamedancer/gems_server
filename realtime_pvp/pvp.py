@@ -53,7 +53,7 @@ def add_pear_dict(player):
     pear_dict_lock.release()
 
 def del_pear_dict(player):
-    if player.uid not in pear_dict:
+    if not player or player.uid not in pear_dict:
         return
     pear_dict_lock.acquire()
     pear_dict.pop(player.uid, None)
