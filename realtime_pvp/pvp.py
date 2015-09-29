@@ -6,6 +6,7 @@ from json import dumps, loads
 import random
 import time
 import datetime
+import gevent
 import geventwebsocket
 from geventwebsocket import WebSocketServer
 from gevent.lock import Semaphore
@@ -33,7 +34,7 @@ def _make_bead_list():
     random.shuffle(INIT_BEAD_LIST)
     return INIT_BEAD_LIST[:200]
 
-def add_all_player(player:
+def add_all_player(player):
     all_players_lock.acquire()
     all_players.append(player)
     all_players_lock.release()
@@ -48,7 +49,7 @@ def del_all_player(player):
 
 def add_pear_dict(player):
     pear_dict_lock.acquire()
-    pear_dict[player.uid] = pear_dict[player.opponent]
+    pear_dict[player.uid] = player.opponent
     pear_dict_lock.release()
 
 def del_pear_dict(player):
@@ -162,7 +163,7 @@ class Player(object):
 
     def get_suitable_opponent(self):
         for player in all_players:
-            if player is not self and player.fight_status == -2:
+            if player is not self and player.fight_status == -1:
                 return player
 
     def req_pvp(self, data):
@@ -383,10 +384,11 @@ def check_dead_user():
             # print user.uid
             if user.last_recv_fg == False:
                 print "disconnect ", user.uid
-                disconnect_player(user, reason='network-error:no-msg-in-15s')
+                disconnect_player(user, reason='network-error:no-msg-in-30s')
+                print "now the connecting user counter is", len(all_players) 
             else:
                 user.last_recv_fg = False
-        time.sleep(15000)
+        gevent.sleep(60)
 
 
 
@@ -394,9 +396,9 @@ def check_dead_user():
 if __name__ == "__main__":
     path = os.path.dirname(geventwebsocket.__file__)
     agent = "gevent-websocket/%s" % (geventwebsocket.get_version())
+    print "start check user connecting"         # 开启检查掉线玩家进程
+    gevent.spawn(check_dead_user).start()
 
-    # print "start check user connecting"         # 开启检查掉线玩家进程
-    # thread.start_new_thread(check_dead_user, ())
     try:
         print "Running %s from %s" % (agent, path)
         print "start pvp serve", datetime.datetime.now()
