@@ -163,7 +163,7 @@ class Player(object):
 
     def get_suitable_opponent(self):
         for player in all_players:
-            if player is not self and player.fight_status == -1:
+            if player.uid and player.uid != self.uid and player.fight_status == -1:
                 return player
 
     def req_pvp(self, data):

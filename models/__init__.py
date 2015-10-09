@@ -19,7 +19,9 @@ class GameModel(UserModel):
 
     @classmethod
     def create(cls, uid):
-        return cls(uid) 
+        obj = cls(uid)
+        obj.put()
+        return obj 
 
     @classmethod
     def get_no_none(cls, uid):
