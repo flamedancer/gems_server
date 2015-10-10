@@ -9,25 +9,12 @@ class UserArena(GameModel):
     """ 玩家竞技场
     
     Attribute:
-        team: 玩家编队list, len为common_config['team_number'] 每个玩家总共可以编队数,
-              其中每个item为一个编队, card_id组成的list,''代表这个位置没有武将,len为common_config['team_length'],
-             eg:
-                [['1_card', '', '2_card', '3_card', ''],[],[],[],[]]
-        cards: 玩家所有武将信息dict, key为武将id, 
-                value为武将数据dict:
-                    lv  武将等级
-                    exp  武将经验
-                    favor 武将好感度
-                    num 有多少个此武将
-                eg:
-                {
-                    '1_card':{
-                        'lv': 0,
-                        'exp':0,
-                        'favor:0,
-                        'num':1,
-                    }
-                }
+        step:  竞技场状态 0未开启竞技  1选第一张卡 2选第二张卡...  5准备开始竞技 6完成竞技等待领取奖励 
+        selected_cards: 玩家当前已近选择卡牌 
+        cards_pool: 当前竞技场给的候选卡组
+        total: 当前竞技场共打了几场
+        win: 当前竞技场赢了几场,赢了10次或者输了2次这次竞技就不能再打了
+        has_fight_uids: 玩家此次竞技打过的对手,不和重复的对手和自己打
     """
     def __init__(self, uid=''):
         self.uid = uid

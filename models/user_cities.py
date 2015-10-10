@@ -21,7 +21,7 @@ class UserCities(GameModel):
     """
     def __init__(self, uid=''):
         self.uid = uid
-        self.capital_city = '1'
+        self.capital_city = '0'
         self.cities = {}
 
     @classmethod
@@ -75,11 +75,12 @@ class UserCities(GameModel):
         return modified
 
     def conquer_city(self, city_id):
-        """ 开城
+        """ 征服城市
         """
         if not self.has_open_city(city_id):
             raise LogicError("Should open it first")
         self.cities[city_id]['status'] = 2
+        self.up_city_lv(city_id)
         self.put()
         return {city_id: {'status': 2}}
 
@@ -116,5 +117,12 @@ class UserCities(GameModel):
         self.cities[city_id]['cur_conquer'] += 1
         self.put()
         return {city_id: {'cur_conquer': self.cities[city_id]['cur_conquer']}}
+
+    def up_city_lv(self, city_id):
+        max_city_lv = self._common_config['max_city_lv']
+        self.cities[city_id]['lv'] = max(self.cities[city_id]['lv' + 1, max_city_lv)
+        self.put()
+        
+        
         
 

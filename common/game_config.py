@@ -71,6 +71,12 @@ u'''
 1.开城消耗金币，根据已开城数计算
 2.数组index为已开城数，对应项为需要金币数
 
+开启竞技场需要金币open_arena_coin
+每场竞技战斗消耗体力arena_fight_stamina
+竞技场对手卡牌好感度arena_card_favor
+竞技场对手卡牌等级arena_card_lv
+
+
 ''',
     'userlv_config': \
 u'''

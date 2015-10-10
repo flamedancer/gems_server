@@ -112,8 +112,11 @@ def api_cancel_arena():
     取消这次竞技
     """
     uarena = request.user.user_arena
-    uarena.set_step(0)
+    if not self.can_fight():
+        raise LogicError('Cannot cancel')
+    uarena.set_step(6)
     return {}
+
 
 def api_get_award():
     """ api/arena/get_award

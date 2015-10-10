@@ -139,7 +139,7 @@ class Player(object):
 
     def handle_msg(self, msg):
         if msg is None:
-            disconnect_player(self, reason='network-error')
+            disconnect_player(self, reason='network-error: msg is None')
             return
         msg = msg.strip()
         debug_print("<<<<<<reseve", self.core_id, self.uid, msg)
@@ -369,10 +369,13 @@ def application(environ, start_response):
         while player.connecting:
             message = websocket.receive()
             player.handle_msg(message)
-    except geventwebsocket.WebSocketError, ex:
+    except geventwebsocket.WebSocketError as ex:
         print "{0}: {1}".format(ex.__class__.__name__, ex)
+    except Exception as ex:
+        print ex
+        raise ex
     finally:
-        disconnect_player(player, reason='network-error')
+        disconnect_player(player, reason='Give up connecting finally')
 
 
 def check_dead_user():
@@ -384,11 +387,11 @@ def check_dead_user():
             # print user.uid
             if user.last_recv_fg == False:
                 print "disconnect ", user.uid
-                disconnect_player(user, reason='network-error:no-msg-in-30s')
+                disconnect_player(user, reason='Too long time no-msg-in-or-out')
                 print "now the connecting user counter is", len(all_players) 
             else:
                 user.last_recv_fg = False
-        gevent.sleep(60)
+        gevent.sleep(600)
 
 
 
