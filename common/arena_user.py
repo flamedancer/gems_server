@@ -62,7 +62,7 @@ class ArenaUser(BaseModel):
             'nature_3': selected_property.nature_3,
             'nature_4': selected_property.nature_4,
             'nature_5': selected_property.nature_5,
-            'team': self.uids[selected_uid],
+            'team': self.users[selected_uid],
         }
 
     def make_virtual_user(self):

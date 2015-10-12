@@ -89,12 +89,13 @@ def api_start_fight():
             team: 敌人卡片队伍
     """
     uarena = request.user.user_arena
-    if not self.can_fight():
+    if not uarena.can_fight():
         raise LogicError('Cannot fight')
     uarena.inc_total()
     except_uids = uarena.has_fight_uids + [uarena.uid]
-    enemey_info = ArenaUser.get_random_user(except_uids=excep_uids)
-    ArenaUser.add_user(uarena.uid, uarena.selected_cards)
+    arena_user = ArenaUser.get_instance()
+    enemy_info = arena_user.get_random_user(except_uids=excep_uids)
+    arena_user.add_user(uarena.uid, uarena.selected_cards)
     return {'enemy': enemy_info}
 
 
@@ -112,7 +113,7 @@ def api_cancel_arena():
     取消这次竞技
     """
     uarena = request.user.user_arena
-    if not self.can_fight():
+    if not uarena.can_fight():
         raise LogicError('Cannot cancel')
     uarena.set_step(6)
     return {}
@@ -122,7 +123,9 @@ def api_get_award():
     """ api/arena/get_award
     领取竞技奖励
     """
+    uarena = request.user.user_arena
     awards = {
         'coin': 20,
     }
+    uarena.reset_arena()
     return {'awards': awards}
