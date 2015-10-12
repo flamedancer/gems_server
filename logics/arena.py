@@ -150,4 +150,14 @@ def api_set_team(new_team):
     uarena.selected_cards = new_team
     uarena.put()
     return {}
+
+def api_view_award():
+    """ api/view_award
+     查看奖励
+    """
+    uarena = request.user.user_arena
+    awards = {
+        'coin': 20,
+    }
+    return {'awards': awards}
     

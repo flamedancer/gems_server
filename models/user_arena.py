@@ -28,6 +28,7 @@ class UserArena(GameModel):
         self.total = 0  # 此次竞技已打场数
         self.win = 0  # 此次竞技已赢场数
         self.has_fight_uids = [] # 已打过的uid
+        self.put()
 
     def is_in_arena(self):
         return self.step != 0
