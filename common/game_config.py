@@ -45,6 +45,13 @@ CONFIG_TITLES = [
          ],
     },
     {
+        'category': u'竞技',
+        'content':[
+            ('arenapool_config', u'竞技卡池配置'),
+            ('arenaaward_config', u'竞技奖励配置'),
+        ],
+    },
+    {
         'category': u'物品',
         'content':[
             ('prop_config', u'道具配置'),
@@ -203,8 +210,191 @@ u'''
             "weight": 30,
         },
 }
+''',
+    'conquer_config':\
+u'''
+key  (城市id)                   
+    key  （floor_index）                
+        name    str 关卡名字    
+        stamina int 消耗体力    
+        award   dict    战场掉落    
+        enemy    list    敌将以及基础等级    
+        enemy_nature    int 对手全元素掌握度    
+        enemy_favor int 敌将好感度  
+                    
+                    
+                    
+例如：                  
+{ "0": {                    
+    "1": {              
+        "name": "第一关"，          
+        "stamina"： 10，            
+        "enemy"：[["1_card",1], ["3_card",2],["5_card",3], ["9_card",4]],           
+        "enemy_nature": 3,          
+        "enemy_favor": 1,           
+        "award": {          
+            "exp": 10,      
+            "coin": 10,     
+            "heroSoul",     
+            "diamond": 1,       
+            "1_card": 2     卡牌:数量
+            "2_prop"：3     道具：数量
+        },          
+    },              
+    "2": {              
+    ……              
+    ……              
+    ……              
+''',
+    'conversation_config':\
+u'''
+        字段    类型    解释                
+                                
+key  (城市id)                               
+    key  （floor_index）                            
+        before  list    进场对话
+                                 说话者  说话者头像id    语句
+                                 self    ""  xxx
+                                 npc "1_card"    xxx
+                                 enemy   "2_card"    xxx
+                                
+        after   list    出场对话                
+                                
+                                
+                                
+                                
+例如：                              
+{ "0": {                                
+    "1": {                          
+        "before":[  ["self",    "", "你是谁"]，         
+            ["npc", "1_card",   "我是npc"]，            
+            ["self",    "", "..."]，            
+            ["npc", "", "xxx"]，            
+            ["enemy",   "2_card",   "插标卖耳"]，           
+                                
+        ],                      
+        "after":[                       
+        …                       
+        …                       
+        ..                      
+        ],                      
+''',
+    'challenge_config':\
+u'''
+            字段    类型    解释    
+                        
+key  (城市id)                       
+    key  （floor_index 大关卡id）                   
+        key  （room_index小关卡id）             
+            name    str 关卡名字    
+            stamina int 消耗体力    
+            award   dict    战场掉落    
+            enemy   list    敌将以及等级    
+            enemy_nature    int 对手全元素掌握度    
+            enemy_favor int 敌将好感度  
+            ext_award   dict    额外奖励    
+            ext_content str 额外奖励条件    
+                        a)       己方卡牌不可阵亡
+                        b)       上阵卡牌必须全部为某阵营
+                        c)       上阵卡牌必须全部带有某属性
+                        d)       上阵卡牌必须包括某某卡牌
+                        
+                        
+例如：                      
+{ "0": {                        
+    "1": {                  
+        "1":{               
+            "name": "第一关"，          
+            "stamina"： 10，            
+            "enemy"：[["1_card",1], ["3_card",2],["5_card",3], ["9_card",4]],           
+            "enemy_nature": 3,          
+            "enemy_favor": 1,           
+            "award": {          
+                "exp": 10,      
+                "coin": 10,     
+                "heroSoul",     
+                "diamond": 1,       
+                "1_card": 2     卡牌:数量
+                "2_prop"：3     道具：数量
+            },          
+            "ext_award": {          
+                "coin" :3,      
+            },          
+            "ext_content": "a",         
+        }               
+    },                  
+    "2": {                  
+    ……                  
+    ……                  
+    ……                  
+''',
 
+    'arenapool_config':\
+u'''
+1.分为两层:
+   第一层key为选第几张阶段（从1开始）；
+   第二层key为唯一标示符，value为具体物品信息
+2.第三层有个特殊的字段 weight, 代表此卡权重
+    
+3.例：
+{
+        "1":{
+              "1":{
+                  "id":"5001_card",
+                  "weight":5,
+              },
+              "2":{
+                  "id":"5002_card",
+                  "weight":5,
+              },
+              "3":{
+                  "id":"5003_card",
+                  "weight":10,
+              },
+              "4":{
+                  "id":"5003_card",
+                  "weight":10,
+              },
+           },
+        "2":{
+            "1":{
+                "id":"5001_card",
+                "weight":10,
+            },
+            "2":{
+                "id":"4002_card",
+                "weight":10,
+            },
+            '3':{
+                "id":"4003_card",
+                "weight":10,
+            },
+            '4':{
+                "id":"4004_card",
+                "weight":10,
+            },
+        },
+    ....
+}
+''',
 
+    'arenaaward_config': \
+u'''
+1.key 为赢了几场 value为具体奖励
+2.例:
+{
+    "0": {
+        "coin": 3,
+        "card": "1_card",
+        "stamina": 10,
+    },
+    "1": {
+        "coin": 3,
+        "card": "1_card",
+        "stamina": 10,
+    },
+    ....
+}
 
 ''',
 

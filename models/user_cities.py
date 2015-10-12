@@ -11,13 +11,14 @@ class UserCities(GameModel):
         cities: 各城市信息dict, key为城市id, 不在此里的其它city
                 为战争迷雾状态
             value 为城市dict:
-                status:  0未开启  1开启  2已征服
+                status:  0未开启  1开启  2已征服 3完成挑战
                 cur_conquer: 征服模式当前战场index
                 lv    ： 等级
                 team  :  城市卫队
                 jeton :  该城市经费（城市代币）
                 reputation: 声望值
                 reputation_lv: 声望等级
+                challenge: 挑战模式各个大关卡当前进行深度
     """
     def __init__(self, uid=''):
         self.uid = uid
@@ -53,6 +54,7 @@ class UserCities(GameModel):
             'reputation_lv': 0,
             'team': [],
             'cur_conquer': 1,
+            'challenge': {}
         }
         self.put()
         return {city_id: self.cities[city_id]}
