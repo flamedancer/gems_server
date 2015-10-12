@@ -77,9 +77,11 @@ def api_select_card(step, card_id):
     return {}
 
 
-def api_start_fight():
+def api_start_fight(new_team=None):
     """ api/arena/start_fight
     开打
+    Args:
+        new_team(list): 战斗编队
     Returns:
         enemy(dict):
             uid: 敌人uid
@@ -91,10 +93,12 @@ def api_start_fight():
     uarena = request.user.user_arena
     if not uarena.can_fight():
         raise LogicError('Cannot fight')
+    if new_team:
+        api_set_team(new_team)
     uarena.inc_total()
     except_uids = uarena.has_fight_uids + [uarena.uid]
     arena_user = ArenaUser.get_instance()
-    enemy_info = arena_user.get_random_user(except_uids=excep_uids)
+    enemy_info = arena_user.get_random_user(except_uids=except_uids)
     arena_user.add_user(uarena.uid, uarena.selected_cards)
     return {'enemy': enemy_info}
 
@@ -129,3 +133,18 @@ def api_get_award():
     }
     uarena.reset_arena()
     return {'awards': awards}
+
+
+def api_set_team(new_team):
+    """ api/arena/set_team
+    更改竞技编队队形
+    Args:
+        new_team(list): 新的卡片编队 
+    """
+    uarena = request.user.user_arena
+    if sorted(new_team) != sorted(uarena.selected_cards):
+        raise ParamsError('Card not in old team')
+    uarena.selected_cards = new_team
+    uarena.put()
+    return {}
+    
