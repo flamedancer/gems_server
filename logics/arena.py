@@ -103,12 +103,15 @@ def api_start_fight(new_team=None):
     return {'enemy': enemy_info}
 
 
-def api_end_fight():
+def api_end_fight(win=True):
     """ api/arena/end_fight
     战斗胜利
+    Argv:
+        win(bool): 是否胜利
     """ 
-    uarena = request.user.user_arena
-    uarena.inc_win()
+    if win:
+        uarena = request.user.user_arena
+        uarena.inc_win()
     return {}
 
 
