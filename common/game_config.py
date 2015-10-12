@@ -310,6 +310,7 @@ key  (城市id)
             "enemy_nature": 3,          
             "enemy_favor": 1,           
             "award": {          
+                "reputation", 当前城市声望
                 "exp": 10,      
                 "coin": 10,     
                 "heroSoul",     
@@ -384,14 +385,22 @@ u'''
 2.例:
 {
     "0": {
-        "coin": 3,
-        "card": "1_card",
-        "stamina": 10,
+         "exp": 10,      
+         "coin": 10,     
+         "heroSoul",     
+         "diamond": 1,       
+         "1_card": 2     卡牌:数量
+         "2_prop"：3     道具：数量
+         "stamina": 10,
     },
     "1": {
-        "coin": 3,
-        "card": "1_card",
-        "stamina": 10,
+         "exp": 10,      
+         "coin": 10,     
+         "heroSoul",     
+         "diamond": 1,       
+         "1_card": 2     卡牌:数量
+         "2_prop"：3     道具：数量
+         "stamina": 10,
     },
     ....
 }
