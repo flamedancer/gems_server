@@ -77,8 +77,8 @@ def add_user_awards(user, award, way):
         # 'card' : [['1_card', 1]...
         if thing == 'card':
             for cid, num in info:
-                add_user_things(ubase, cid, num, way)
+                add_user_things(user, cid, num, way)
         else:
-            add_user_things(ubase, thing, info, way)
+            add_user_things(user, thing, info, way)
         
 

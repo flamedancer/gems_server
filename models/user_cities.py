@@ -134,7 +134,7 @@ class UserCities(GameModel):
 
     def up_city_lv(self, city_id):
         max_city_lv = self._common_config['max_city_lv']
-        self.cities[city_id]['lv'] = max(self.cities[city_id]('lv' + 1, max_city_lv))
+        self.cities[city_id]['lv'] = max(self.cities[city_id]['lv'] + 1, max_city_lv))
         self.put()
 
     def up_challenge_stage(self, city_id, floor):
@@ -150,16 +150,15 @@ class UserCities(GameModel):
                 self.up_city_lv(city_id)
             self.refresh_challenge(city_id)
         self.put()
-        return self.cities[city_id]['challenge']
+        return {city_id: {'challenge': self.cities[city_id]['challenge'],
+                          'status': self.cities[city_id]['status']}}
 
     def refresh_challenge(self, city_id):
+        if not self.cities[city_id]['status'] >= 3:
+            raise LogicError('Cannot refresh this city')
         city_challenge_conf = self._challenge_config[city_id]
         sample_city = random.sample(city_challenge_conf)
         self.cities[city_id]['challenge'] = {city_id: 1 for city_id in sample_city}
         self.put()
-        
-        
-        
-        
-        
+        return {city_id: {'challenge': self.cities[city_id]['challenge']}}
 

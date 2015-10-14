@@ -13,6 +13,14 @@ def gacha(gacha_type):
         钻石抽: diamond_gacha
     """
     user = request.user
+    common_config = user._common_config
+    if gacha_type == 'coin_gacha':
+        need_coin = common_config['gacha_coin']
+        del_user_things(user, 'coin', need_coin, gacha_type)
+    elif gacha_type == 'diamond_gacha':
+        need_diamond = common_config['gacha_diamond']
+        del_user_things(user, 'diamond', need_diamond, gacha_type)
+    
     get_cards = []
 
     gacha_conf = user._gacha_config[gacha_type]

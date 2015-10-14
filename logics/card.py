@@ -57,7 +57,7 @@ def api_upgrade(card_id, lv_num):
     need_heroSoul = 0
     # 计算需消耗英魂
     for add_lv_cnt in range(lv_num): 
-        need_herSoul += consume_conf[card_quality][now_lv]
+        need_heroSoul += consume_conf[card_quality][now_lv]
         now_lv += 1
     tools.del_user_things(ucards, 'heroSoul', need_heroSoul, 'card_upgrade')
     new_card_info = ucards.add_card_lv(card_id, lv_num)

@@ -83,6 +83,11 @@ u'''
 竞技场双方卡牌好感度arena_card_favor
 竞技场双方卡牌等级arena_card_lv
 
+刷新挑战大关卡需要金币refresh_challenge_coin
+
+金币抽将消耗金币gacha_coin
+钻石抽奖消耗钻石gahca_diamond
+
 
 ''',
     'userlv_config': \
@@ -419,6 +424,7 @@ NEED_SYNC_CONFIGS = [
     'city_config',
     'conquer_config',
     'conversation_config',
+    'challenge_config',
 ]
 
 

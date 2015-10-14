@@ -207,7 +207,8 @@ def api_end(dungeon_type, city_id, has_dead_mem):
                     award[thing] = info
         tools.add_user_awards(ubase, award, 'conquer')
         new_info = ucities.up_challenge_stage(city_id, floor)
-        return {'awards': award, 'new_info': new_info}
+        umodified.set_modify_info('cities', new_info)
+        return award
     
 
 
@@ -240,7 +241,20 @@ def can_get_ext_award(user, ext_term, has_dead_mem):
     return True
             
         
-        
+def api_refresh_challenge_floor(city_id):        
+    """ api/dungeon/refresh_challenge_floor
+    刷新挑战模式大关卡
+    Argvs:
+        city_id(str): 需刷新的城市id
+    """
+    ubase = request.user
+    ucities = ubase.user_cities
+    need_coin = ubase._common_config['refresh_challenge_coin']
+    tools.del_user_things(ubase, 'coin', need_coin, 'refresh_challenge_floor')
+    new_info = ucities.refresh_challenge(city_id)
+    umodified = ubase.user_modified
+    umodified.set_modify_info('cities', new_info)
+    return {}
         
     
     

@@ -5,8 +5,8 @@
 """
 import datetime
 
-from apps.oclib.client import Redis
-import apps.settings as settings
+from libs.client import Redis
+import settings
 
 Redis_Conf = settings.STORAGE_CONFIG[settings.STORAGE_INDEX]['realtime_pvp_redis']
 
