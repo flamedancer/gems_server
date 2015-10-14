@@ -1,5 +1,6 @@
 # -*- encoding: utf-8*
 
+import random
 from models import GameModel
 from common.exceptions import *
 
@@ -7,18 +8,18 @@ class UserCities(GameModel):
     """ 城市系统
 
     Attribute:
-        captial_city: 主城id
-        cities: 各城市信息dict, key为城市id, 不在此里的其它city
+        captial_city(str): 主城id
+        cities: 各城市信息dict, key为城市id(str), 不在此里的其它city
                 为战争迷雾状态
             value 为城市dict:
-                status:  0未开启  1开启  2已征服 3完成挑战
-                cur_conquer: 征服模式当前战场index
-                lv    ： 等级
-                team  :  城市卫队
-                jeton :  该城市经费（城市代币）
-                reputation: 声望值
-                reputation_lv: 声望等级
-                challenge: 挑战模式各个大关卡当前进行深度
+                status(int):  0未开启  1开启  2已征服 3完成一轮挑战
+                cur_conquer(int): 征服模式当前战场index
+                lv(int)    :  等级
+                team(int)  :  城市卫队
+                jeton(int) :  该城市经费（城市代币）
+                reputation(int): 声望值
+                reputation_lv(int): 声望等级
+                challenge(dict): 挑战模式各个大关卡对应的当前进行深度
     """
     def __init__(self, uid=''):
         self.uid = uid
@@ -83,6 +84,10 @@ class UserCities(GameModel):
             raise LogicError("Should open it first")
         self.cities[city_id]['status'] = 2
         self.up_city_lv(city_id)
+        # 初始化挑战的关卡
+        challenge_config = self._challenge_config
+        for floor in challenge_config[city_id]:
+            self.cities[city_id]['challenge'][floor] = 1
         self.put()
         return {city_id: {'status': 2}}
 
@@ -109,6 +114,13 @@ class UserCities(GameModel):
             return True
         return False
 
+    def can_challenge_city_floor(self, city_id, floor):
+        if self.has_open_city(city_id) and \
+            self.cities[city_id]['status'] >= 2 and \
+            self.cities[city_id]['challenge'].get(floor, 6) < 6:
+            return True
+        return False
+
     def get_opened_city_num(self):
         return len([city for city in self.cities if self.cities[city]['status'] >=1])
 
@@ -124,6 +136,29 @@ class UserCities(GameModel):
         max_city_lv = self._common_config['max_city_lv']
         self.cities[city_id]['lv'] = max(self.cities[city_id]('lv' + 1, max_city_lv))
         self.put()
+
+    def up_challenge_stage(self, city_id, floor):
+        self.cities[city_id]['challenge'][floor] += 1
+        self.put()
+        # 检查是否全部通关
+        for room in self.cities[city_id]['challenge'].values():
+            if room <= 5:
+                break
+        else:
+            if self.cities[city_id]['status'] == 2:
+                self.cities[city_id]['status'] = 3
+                self.up_city_lv(city_id)
+            self.refresh_challenge(city_id)
+        self.put()
+        return self.cities[city_id]['challenge']
+
+    def refresh_challenge(self, city_id):
+        city_challenge_conf = self._challenge_config[city_id]
+        sample_city = random.sample(city_challenge_conf)
+        self.cities[city_id]['challenge'] = {city_id: 1 for city_id in sample_city}
+        self.put()
+        
+        
         
         
         

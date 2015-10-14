@@ -80,8 +80,8 @@ u'''
 
 开启竞技场需要金币open_arena_coin
 每场竞技战斗消耗体力arena_fight_stamina
-竞技场对手卡牌好感度arena_card_favor
-竞技场对手卡牌等级arena_card_lv
+竞技场双方卡牌好感度arena_card_favor
+竞技场双方卡牌等级arena_card_lv
 
 
 ''',
@@ -293,11 +293,11 @@ key  (城市id)
             enemy_nature    int 对手全元素掌握度    
             enemy_favor int 敌将好感度  
             ext_award   dict    额外奖励    
-            ext_term str 额外奖励条件    
+            ext_term list 额外奖励条件 例如: ["a", "b3", "c5"]  
                         a       己方卡牌不可阵亡
                         b*      上阵卡牌必须全部为*阵营 例: b2 全属于尤克特拉希尔城
-                        c*      上阵卡牌必须全部带有某属性 例: c2 全有绿元素 
-                        d*      上阵卡牌必须包括某某卡牌 例:  d3 阵营要有斯雷普尼尔
+                        c*      上阵卡牌必须全部带有*属性 例: c2 全有绿元素 
+                        d*      上阵卡牌必须包括*卡牌 例:  d3 战斗编队要有3_card
                         
                         
 例如：                      
@@ -321,7 +321,7 @@ key  (城市id)
             "ext_award": {          
                 "coin" :3,      
             },          
-            "ext_term": "a",
+            "ext_term": ["a"],
         }               
     },                  
     "2": {                  
@@ -389,8 +389,8 @@ u'''
          "coin": 10,     
          "heroSoul",     
          "diamond": 1,       
-         "1_card": 2     卡牌:数量
-         "2_prop"：3     道具：数量
+         "card": [  ["1_card", 1],  ["2_card", 2],…..], # [ [卡牌id, 数量], ..
+         "prop": [  ["1_prop", 1],  ["2_prop", 2],…..],
          "stamina": 10,
     },
     "1": {
@@ -398,8 +398,8 @@ u'''
          "coin": 10,     
          "heroSoul",     
          "diamond": 1,       
-         "1_card": 2     卡牌:数量
-         "2_prop"：3     道具：数量
+         "card": [  ["1_card", 1],  ["2_card", 2],…..], # [ [卡牌id, 数量], ..
+         "prop": [  ["1_prop", 1],  ["2_prop", 2],…..],
          "stamina": 10,
     },
     ....

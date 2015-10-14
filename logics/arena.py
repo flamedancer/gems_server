@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 """ 竞技场逻辑
 """
-
+import time
 from bottle import request
 from common.exceptions import *
+from common import tools 
 from common.arena_user import ArenaUser
-from logics import gacha
+from common.utils import get_key_by_weight_dict
 
 
 def api_check_arena():
@@ -38,6 +39,21 @@ def api_check_arena():
     return uarena.pack_info()
 
 
+def get_arena_cards(user, step):
+    arena_cards = []
+    cardpool_conf = user._arenapool_config[str(step)]
+    if len(cardpool_conf) < 3:
+        raise LogicError('Cardpool cards num less than 3') 
+    cid_rate_conf = {key: value['weight'] for key, value in cardpool_conf.items()}
+    for cnt in range(0, 3):
+        card_key = get_key_by_weight_dict(cid_rate_conf)
+        get_card = cardpool_conf[card_key]['id']
+        arena_cards.append(get_card)
+        cid_rate_conf.pop(card_key)
+    return arena_cards
+        
+
+
 def api_new_arena():
     """ api/arena/new_arena
     开启新的竞技场
@@ -48,10 +64,15 @@ def api_new_arena():
     if uarena.is_in_arena():
         raise LogicError('Aready in arena') 
     
-    team_length = uarena._common_config['team_length']
+    common_config = uarena._common_config
+    # 扣金币
+    need_coin = common_config['open_arena_coin'] 
+    tools.del_user_things(uarena, 'coin', need_coin, 'new_arena')
+    
+    team_length = common_config['team_length']
     cards_pool = []
-    for cnt in range(team_length):
-        cards_pool.append(gacha.gacha('diamond_gacha'))
+    for step in range(1, team_length + 1):
+        cards_pool.append(get_arena_cards(uarena, step))
     uarena.set_cards_pool(cards_pool) 
     uarena.set_step(1)
     return {'cards_pool': cards_pool}
@@ -89,18 +110,36 @@ def api_start_fight(new_team=None):
             lv: 敌人等级
             nature_*: 敌人各元素掌握度
             team: 敌人卡片队伍
+        card_lv(int): 双方卡片等级
+        card_favor(int): 双方卡片好感度
+        
     """
     uarena = request.user.user_arena
     if not uarena.can_fight():
         raise LogicError('Cannot fight')
     if new_team:
         api_set_team(new_team)
+    common_config = uarena._common_config
+    # 扣除体力
+    need_stamina = common_config['arena_fight_stamina']
+    tools.del_user_things(uarena, 'stamina', need_stamina, 'start_arena')
+
     uarena.inc_total()
     except_uids = uarena.has_fight_uids + [uarena.uid]
     arena_user = ArenaUser.get_instance()
     enemy_info = arena_user.get_random_user(except_uids=except_uids)
     arena_user.add_user(uarena.uid, uarena.selected_cards)
-    return {'enemy': enemy_info}
+    # 记录战前信息
+    umodified = uarena.user_modified
+    umodified.temp['dungeon'] = {
+        'type': 'arena',
+        'time': int(time.time()),
+    }
+    umodified.put()
+    return {'enemy': enemy_info,
+            'card_lv': common_config['arena_card_lv'],
+            'card_favor': common_config['arena_card_favor'],
+    }
 
 
 def api_end_fight(win=True):
@@ -111,6 +150,15 @@ def api_end_fight(win=True):
     """ 
     if win:
         uarena = request.user.user_arena
+        umodified = uarena.user_modified
+        if 'dungeon' not in umodified.temp:
+            raise LogicError('Should start fight first')
+        start_info = umodified.temp['dungeon']
+        if start_info.get('type') != 'arena':
+            raise LogicError('End the wrong fight')
+        now = int(time.time())
+        if now - start_info['time'] <= 1:
+            raise LogicError("rush a dungeon to quick")
         uarena.inc_win()
     return {}
 
@@ -131,11 +179,10 @@ def api_get_award():
     领取竞技奖励
     """
     uarena = request.user.user_arena
-    awards = {
-        'coin': 20,
-    }
+    award = uarena._arenaaward_config[str(uarena.win)]
+    tools.add_user_awards(uarena, award, 'arena')
     uarena.reset_arena()
-    return {'awards': awards}
+    return {'awards': award}
 
 
 def api_set_team(new_team):
@@ -156,8 +203,6 @@ def api_view_award():
      查看奖励
     """
     uarena = request.user.user_arena
-    awards = {
-        'coin': 20,
-    }
-    return {'awards': awards}
+    award = uarena._arenaaward_config[str(uarena.win)]
+    return {'awards': award}
     

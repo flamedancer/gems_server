@@ -8,11 +8,8 @@ from logics import card
 from common import tools
 from common.exceptions import *
 
-def check_can_start():
-    pass
 
-
-def api_start(dungeon_type, city_id, team_index='', new_team=None):
+def api_start(dungeon_type, city_id, team_index='', new_team=None, floor=''):
     """ api/dungeon/start
     进战场
     1.进战场先扣体力 
@@ -22,6 +19,7 @@ def api_start(dungeon_type, city_id, team_index='', new_team=None):
         city_id(str): 要打哪个城，城市id
         team_index(str): 选取的城市编队id
         new_team(list->str): 新的战斗卡片队伍
+        floor(str): 挑战模式选取的大关卡
 
     Returns:
         enemy_team(list): 敌将编队
@@ -29,7 +27,7 @@ def api_start(dungeon_type, city_id, team_index='', new_team=None):
         enemy_favor(int): 敌将全好感度
         enemy_nature(int): 敌将全元素掌握度
     """
-    check_can_start()
+    result = {}
     if team_index != '' and new_team is not None:
         if set(new_team) == set(['']):
             raise ParmasError('Can\'t set empty team !')
@@ -38,8 +36,6 @@ def api_start(dungeon_type, city_id, team_index='', new_team=None):
     ucities = ubase.user_cities
     if dungeon_type == 'conquer':
         conquer_config = ubase._conquer_config  
-        if city_id not in conquer_config:
-            raise LogicError("Has no this city")
         if not ucities.can_conquer_city(city_id):
             raise LogicError("Can't conquer this city")
         cur_stage = str(ucities.cur_conquer_stage(city_id))
@@ -58,24 +54,43 @@ def api_start(dungeon_type, city_id, team_index='', new_team=None):
             enemy_team.append(enemy_cid)
             base_enemy_lv.append(lv)
         enemy_lv = calcu_enemy_lv(ubase.user_cards, base_enemy_lv)
-
-        umodified = ubase.user_modified
-        umodified.temp['dungeon'] = {
-            'type': dungeon_type,
-            'time': int(time.time()),
-            'city_id': city_id,
-        }
-        umodified.put()
+    elif dungeon_type == 'challenge':
+        challenge_config = ubase._challenge_config
+        if not ucities.can_challenge_city_floor(city_id, floor):
+            raise LogicError("Can't challenge this city floor")
+        cur_room = str(ucities.cities[city_id]['challenge'][floor])
+        room_conf = challenge_config[city_id][floor][room]
+        need_stamina = room_conf['stamina']
+        # 扣体力
+        tools.del_user_things(ubase, 'stamina', need_stamina, 'challenge')
+        # 加1/3经验 
+        add_exp = int((1.0 / 3) * room_conf['award'].get('exp', 0))
+        tools.add_user_things(ubase, 'exp', add_exp, 'conquer')
+        enemy_favor = room_conf['enemy_favor'] 
+        enemy_nature = room_conf['enemy_nature'] 
+        enemy_team = []
+        enemy_lv = []
+        for enemy_cid, lv in stage_conf['enemy']:
+            enemy_team.append(enemy_cid)
+            enemy_lv.append(lv)
         
-        result = {
-            'enemy_team': enemy_team,
-            'enemy_lv': enemy_lv,
-            'enemy_favor': enemy_favor,
-            'enemy_nature': enemy_nature,
-            'add_exp': add_exp,
-        }
-        return result
-    return {}
+    umodified = ubase.user_modified
+    umodified.temp['dungeon'] = {
+        'type': dungeon_type,
+        'time': int(time.time()),
+        'city_id': city_id,
+        'floor': floor,
+    }
+    umodified.put()
+        
+    result = {
+        'enemy_team': enemy_team,
+        'enemy_lv': enemy_lv,
+        'enemy_favor': enemy_favor,
+        'enemy_nature': enemy_nature,
+        'add_exp': add_exp,
+    }
+    return result
 
 
 def calcu_enemy_lv(ucards, base_lv):
@@ -116,12 +131,13 @@ def calcu_enemy_lv(ucards, base_lv):
     return return_lv
 
 
-def api_end(dungeon_type, city_id):
+def api_end(dungeon_type, city_id, has_dead_mem):
     """ api/dungeon/end
     结束战斗
     Args:
         dungeon_type(str): 战斗类型 "conquer"征服模式 "challenge"挑战模式 
         city_id(str): 要打哪个城，城市id
+        has_dead_mem(bool): 挑战模式战斗过程是否有队员死亡
 
     Returns:
         coin(int): 奖励 铜钱
@@ -148,14 +164,15 @@ def api_end(dungeon_type, city_id):
     ucities = ubase.user_cities
     umodified = ubase.user_modified 
     if 'dungeon' not in umodified.temp:
-        raise LogicError
+        raise LogicError('Should start fight first')
     start_info = umodified.temp['dungeon']
-    if start_info['type'] != dungeon_type or \
-       start_info['city_id'] != city_id:
-        raise LogicError
+    if start_info.get('type') != dungeon_type or \
+       start_info.get('city_id') != city_id:
+        raise LogicError('End the wrong fight')
     now = int(time.time())
     if now - start_info['time'] <= 1:
         raise LogicError("rush a dungeon to quick")
+    award = {}
     if dungeon_type == 'conquer':
         conquer_config = ubase._conquer_config  
         cur_stage = ucities.cur_conquer_stage(city_id)
@@ -165,17 +182,66 @@ def api_end(dungeon_type, city_id):
             # 加2/3经验 
             add_exp = award['exp'] - int((1.0 / 3) * award['exp'])
             award['exp'] = add_exp
-        if str(int(ucities.cur_conquer_stage(city_id)) + 1) not in conquer_config[city_id]:
+        tools.add_user_awards(ubase, award, 'conquer')
+        if str(int(cur_stage) + 1) not in conquer_config[city_id]:
             new_info = ucities.conquer_city(city_id)
         else:
             new_info = ucities.up_conquer_stage(city_id)
         umodified.set_modify_info('cities', new_info)
-        for thing, info in award.items():
-            # 'card' : [['1_card', 1]...
-            if thing == 'card':
-                for cid, num in info:
-                    tools.add_user_things(ubase, cid, num, 'conquer')
-            else:
-                tools.add_user_things(ubase, thing, info, 'conquer')
         return award
+    elif dungeon_type == 'challenge':
+        challenge_config = ubase._challenge_config
+        floor = umodified.temp['dungeon']['floor']
+        cur_room = str(ucities.cities[city_id]['challenge'][floor])
+        room_conf = challenge_config[city_id][floor][cur_room]
+        award = stage_conf.get('award', {})
+        if 'exp' in award:
+            # 加2/3经验 
+            add_exp = award['exp'] - int((1.0 / 3) * award['exp'])
+            award['exp'] = add_exp
+        if can_get_ext_award(ubase, room_conf['ext_term'], has_dead_mem):
+            for thing, info in room_conf['ext_award'].items(): 
+                if thing in award:
+                    award[thing] += info
+                else:
+                    award[thing] = info
+        tools.add_user_awards(ubase, award, 'conquer')
+        new_info = ucities.up_challenge_stage(city_id, floor)
+        return {'awards': award, 'new_info': new_info}
+    
+
+
+def can_get_ext_award(user, ext_term, has_dead_mem):
+    """
+    a       己方卡牌不可阵亡
+    b*      上阵卡牌必须全部为*阵营 例: b2 全属于尤克特拉希尔城
+    c*      上阵卡牌必须全部带有某属性 例: c2 全有绿元素 
+    d*      上阵卡牌必须包括某某卡牌 例:  d3 阵营要有斯雷普尼尔
+    """
+    card_config = user._card_config
+    ucards = user.user_cards
+    cur_team = ucards.cur_team
+    for term in ext_term:
+        term_name, term_value = term[0], int(term[1:])
+        if term_name == 'a':
+            if has_dead_mem:
+                return False
+        elif term_name == 'b':
+            for card_id in cur_team:
+                if card_config[card_id]['camp'] != term_value:
+                    return False
+        elif term_name == 'c':
+            for card_id in cur_team:
+                if term_value not in card_config[card_id]['type']:
+                    return False
+        elif term_name == 'd':
+            if term_name + '_card' not in cur_team:
+                return False
+    return True
+            
+        
+        
+        
+    
+    
 
