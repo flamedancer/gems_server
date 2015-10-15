@@ -30,9 +30,8 @@ def gacha(gacha_type):
     for cnt in range(0, 3):
         # 前两张没拿到保底颜色或以上卡，第三张必出保底颜色或以上
         if cnt == 2 and not get_guarant:
-            for key_color in color_rate_dict:
-                if int(key_color) < guarant_color:
-                    color_rate_dict.pop(key_color)
+            for key_color in range(0, guarant_color):
+                color_rate_dict.pop(key_color, None)
             color = get_key_by_weight_dict(color_rate_dict) 
         else:
             color = get_key_by_weight_dict(color_rate_dict) 

@@ -221,7 +221,7 @@ def can_get_ext_award(user, ext_term, has_dead_mem):
     """
     card_config = user._card_config
     ucards = user.user_cards
-    cur_team = ucards.cur_team
+    cur_team = ucards.cur_team()
     for term in ext_term:
         term_name, term_value = term[0], term[1:]
         if term_name == 'a':

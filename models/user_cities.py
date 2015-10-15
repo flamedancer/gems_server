@@ -157,7 +157,7 @@ class UserCities(GameModel):
         if not self.cities[city_id]['status'] >= 3:
             raise LogicError('Cannot refresh this city')
         city_challenge_conf = self._challenge_config[city_id]
-        sample_city = random.sample(city_challenge_conf)
+        sample_city = random.sample(city_challenge_conf, 3)
         self.cities[city_id]['challenge'] = {city_id: 1 for city_id in sample_city}
         self.put()
         return {city_id: {'challenge': self.cities[city_id]['challenge']}}
