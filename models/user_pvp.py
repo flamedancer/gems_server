@@ -12,6 +12,6 @@ class UserPvp(GameModel):
         self.all_star = 0 
         self.grade = 15 # 段位 
         self.light_star = 0     # 显示亮星个数 
-        self.shade_star = 0  # 显示暗星个数 
+        self.shade_star = 5  # 显示暗星个数 
 
 
