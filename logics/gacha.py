@@ -25,15 +25,19 @@ def gacha(gacha_type):
 
     gacha_conf = user._gacha_config[gacha_type]
     color_rate_dict = {key: value['weight'] for key,value in gacha_conf.items()}
-    get_green = False
+    guarant_color = 2 if gacha_type == 'diamond_gacha' else 1 
+    get_guarant = False
     for cnt in range(0, 3):
-        # 前两张没拿到绿卡，第三张必出
-        if cnt == 2 and not get_green:
-            color = '1'
+        # 前两张没拿到保底颜色或以上卡，第三张必出保底颜色或以上
+        if cnt == 2 and not get_guarant:
+            for key_color in color_rate_dict:
+                if int(key_color) < guarant_color:
+                    color_rate_dict.pop(key_color)
+            color = get_key_by_weight_dict(color_rate_dict) 
         else:
             color = get_key_by_weight_dict(color_rate_dict) 
-        if color == '1':
-            get_green = True
+        if int(color) >= guarant_color:
+            get_guarant = True
         cid_rate_dict = {key: value['weight'] for key, value in gacha_conf[color].items() if key != 'weight'}
         card_key = get_key_by_weight_dict(cid_rate_dict) 
         get_card = gacha_conf[color][card_key]['id']

@@ -134,7 +134,7 @@ class UserCities(GameModel):
 
     def up_city_lv(self, city_id):
         max_city_lv = self._common_config['max_city_lv']
-        self.cities[city_id]['lv'] = max(self.cities[city_id]['lv'] + 1, max_city_lv))
+        self.cities[city_id]['lv'] = max(self.cities[city_id]['lv'] + 1, max_city_lv)
         self.put()
 
     def up_challenge_stage(self, city_id, floor):

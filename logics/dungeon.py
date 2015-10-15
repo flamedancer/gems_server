@@ -59,7 +59,7 @@ def api_start(dungeon_type, city_id, team_index='', new_team=None, floor=''):
         if not ucities.can_challenge_city_floor(city_id, floor):
             raise LogicError("Can't challenge this city floor")
         cur_room = str(ucities.cities[city_id]['challenge'][floor])
-        room_conf = challenge_config[city_id][floor][room]
+        room_conf = challenge_config[city_id][floor][cur_room]
         need_stamina = room_conf['stamina']
         # 扣体力
         tools.del_user_things(ubase, 'stamina', need_stamina, 'challenge')
@@ -70,7 +70,7 @@ def api_start(dungeon_type, city_id, team_index='', new_team=None, floor=''):
         enemy_nature = room_conf['enemy_nature'] 
         enemy_team = []
         enemy_lv = []
-        for enemy_cid, lv in stage_conf['enemy']:
+        for enemy_cid, lv in room_conf['enemy']:
             enemy_team.append(enemy_cid)
             enemy_lv.append(lv)
         
@@ -131,7 +131,7 @@ def calcu_enemy_lv(ucards, base_lv):
     return return_lv
 
 
-def api_end(dungeon_type, city_id, has_dead_mem):
+def api_end(dungeon_type, city_id, has_dead_mem=True):
     """ api/dungeon/end
     结束战斗
     Args:
@@ -194,7 +194,7 @@ def api_end(dungeon_type, city_id, has_dead_mem):
         floor = umodified.temp['dungeon']['floor']
         cur_room = str(ucities.cities[city_id]['challenge'][floor])
         room_conf = challenge_config[city_id][floor][cur_room]
-        award = stage_conf.get('award', {})
+        award = room_conf.get('award', {})
         if 'exp' in award:
             # 加2/3经验 
             add_exp = award['exp'] - int((1.0 / 3) * award['exp'])
@@ -223,20 +223,20 @@ def can_get_ext_award(user, ext_term, has_dead_mem):
     ucards = user.user_cards
     cur_team = ucards.cur_team
     for term in ext_term:
-        term_name, term_value = term[0], int(term[1:])
+        term_name, term_value = term[0], term[1:]
         if term_name == 'a':
             if has_dead_mem:
                 return False
         elif term_name == 'b':
             for card_id in cur_team:
-                if card_config[card_id]['camp'] != term_value:
+                if card_config[card_id]['camp'] != int(term_value):
                     return False
         elif term_name == 'c':
             for card_id in cur_team:
-                if term_value not in card_config[card_id]['type']:
+                if int(term_value) not in card_config[card_id]['type']:
                     return False
         elif term_name == 'd':
-            if term_name + '_card' not in cur_team:
+            if term_value + '_card' not in cur_team:
                 return False
     return True
             
