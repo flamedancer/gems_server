@@ -89,7 +89,11 @@ class UserCities(GameModel):
         for floor in challenge_config[city_id]:
             self.cities[city_id]['challenge'][floor] = 1
         self.put()
-        return {city_id: {'status': 2}}
+        return {city_id: {'status': 2,
+                          'lv': self.cities[city_id]['lv'],
+                          'challenge': self.cities[city_id]['challenge'],
+                         }
+        }
 
     def set_capital(self, city_id):
         if not has_conquer_city(city_id):
@@ -151,7 +155,11 @@ class UserCities(GameModel):
             self.refresh_challenge(city_id)
         self.put()
         return {city_id: {'challenge': self.cities[city_id]['challenge'],
-                          'status': self.cities[city_id]['status']}}
+                          'status': self.cities[city_id]['status'],
+                          'lv': self.cities[city_id]['lv'],
+                         }
+        }
+
 
     def refresh_challenge(self, city_id):
         if not self.cities[city_id]['status'] >= 3:

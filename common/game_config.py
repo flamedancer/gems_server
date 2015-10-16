@@ -88,6 +88,8 @@ u'''
 金币抽将消耗金币gacha_coin
 钻石抽奖消耗钻石gahca_diamond
 
+pvp各段位升满所需星数，从15~1为序pvp_rank_stars
+
 
 ''',
     'userlv_config': \
@@ -420,6 +422,7 @@ NEED_SYNC_CONFIGS = [
     'language_config',
     'userlv_config',
     'card_config',
+    'cardup_config',
     'skill_config',
     'city_config',
     'conquer_config',

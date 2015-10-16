@@ -52,7 +52,7 @@ def api_upgrade(card_id, lv_num):
     max_card_lv = ucards._common_config.get('max_card_lv', 15)
     card_quality = str(ucards._card_config[card_id]["quality"])
     now_lv = ucards.get_card_lv(card_id)
-    if now_lv + lv_num >= max_card_lv:
+    if now_lv + lv_num > max_card_lv:
         raise LogicError("The card got the top lv")
     need_heroSoul = 0
     # 计算需消耗英魂
