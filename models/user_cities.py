@@ -96,7 +96,7 @@ class UserCities(GameModel):
         }
 
     def set_capital(self, city_id):
-        if not has_conquer_city(city_id):
+        if not self.has_conquer_city(city_id):
             raise "Cannot set this city capital"
         self.capital_city = city_id
         self.put()
@@ -109,6 +109,12 @@ class UserCities(GameModel):
     def has_open_city(self, city_id):
         if self.has_show_city(city_id) and \
             self.cities[city_id]['status'] > 0:
+            return True
+        return False
+
+    def has_conquer_city(self, city_id):
+        if self.has_show_city(city_id) and \
+            self.cities[city_id]['status'] > 1:
             return True
         return False
 

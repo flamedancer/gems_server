@@ -13,5 +13,11 @@ class UserPvp(GameModel):
         self.grade = 15 # 段位 
         self.light_star = 0     # 显示亮星个数 
         self.shade_star = 5  # 显示暗星个数 
+        self.init()
+
+    def init(self):
+        pvp_rank_stars = self._common_config['pvp_rank_stars']
+        self.grade = len(pvp_rank_stars)
+        self.shade_star = pvp_rank_stars[0]
 
 

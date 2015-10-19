@@ -199,7 +199,7 @@ def api_set_team(new_team):
     return {}
 
 def api_view_award():
-    """ api/view_award
+    """ api/arena/view_award
      查看奖励
     """
     uarena = request.user.user_arena
