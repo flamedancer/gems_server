@@ -21,7 +21,7 @@ def api_info():
     return {
         'grade': upvp.grade,
         'light_star': upvp.light_star,
-        'shade_star': 5 #upvp.shade_star,
+        'shade_star': upvp.shade_star,
     }
 
 

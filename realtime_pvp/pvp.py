@@ -77,10 +77,13 @@ def get_real_pvp_info(uid):
     pier_clear(uid)
     uBase = UserBase.create(uid) 
     uCards = uBase.user_cards 
+    team = uCards.cur_team()
     user_pvp_info = {
         'uid': uBase.uid,
         'name': uBase.name,
-        'team': uCards.cur_team(),
+        'team': team,
+        'lv': [uCards.cards.get(cid, {'lv': 0})['lv'] for cid in team],
+        'favor': [uCards.cards.get(cid, {'favor': 0})['favor'] for cid in team],
     }
     return user_pvp_info
 
