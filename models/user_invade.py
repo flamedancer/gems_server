@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import bisect
 from common.exceptions import *
 from models import GameModel
 from common.tools import add_user_things
@@ -17,6 +18,7 @@ class UserInvade(GameModel):
         history: 防守日志
         has_new_history: 是否有新日志
         refresh_cnt: 已连续寻找对手次数
+        consecutive_win: 已连赢次数
         opponent: 当前对手对手信息,可为空
             uid(str): 对手uid
             name(str): 对手名字
@@ -37,6 +39,7 @@ class UserInvade(GameModel):
         self.has_new_history = False
         self.watch_team = []
         self.refresh_cnt = 0
+        self.consecutive_win = 0
         self.opponent = {}
 
     def set_opponent(self, opponent_info):
@@ -92,6 +95,8 @@ class UserInvade(GameModel):
     def add_cup(self, num):
         old_cup = self.cup
         self.cup = max(0, self.cup + num)
+        invade_cup_rank = self._common_config['invade_cup_rank']
+        self.cup_rank = len(invade_cup_rank) - bisect.bisect(invade_cup_rank, self.cup)
         self.put()
         return self.cup - old_cup
 
@@ -111,23 +116,36 @@ class UserInvade(GameModel):
         self.opponent = {}
         self.put()
 
-    def set_watch_team(self, new_team):
+    def set_watch_team(self, team):
         """ 修改守城编队
         Args:
             team: 新的编队list
         """
         team_len = self._common_config['team_length']
+        uCards = self.user_cards
         if len(team) != team_len:
             raise ParamsError('Team length error!')
         for card_id in team:
             if card_id == '':
                 continue
-            elif card_id not in self.cards:
+            elif card_id not in uCards.cards:
                 raise LogicError("Hasn't got card_id %s" % card_id)
-            elif self.cards[card_id]['num'] <= 0:
+            elif uCards.cards[card_id]['num'] <= 0:
                 raise LogicError(" %s num is 0" % card_id)
-            elif self.cards[card_id]['num'] < team.count(card_id):
+            elif uCards.cards[card_id]['num'] < team.count(card_id):
                 raise LogicError("%s num is not enough" % card_id)
         self.watch_team = team
         self.put()
         
+
+    def inc_refresh_cnt(self):
+        self.refresh_cnt += 1
+        self.put()
+
+    def reset_consecutive_win(self):
+        self.consecutive_win = 0
+        self.put()
+
+    def inc_consecutive_win(self):
+        self.consecutive_win += 1
+        self.put()

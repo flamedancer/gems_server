@@ -1,6 +1,8 @@
 #-*- coding: utf-8 -*-
 
+import time
 from models import GameModel
+from common.exceptions import *
 
 
 class UserModified(GameModel):
@@ -13,6 +15,7 @@ class UserModified(GameModel):
         self.uid = uid 
         self.modified = {} 
         self.temp = {} 
+        self.dungeon = {}
 
     def set_modify_info(self, thing, info=None):
         if thing == 'cards':
@@ -42,3 +45,28 @@ class UserModified(GameModel):
             self.set_modify_info(item, info)
         self.put()
     
+    def add_dungeon_info(self, dungeon_type, info=None): 
+        if info is None:
+            info = {}
+        info['time'] = time.time()
+        self.dungeon[dungeon_type] = info
+        self.put()
+
+    def clear_dungeon_info(self, dungeon_type):
+        if dungeon_type not in self.dungeon:
+            raise LogicError("End the wrong fight")
+        info = self.dungeon.pop(dungeon_type)
+        self.put()
+        return info
+
+    def has_dungeon_info(self, dungeon_type):
+        return dungeon_type in self.dungeon  
+
+    def get_dungeon_info(self, dungeon_type):
+        """ 检查是否由此战场信息
+        """
+        if dungeon_type not in self.dungeon:
+            raise LogicError("End the wrong fight")
+        return self.dungeon[dungeon_type]
+        
+        

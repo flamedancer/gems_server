@@ -65,30 +65,38 @@ u'''
 ***一些游戏基础配置***
 
 
-卡牌最高等级max_card_lv
+卡牌最高等级 max_card_lv
 
-城市最高等级max_city_lv
+城市最高等级 max_city_lv
 
-城市最高声望值max_city_reputation
+城市最高声望值 max_city_reputation
 
-卡牌编队最大长度team_length
+卡牌编队最大长度 team_length
 
 
-开城消耗金币配置open_city_consume_coin
+开城消耗金币配置 open_city_consume_coin
 1.开城消耗金币，根据已开城数计算
 2.数组index为已开城数，对应项为需要金币数
 
-开启竞技场需要金币open_arena_coin
-每场竞技战斗消耗体力arena_fight_stamina
-竞技场双方卡牌好感度arena_card_favor
-竞技场双方卡牌等级arena_card_lv
+开启竞技场需要金币 open_arena_coin
+每场竞技战斗消耗体力 arena_fight_stamina
+竞技场双方卡牌好感度 arena_card_favor
+竞技场双方卡牌等级 arena_card_lv
 
-刷新挑战大关卡需要金币refresh_challenge_coin
+金币抽将消耗金币 gacha_coin
+钻石抽奖消耗钻石 gahca_diamond
 
-金币抽将消耗金币gacha_coin
-钻石抽奖消耗钻石gahca_diamond
+pvp各段位升满所需星数(从15~1为序) pvp_rank_stars
 
-pvp各段位升满所需星数，从15~1为序pvp_rank_stars
+城战奖杯对应段位 invade_cup_rank
+城战寻找对手需要金币(根据次数增加) invade_refresh_coin
+城战对手保留时间(秒) invade_keep_opponent_seconds
+城战护盾保护时间(秒) invade_keep_shield_seconds
+城战侵略需要体力 invade_fight_stamina
+城战侵略经验奖励 invade_fight_exp 
+城战反击需要体力 invade_defense_stamina
+城战反击经验奖励 invade_defense_exp
+
 
 
 ''',
@@ -103,6 +111,7 @@ u'''
         "exp":0,            # 升级到此等级需要经验
         "lv_add_stamina":0, # 升级到此等级时送的体力,可超过上限
         "stamina":30,       # 此等级体力上限
+        "reward_coin": 10,  # 主城进贡金币
 3.以下为例, 玩家升级到2级需要总经验10;当升到2级时，直接增加1体力值，
   同时体力上限变更为50
 

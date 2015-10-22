@@ -57,7 +57,7 @@ def api_info():
     coin_conf = uInvade._common_config['invade_refresh_coin']
     refresh_coin = coin_conf[min(uInvade.refresh_cnt, len(coin_conf) - 1)]
     # 若对手已过期 ，清空对手信息
-    if uInvade.opponent.get('expire_time', 0) > time.time():
+    if uInvade.opponent.get('expire_time', 0) < time.time():
         uInvade.clear_opponent()
     return {
         'cup': uInvade.cup,
@@ -139,9 +139,6 @@ def api_store():
         }
     }
 
-    
-    
-
 
 def api_find_opponent():
     """ api/invade/find_opponent
@@ -150,42 +147,39 @@ def api_find_opponent():
         同api_info
     """
     uInvade = request.user.user_invade
-    coin_conf = uInvade._common_config['invade_refresh_coin']
+    common_config = uInvade._common_config
+    umodified = uInvade.user_modified
+    # 如果有残留战场信息,说明是强退战场,重置连胜次数
+    if umodified.has_dungeon_info('invade'):
+        uInvade.reset_consecutive_win()
+    # 消耗金币
+    coin_conf = common_config['invade_refresh_coin']
     refresh_coin = coin_conf[min(uInvade.refresh_cnt, len(coin_conf) - 1)]
-    tools.del_user_things(uInvade, 'coin', refresh_coin, 'invade')
-    opponent_info = InvadeUser.get_instance().get_fight_user(except_uids=[uInvade.uid])
+    tools.del_user_things(uInvade, 'coin', refresh_coin, 'invade_find')
+    # 需找对手, 添加过期时间
+    invade_user_instance = InvadeUser.get_instance()
+    opponent_info = invade_user_instance.get_fight_user(except_uids=[uInvade.uid])
+    expire_time = common_config['invade_keep_opponent_seconds'] + int(time.time())
+    opponent_info['expire_time'] = expire_time
+    # 此对手不能被别的玩家搜到
+    if opponent_info['uid']:
+        invade_user_instance.add_user(opponent_info['uid'], expire_time)
+    
     # 失败只损失一个奖杯
     opponent_info['lose_award'] = {
         'cup': -1,
     }
+    # 掠夺的金币和对手主城进贡有关
     userlv_config = uInvade._userlv_config
     win_get_coin = userlv_config[str(opponent['lv'])].get('reward_coin', 10) if opponent_info['uid'] else 0
+    # 连胜两次以上获得两个杯，否则一个
     opponent_info['win_award'] = {
-        'cup': 1,
+        'cup': 1 if uInvade.consecutive_win < 2 else 2,
         'coin': win_get_coin,
     }
+    # 记录下对手信息
     uInvade.set_opponent(opponent_info)
     return api_info()
-    return {
-            'cup': 3,
-            'cup_rank': 15,
-            'shield_time': int(time.time()) + 3650,
-            'watch_team': ['1_card', '2_card', '3_card', '4_card'],
-            'refresh_coin': 50,
-            'opponent': {
-                'name': 'xxx',
-                'lv':  45,
-                'expire_time': int(time.time()) + 120,
-                'captial_city': '0',
-                'win_award': {
-                    'coin': 40,
-                    'cup': 1,
-                },
-                'lose_award': {
-                    'cup': -1,
-                },
-            },
-        }
 
 
 def api_start_invade(team_index='', new_team=None):
@@ -207,19 +201,19 @@ def api_start_invade(team_index='', new_team=None):
             raise ParmasError('Can\'t set empty team !')
         card.api_set_team(team_index, new_team) 
     uInvade = request.user.user_invade
+    # 消耗体力
+    need_stamina = uInvade._common_config['invade_fight_stamina']
+    tools.del_user_things(uInvade, 'stamina', need_stamina, 'invade')
+
     opponent_info = uInvade.opponent
     opponent_uid = opponent_info['uid']
     # 记录战前信息
     umodified = uInvade.user_modified
-    umodified.temp['dungeon'] = {
-        'type': 'invade',
-        'time': int(time.time()),
-    }
-    umodified.put()
+    umodified.add_dungeon_info('invade')
 
     # 如果是虚拟玩家，造一个数据
     if not opponent_uid:
-        opponent_info = {
+        opponent_team_info = {
                     'lv': 10,
                     'nature_0': 5,
                     'nature_1': 5,
@@ -235,12 +229,14 @@ def api_start_invade(team_index='', new_team=None):
         opoonent_invade = UserInvade.get(opponent_uid)
         opponent_team_info = opponent_invade.watch_team_info()
     # 每次打别人， 自己的保护时间取消
-    invade_user_model = InvadeUser.get_instance()
+    invade_user_instance = InvadeUser.get_instance()
     uInvade.reset_shield_time()
-    invade_user_model.add_user(uInvade.uid)
+    invade_user_instance.add_user(uInvade.uid)
+    # 重置 连续寻找对手次数 清空已找到对手
+    uInvade.reset_refresh_cnt()
+    uInvade.clear_opponent()
     return {'enemy': opponent_team_info}
     
-
 
 def api_end_invade(win=True):
     """ api/invade/end_invade
@@ -248,18 +244,15 @@ def api_end_invade(win=True):
     Argvs:
         win(bool): 是否胜利
     Returns:
-        award(dict): 结束奖励
-    
+        exp(int): 获得经验
+        cup(int): 获得奖杯数，可为负数
+        coin(int): 获得金币数
     """ 
     user = request.user
-    umodified = ubase.user_modified
-    if 'dungeon' not in umodified.temp:
-        raise LogicError('Should start fight first')
-    start_info = umodified.temp['dungeon']
-    if start_info.get('type') != 'invade':
-        raise LogicError('End the wrong fight')
-    umodified.temp.pop('dungeon')
-    umodified.put()
+    common_config = uInvade._common_config
+    umodified = user.user_modified
+    umodified.clear_dungeon_info('invade')
+
     now = int(time.time())
     if now - start_info['time'] <= 1:
         raise LogicError("rush a dungeon to quick") 
@@ -276,15 +269,16 @@ def api_end_invade(win=True):
         'time': int(time.time()),
     }
     invade_log['team_info'] = uInvade.now_team_info()
-    # 胜利获得奖杯和对手金钱;失败扣奖杯,且对手加代币
+    # 胜利获得全额经验1奖杯和对手金钱;失败扣奖杯,且对手加代币
+    full_exp = common_config['invade_fight_exp']
     if win:
-        award = opponent['win_award']
-        award['exp'] = 30
+        award = opponent_info['win_award']
+        award['exp'] = full_exp
         invade_log['status'] = 0
         invade_log['lose_coin'] = award.get('coin', 0)
     else:
-        award = opponent['lose_award']
-        award['exp'] = 10
+        award = opponent_info['lose_award']
+        award['exp'] = full_exp // 3
         invade_log['status'] = 1
         invade_log['win_invade_jeton'] = abs(award.get('invade_jeton', 0))
 
@@ -300,9 +294,10 @@ def api_end_invade(win=True):
             award['coin'] = max(invade_log['lose_coin'], opponent_coin) 
             tools.del_user_things(opponentInvade, 'coin', award['coin'], 'beinvaded')
             # 给被打人 加护盾时间
-            invade_user_model = InvadeUser.get_instance()
-            shield_time = int(time.time()) + 7200
-            opponent_info = invade_user_model.add_user(opponent_uid, shield_time) 
+            invade_user_instance = InvadeUser.get_instance()
+            shield_gap = common_config['invade_keep_shield_seconds']
+            shield_time = int(time.time()) + shield_gap
+            opponent_info = invade_user_instance.add_user(opponent_uid, shield_time) 
             opponent_invade.reset_shield_time(shield_time)
         else:
             opponentInvade.add_invade_jeton(1)
@@ -336,6 +331,7 @@ def api_start_defense(history_index, team_index='', new_team=None):
             raise ParmasError('Can\'t set empty team !')
         card.api_set_team(team_index, new_team) 
     uInvade = request.user.user_invade
+
     history = uInvade.history
     if not 0 <= history_index <= len(history) - 1:
         raise ParamsError('Wrong history index') 
@@ -343,18 +339,15 @@ def api_start_defense(history_index, team_index='', new_team=None):
     if defe_history['status'] != 0:
         raise LogicError('Had been defensed')
 
-
+    # 消耗体力
+    need_stamina = uInvade._common_config['invade_defense_stamina']
+    tools.del_user_things(uInvade, 'stamina', need_stamina, 'invade')
     # 记录战前信息
     umodified = uInvade.user_modified
-    umodified.temp['dungeon'] = {
-        'type': 'invade_defense',
+    umodified.add_dungeon_info('invade_defense', {
         'history': defe_history,
-        'time': int(time.time()),
-    }
-    umodified.put()
-    # 重置 连续寻找对手次数 清空对手已找到对手记录 清除此次日志
-    uInvade.reset_refresh_cnt()
-    uInvade.clear_opponent()
+    })
+    # 清除此次日志
     uInvade.clear_history(index=history_index)
     return {'enemy': defe_history['team_info']}
 
@@ -364,26 +357,21 @@ def api_end_defense(win=True):
     结束反击战斗
     
     """ 
-    award = {'exp': 3}
-    if not win:
-        return {'award': award}
     user = request.user
+    full_exp = user._common_config['invade_defense_exp']
+    if not win:
+        # 反击失败只给1/3经验
+        return {'award': {'exp': full_exp // 3}}
     umodified = ubase.user_modified
-    if 'dungeon' not in umodified.temp:
-        raise LogicError('Should start fight first')
-    start_info = umodified.temp['dungeon']
-    if start_info.get('type') != 'invade_defense':
-        raise LogicError('End the wrong fight')
-    defe_history = start_info['history']
-    umodified.temp.pop('dungeon')
-    umodified.put()
+    defe_history = umodified.get_dungeon_info('invade_defense')['history']
+    umodified.clear_dungeon_info('invade_defense')
     now = int(time.time())
     if now - start_info['time'] <= 1:
         raise LogicError("rush a dungeon to quick") 
 
     uInvade = user.user_invade
     award = {
-        'exp': 9,
+        'exp': full_exp,
         'invade_jeton': 1,
     } 
     # 加代币

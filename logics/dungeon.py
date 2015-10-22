@@ -251,8 +251,8 @@ def api_refresh_challenge_floor(city_id):
     """
     ubase = request.user
     ucities = ubase.user_cities
-    need_coin = ubase._common_config['refresh_challenge_coin']
-    tools.del_user_things(ubase, 'coin', need_coin, 'refresh_challenge_floor')
+    #need_coin = ubase._common_config['refresh_challenge_coin']
+    #tools.del_user_things(ubase, 'coin', need_coin, 'refresh_challenge_floor')
     new_info = ucities.refresh_challenge(city_id)
     umodified = ubase.user_modified
     umodified.set_modify_info('cities', new_info)
