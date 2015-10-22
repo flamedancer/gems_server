@@ -169,6 +169,8 @@ def api_end(dungeon_type, city_id, has_dead_mem=True):
     if start_info.get('type') != dungeon_type or \
        start_info.get('city_id') != city_id:
         raise LogicError('End the wrong fight')
+    umodified.temp.pop('dungeon')
+    umodified.put()
     now = int(time.time())
     if now - start_info['time'] <= 1:
         raise LogicError("rush a dungeon to quick")
@@ -256,6 +258,4 @@ def api_refresh_challenge_floor(city_id):
     umodified.set_modify_info('cities', new_info)
     return {}
         
-    
-    
 

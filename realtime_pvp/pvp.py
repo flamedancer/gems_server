@@ -82,8 +82,8 @@ def get_real_pvp_info(uid):
         'uid': uBase.uid,
         'name': uBase.name,
         'team': team,
-        'lv': [uCards.cards.get(cid, {'lv': 0})['lv'] for cid in team],
-        'favor': [uCards.cards.get(cid, {'favor': 0})['favor'] for cid in team],
+        'card_lv': [uCards.cards.get(cid, {'lv': 0})['lv'] for cid in team],
+        'card_favor': [uCards.cards.get(cid, {'favor': 0})['favor'] for cid in team],
     }
     return user_pvp_info
 

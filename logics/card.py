@@ -12,7 +12,7 @@ def api_switch_team_index(team_index):
     切换编队
     
     Args:
-        team_index(int): 新的当前编队序号
+        team_index(str): 新的当前编队序号
     """
     umodified = request.user.user_modified
     ucards = request.user.user_cards
