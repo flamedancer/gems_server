@@ -26,7 +26,7 @@ class InvadeUser(BaseModel):
         obj.put() 
         return obj
 
-    def add_user(self, uid, time_stamp):
+    def add_user(self, uid, time_stamp=0):
         """
         Args:
             uid: 玩家id
@@ -52,12 +52,14 @@ class InvadeUser(BaseModel):
         selected_user = UserBase.get(selected_uid)
         selected_uproperty = selected_user.user_property
         selected_ucities = selected_user.user_cities
+        expire_time = int(time.time()) + 300
+        self.add_user(selected_uid, expire_time)
         return {
             'uid': selected_uid,
             'name': selected_user.name,
             'lv': selected_uproperty.lv,
             'capital_city': selected_ucities.captial_city,
-            'expire_time': int(time.time()) + 300,
+            'expire_time': expire_time,
         }
 
     def make_virtual_user(self):
@@ -66,6 +68,7 @@ class InvadeUser(BaseModel):
             'name': 'test',
             'lv': 10,
             'capital_city': '0',
+            'expire_time': int(time.time()) + 300,
         }
 
 

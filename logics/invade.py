@@ -149,11 +149,11 @@ def api_find_opponent():
     Retures:
         同api_info
     """
+    uInvade = request.user.user_invade
     coin_conf = uInvade._common_config['invade_refresh_coin']
     refresh_coin = coin_conf[min(uInvade.refresh_cnt, len(coin_conf) - 1)]
-    uInvade = request.user.user_invade
     tools.del_user_things(uInvade, 'coin', refresh_coin, 'invade')
-    opponent_info = InvadeUser.get().get_fight_user(except_uids=[uInvade.uid])
+    opponent_info = InvadeUser.get_instance().get_fight_user(except_uids=[uInvade.uid])
     # 失败只损失一个奖杯
     opponent_info['lose_award'] = {
         'cup': -1,
@@ -165,7 +165,7 @@ def api_find_opponent():
         'coin': win_get_coin,
     }
     uInvade.set_opponent(opponent_info)
-    return opponent_info
+    return api_info()
     return {
             'cup': 3,
             'cup_rank': 15,
@@ -216,6 +216,7 @@ def api_start_invade(team_index='', new_team=None):
         'time': int(time.time()),
     }
     umodified.put()
+
     # 如果是虚拟玩家，造一个数据
     if not opponent_uid:
         opponent_info = {
@@ -231,9 +232,12 @@ def api_start_invade(team_index='', new_team=None):
                     'card_favor':[0, 1, 0, 1],
                 }
     else:
-        opponent_team_info = UserInvade.get(opponent_uid).watch_team_info()
+        opoonent_invade = UserInvade.get(opponent_uid)
+        opponent_team_info = opponent_invade.watch_team_info()
     # 每次打别人， 自己的保护时间取消
+    invade_user_model = InvadeUser.get_instance()
     uInvade.reset_shield_time()
+    invade_user_model.add_user(uInvade.uid)
     return {'enemy': opponent_team_info}
     
 
@@ -276,10 +280,12 @@ def api_end_invade(win=True):
     if win:
         award = opponent['win_award']
         award['exp'] = 30
+        invade_log['status'] = 0
         invade_log['lose_coin'] = award.get('coin', 0)
     else:
         award = opponent['lose_award']
         award['exp'] = 10
+        invade_log['status'] = 1
         invade_log['win_invade_jeton'] = abs(award.get('invade_jeton', 0))
 
     # 改变对手数据！ 加代币 或 减钱
@@ -287,12 +293,17 @@ def api_end_invade(win=True):
         opponentInvade = UserInvade.get(opponent_uid)
         # 日志中主城设为被打者主城
         invade_log['capital_city'] = opponentInvade.user_city.capital_city
+        # 要告诉对手他别打了
+        opponentInvade.add_history(invade_log)
         if win:
             opponent_coin = opponentInvade.user_property.coin 
             award['coin'] = max(invade_log['lose_coin'], opponent_coin) 
             tools.del_user_things(opponentInvade, 'coin', award['coin'], 'beinvaded')
-            # 打赢了 要告诉对手
-            opponentInvade.add_history(invade_log)
+            # 给被打人 加护盾时间
+            invade_user_model = InvadeUser.get_instance()
+            shield_time = int(time.time()) + 7200
+            opponent_info = invade_user_model.add_user(opponent_uid, shield_time) 
+            opponent_invade.reset_shield_time(shield_time)
         else:
             opponentInvade.add_invade_jeton(1)
     else:

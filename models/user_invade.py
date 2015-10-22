@@ -30,7 +30,7 @@ class UserInvade(GameModel):
         self.uid = uid
         self.cup = 0
         invade_cup_rank = self._common_config['invade_cup_rank']
-        self.cup_rank = str(len(invade_cup_rank))
+        self.cup_rank = len(invade_cup_rank)
         self.invade_jeton = 0
         self.shield_time = 0
         self.history = []
@@ -103,11 +103,11 @@ class UserInvade(GameModel):
         self.shield_time = 0
         self.put()
 
-    def reset_refresh_cnt(self):
-        self.refresh_cnt = 0
+    def reset_refresh_cnt(self, new_time=0):
+        self.refresh_cnt = new_time 
         self.put()
 
-    def clear_oppoent(self):
+    def clear_opponent(self):
         self.opponent = {}
         self.put()
 
