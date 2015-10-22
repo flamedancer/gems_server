@@ -401,6 +401,5 @@ def api_buy(good_id):
     Argvs:
         good_id(str): 商品号
     """
-    return {'awards': }
-
+    return {'awards': {'coin': 10 }}
 
