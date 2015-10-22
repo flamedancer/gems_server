@@ -156,6 +156,8 @@ def api_find_opponent():
     coin_conf = common_config['invade_refresh_coin']
     refresh_coin = coin_conf[min(uInvade.refresh_cnt, len(coin_conf) - 1)]
     tools.del_user_things(uInvade, 'coin', refresh_coin, 'invade_find')
+    # 自增连续寻找对手次数
+    uInvade.inc_refresh_cnt()
     # 需找对手, 添加过期时间
     invade_user_instance = InvadeUser.get_instance()
     opponent_info = invade_user_instance.get_fight_user(except_uids=[uInvade.uid])
