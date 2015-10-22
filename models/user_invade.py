@@ -30,10 +30,11 @@ class UserInvade(GameModel):
         self.uid = uid
         self.cup = 0
         invade_cup_rank = self._common_config['invade_cup_rank']
-        self.cup_rank = str(len(invade_rank))
+        self.cup_rank = str(len(invade_cup_rank))
         self.invade_jeton = 0
         self.shield_time = 0
         self.history = []
+        self.has_new_history = False
         self.watch_team = []
         self.refresh_cnt = 0
         self.opponent = {}

@@ -53,11 +53,11 @@ def api_info():
         }
 
     """
-    uInvade = requesr.user.user_invade
+    uInvade = request.user.user_invade
     coin_conf = uInvade._common_config['invade_refresh_coin']
     refresh_coin = coin_conf[min(uInvade.refresh_cnt, len(coin_conf) - 1)]
     # 若对手已过期 ，清空对手信息
-    if uInvade.opponent['expire_time'] > time.time():
+    if uInvade.opponent.get('expire_time', 0) > time.time():
         uInvade.clear_opponent()
     return {
         'cup': uInvade.cup,
@@ -104,8 +104,10 @@ def api_history():
             'lose_coin': 损失金币数(status0时)
             'win_invade_jeton': 获得城战代币数(status1时)
     """
-    
-    return {'history': request.user.user_invade.history}
+    uInvade = request.user.user_invade
+    uInvade.has_new_history = False
+    uInvade.put()
+    return {'history': uInvade.history}
     return { 'history': [
                 {
                     'status': 0,
