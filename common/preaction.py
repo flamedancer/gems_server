@@ -52,10 +52,12 @@ def prelogic(func):
             request.api_data = data
             result['data'] = func(*args, **kargs)
         except Error as e:
+            app.pier.clear()
             result['error_code'] = e.error_code
             result['error_msg'] = e.error_msg
             return result
         except Exception as e:
+            app.pier.clear()
             print_err()
             result.update({
                 'error_code': 4,
