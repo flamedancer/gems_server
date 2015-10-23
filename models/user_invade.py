@@ -49,7 +49,10 @@ class UserInvade(GameModel):
     def watch_team_info(self):
         uProperty = self.user_property
         uCards = self.user_cards
-        team = self.watch_team or uCards.cur_team()
+        team = self.watch_team
+        # 防守编队为空时，用当前编队
+        if not team or set(team) == set(['']):
+            team = uCards.cur_team()
         return {
             'nature_0': uProperty.nature_0,
             'nature_1': uProperty.nature_1,
