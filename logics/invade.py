@@ -13,9 +13,9 @@ from models.user_invade import UserInvade
 def check_remain_dungeon():
     user = request.user
     umodified = user.user_modified
-    if has_dungeon_info('invade'):
+    if umodified.has_dungeon_info('invade'):
         api_end_invade(win=False)
-    elif has_dungeon_info('invade_defense'):
+    elif umodified.has_dungeon_info('invade_defense'):
         api_end_defense(win=False)
         
 
@@ -313,7 +313,7 @@ def api_end_invade(win=True):
             shield_gap = common_config['invade_keep_shield_seconds']
             shield_time = int(time.time()) + shield_gap
             opponent_info = invade_user_instance.add_user(opponent_uid, shield_time) 
-            opponent_invade.reset_shield_time(shield_time)
+            opponentInvade.reset_shield_time(shield_time)
         else:
             opponentInvade.add_invade_jeton(1)
     else:
