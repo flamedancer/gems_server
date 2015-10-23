@@ -150,7 +150,9 @@ def api_find_opponent():
         'cup': 1 if uInvade.consecutive_win < 2 else 2,
         'coin': win_get_coin,
     }
-    # 记录下对手信息
+    # 记录下对手信息,若有旧对手,将他的过期时间重置
+    if uInvade.opponent and uInvade.opponent['uid']:
+        invade_user_instance.add_user(uInvade.opponent['uid'])
     uInvade.set_opponent(opponent_info)
     return api_info()
 
