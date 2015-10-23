@@ -79,27 +79,7 @@ def api_info():
         'refresh_coin': refresh_coin,
         'opponent': uInvade.opponent,
     }
-    return {
-            'cup': 3,
-            'cup_rank': 15,
-            'shield_time': int(time.time()) + 3650,
-            'watch_team': ['1_card', '2_card', '3_card', '4_card'],
-            'refresh_coin': 50,
-            'opponent': {
-                'name': 'xxx',
-                'lv':  45,
-                'expire_time': int(time.time()) + 120,
-                'captial_city': '0',
-                'win_award': {
-                    'coin': 40,
-                    'cup': 1,
-                },
-                'lose_award': {
-                    'cup': -1,
-                },
-            },
-        }
- 
+
 
 def api_history():
     """ api/invade/history
@@ -159,9 +139,6 @@ def api_find_opponent():
     uInvade = request.user.user_invade
     common_config = uInvade._common_config
     umodified = uInvade.user_modified
-    # 如果有残留战场信息,说明是强退战场,重置连胜次数
-    if umodified.has_dungeon_info('invade'):
-        uInvade.reset_consecutive_win()
     # 消耗金币
     coin_conf = common_config['invade_refresh_coin']
     refresh_coin = coin_conf[min(uInvade.refresh_cnt, len(coin_conf) - 1)]
@@ -287,11 +264,15 @@ def api_end_invade(win=True):
     # 胜利获得全额经验1奖杯和对手金钱;失败扣奖杯,且对手加代币
     full_exp = common_config['invade_fight_exp']
     if win:
+        # 连胜次数加1
+        uInvade.inc_consecutive_win()
         award = opponent_info['win_award']
         award['exp'] = full_exp
         opponent_invade_log['status'] = 0
         opponent_invade_log['lose_coin'] = award.get('coin', 0)
     else:
+        # 失败清空连胜次数 
+        uInvade.reset_consecutive_win()
         award = opponent_info['lose_award']
         award['exp'] = full_exp // 3
         opponent_invade_log['status'] = 1
