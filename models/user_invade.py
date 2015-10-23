@@ -108,8 +108,8 @@ class UserInvade(GameModel):
         self.invade_jeton = max(0, self.invade_jeton + num)
         self.put()
 
-    def reset_shield_time(self):
-        self.shield_time = 0
+    def reset_shield_time(self, shield_time=0):
+        self.shield_time = shield_time 
         self.put()
 
     def reset_refresh_cnt(self, new_time=0):

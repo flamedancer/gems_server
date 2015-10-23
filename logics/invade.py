@@ -306,7 +306,7 @@ def api_end_invade(win=True):
         opponentInvade.add_history(opponent_invade_log)
         if win:
             opponent_coin = opponentInvade.user_property.coin 
-            award['coin'] = max(opponent_invade_log['lose_coin'], opponent_coin) 
+            award['coin'] = min(opponent_invade_log['lose_coin'], opponent_coin) 
             tools.del_user_things(opponentInvade, 'coin', award['coin'], 'beinvaded')
             # 给被打人 加护盾时间
             invade_user_instance = InvadeUser.get_instance()
