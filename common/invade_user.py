@@ -23,7 +23,6 @@ class InvadeUser(BaseModel):
         obj = cls.get()
         if obj is None:
             obj = cls()
-        obj.put() 
         return obj
 
     def add_user(self, uid, time_stamp=0):
@@ -43,7 +42,6 @@ class InvadeUser(BaseModel):
         """
         now = time.time()
         uids = [uid for uid in self.users if self.users[uid] < now] 
-        uids = self.users.keys()
         if except_uids:
             uids = list(set(uids) - set(except_uids))
         if not uids:

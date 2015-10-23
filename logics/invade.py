@@ -98,22 +98,6 @@ def api_history():
     uInvade.has_new_history = False
     uInvade.put()
     return {'history': uInvade.history}
-    return { 'history': [
-                {
-                    'status': 0,
-                    'uid': 'xxx',
-                    'name': 'xxxxx', 
-                    'lv': 40,
-                    'capital_city': '0',
-                    'cup': 10,
-                    'time': int(time.time()) - 3600,
-                    'lose_coin': 40,
-                },
-                
-
-        ]
-    }
-
 
 
 def api_store():
@@ -293,7 +277,7 @@ def api_end_invade(win=True):
             invade_user_instance = InvadeUser.get_instance()
             shield_gap = common_config['invade_keep_shield_seconds']
             shield_time = int(time.time()) + shield_gap
-            opponent_info = invade_user_instance.add_user(opponent_uid, shield_time) 
+            invade_user_instance.add_user(opponent_uid, shield_time) 
             opponentInvade.reset_shield_time(shield_time)
         else:
             opponentInvade.add_invade_jeton(1)
