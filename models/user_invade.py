@@ -85,6 +85,7 @@ class UserInvade(GameModel):
     def add_history(self, history_log):
         self.history.append(history_log)
         self.history = self.history[-20:]
+        self.has_new_history = True
         self.put()
 
     def clear_history(self, index=None):

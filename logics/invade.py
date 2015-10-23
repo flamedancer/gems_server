@@ -212,7 +212,7 @@ def api_start_invade(team_index='', new_team=None):
     # 记录战前信息
     umodified = uInvade.user_modified
     umodified.add_dungeon_info('invade', {
-        'opponent_info' = opponent_info,
+        'opponent_info': opponent_info,
     })
 
     # 如果是虚拟玩家，造一个数据
@@ -265,37 +265,38 @@ def api_end_invade(win=True):
     uProperty = uInvade.user_property
     opponent_info = start_info['opponent_info']
     opponent_uid = opponent_info['uid']
-    invade_log = {
+    opponent_invade_log = {
         'status': 0,
         'name': user.name,
+        'uid': user.uid,
         'lv': uProperty.lv, 
         'cup': uInvade.cup,
         'time': int(time.time()),
     }
-    invade_log['team_info'] = uInvade.now_team_info()
+    opponent_invade_log['team_info'] = uInvade.now_team_info()
     # 胜利获得全额经验1奖杯和对手金钱;失败扣奖杯,且对手加代币
     full_exp = common_config['invade_fight_exp']
     if win:
         award = opponent_info['win_award']
         award['exp'] = full_exp
-        invade_log['status'] = 0
-        invade_log['lose_coin'] = award.get('coin', 0)
+        opponent_invade_log['status'] = 0
+        opponent_invade_log['lose_coin'] = award.get('coin', 0)
     else:
         award = opponent_info['lose_award']
         award['exp'] = full_exp // 3
-        invade_log['status'] = 1
-        invade_log['win_invade_jeton'] = abs(award.get('invade_jeton', 0))
+        opponent_invade_log['status'] = 1
+        opponent_invade_log['win_invade_jeton'] = 1
 
     # 改变对手数据！ 加代币 或 减钱
     if opponent_uid:
         opponentInvade = UserInvade.get(opponent_uid)
         # 日志中主城设为被打者主城
-        invade_log['capital_city'] = opponentInvade.user_city.capital_city
+        opponent_invade_log['capital_city'] = opponentInvade.user_cities.capital_city
         # 要告诉对手他别打了
-        opponentInvade.add_history(invade_log)
+        opponentInvade.add_history(opponent_invade_log)
         if win:
             opponent_coin = opponentInvade.user_property.coin 
-            award['coin'] = max(invade_log['lose_coin'], opponent_coin) 
+            award['coin'] = max(opponent_invade_log['lose_coin'], opponent_coin) 
             tools.del_user_things(opponentInvade, 'coin', award['coin'], 'beinvaded')
             # 给被打人 加护盾时间
             invade_user_instance = InvadeUser.get_instance()
