@@ -212,7 +212,7 @@ def api_start_invade(team_index='', new_team=None):
                     'nature_3': 5,
                     'nature_4': 5,
                     'nature_5': 5,
-                    'team': ['1_card', '2_card', '3_card', '4_card'],
+                    'team': uInvade._common_config['init_team'],
                     'card_lv': [2, 4, 6, 8],
                     'card_favor':[0, 1, 0, 1],
                 }
@@ -358,7 +358,7 @@ def api_end_defense(win=True):
     if not win:
         # 反击失败只给1/3经验
         return {'award': {'exp': full_exp // 3}}
-    umodified = ubase.user_modified
+    umodified = user.user_modified
     defe_history = umodified.get_dungeon_info('invade_defense')['history']
     umodified.clear_dungeon_info('invade_defense')
     now = int(time.time())
