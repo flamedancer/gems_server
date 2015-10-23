@@ -24,6 +24,7 @@ class UserArena(GameModel):
         self.step = 0 # 竞技场状态 0未开启竞技  1选第一张卡 2选第二张卡...  5准备开始竞技 6完成竞技等待领取奖励
         team_length = self._common_config['team_length']
         self.selected_cards = [''] * team_length
+        self.team_index = '0'
         self.cards_pool = []  # 每次新开启的竞技场随机给的卡组
         self.total = 0  # 此次竞技已打场数
         self.win = 0  # 此次竞技已赢场数
@@ -69,4 +70,8 @@ class UserArena(GameModel):
         if uid:
             self.has_fight_uids.append(uid)
         self.put() 
+
+    def set_team_index(self, team_index):
+        self.team_index = team_index
+        self.put()
 

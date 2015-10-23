@@ -10,6 +10,16 @@ from common.invade_user import InvadeUser
 from models.user_invade import UserInvade
 
 
+def check_remain_dungeon():
+    user = request.user
+    umodified = user.user_modified
+    if has_dungeon_info('invade'):
+        api_end_invade(win=False)
+    elif has_dungeon_info('invade_defense'):
+        api_end_defense(win=False)
+        
+
+
 def api_info():
     """ api/invade/info
     城战界面基本信息

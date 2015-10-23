@@ -11,6 +11,7 @@ from common.game_config import get_config_update_time
 from common.game_config import get_config_str
 from common.game_config import get_config_dir
 from common.game_config import NEED_SYNC_CONFIGS
+from logics import invade
 
 
 def api_login(last_update_time):
@@ -76,6 +77,8 @@ def api_login(last_update_time):
     umodified = ubase.user_modified
     umodified.modified = {}
     umodified.put()
+    # 检查是否有强退战场，防止未结束
+    invade.check_remain_dungeon()
     return result
 
 #def get_all_cards_info(ubase):

@@ -98,10 +98,11 @@ def api_select_card(step, card_id):
     return {}
 
 
-def api_start_fight(new_team=None):
+def api_start_fight(team_index='', new_team=None):
     """ api/arena/start_fight
     开打
     Args:
+        team_index(str): 选择的编队号
         new_team(list): 战斗编队
     Returns:
         enemy(dict):
@@ -119,6 +120,8 @@ def api_start_fight(new_team=None):
         raise LogicError('Cannot fight')
     if new_team:
         api_set_team(new_team)
+    if team_index:
+        uarena.set_team_index(new_team)
     common_config = uarena._common_config
     # 扣除体力
     need_stamina = common_config['arena_fight_stamina']
