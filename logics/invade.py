@@ -173,7 +173,7 @@ def api_find_opponent():
     }
     # 掠夺的金币和对手主城进贡有关
     userlv_config = uInvade._userlv_config
-    win_get_coin = userlv_config[str(opponent['lv'])].get('reward_coin', 10) if opponent_info['uid'] else 0
+    win_get_coin = userlv_config[str(opponent_info['lv'])].get('reward_coin', 10) if opponent_info['uid'] else 0
     # 连胜两次以上获得两个杯，否则一个
     opponent_info['win_award'] = {
         'cup': 1 if uInvade.consecutive_win < 2 else 2,
@@ -211,7 +211,9 @@ def api_start_invade(team_index='', new_team=None):
     opponent_uid = opponent_info['uid']
     # 记录战前信息
     umodified = uInvade.user_modified
-    umodified.add_dungeon_info('invade')
+    umodified.add_dungeon_info('invade', {
+        'opponent_info' = opponent_info,
+    })
 
     # 如果是虚拟玩家，造一个数据
     if not opponent_uid:
@@ -228,7 +230,7 @@ def api_start_invade(team_index='', new_team=None):
                     'card_favor':[0, 1, 0, 1],
                 }
     else:
-        opoonent_invade = UserInvade.get(opponent_uid)
+        opponent_invade = UserInvade.get(opponent_uid)
         opponent_team_info = opponent_invade.watch_team_info()
     # 每次打别人， 自己的保护时间取消
     invade_user_instance = InvadeUser.get_instance()
@@ -251,9 +253,9 @@ def api_end_invade(win=True):
         coin(int): 获得金币数
     """ 
     user = request.user
-    common_config = uInvade._common_config
+    common_config = user._common_config
     umodified = user.user_modified
-    umodified.clear_dungeon_info('invade')
+    start_info = umodified.clear_dungeon_info('invade')
 
     now = int(time.time())
     if now - start_info['time'] <= 1:
@@ -261,7 +263,7 @@ def api_end_invade(win=True):
 
     uInvade = user.user_invade
     uProperty = uInvade.user_property
-    opponent_info = uInvade.opponent
+    opponent_info = start_info['opponent_info']
     opponent_uid = opponent_info['uid']
     invade_log = {
         'status': 0,

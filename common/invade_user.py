@@ -56,7 +56,7 @@ class InvadeUser(BaseModel):
             'uid': selected_uid,
             'name': selected_user.name,
             'lv': selected_uproperty.lv,
-            'capital_city': selected_ucities.captial_city,
+            'capital_city': selected_ucities.capital_city,
         }
 
     def make_virtual_user(self):
@@ -66,6 +66,5 @@ class InvadeUser(BaseModel):
             'lv': 10,
             'capital_city': '0',
         }
-
 
 
