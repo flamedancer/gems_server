@@ -282,6 +282,7 @@ def api_end_invade(win=True):
             invade_user_instance.add_user(opponent_uid, shield_time) 
             opponentInvade.reset_shield_time(shield_time)
         else:
+            invade_user_instance.add_user(opponent_uid) 
             opponentInvade.add_invade_jeton(1)
     else:
         award['coin'] = 0
