@@ -198,7 +198,7 @@ def api_start_invade(team_index='', new_team=None):
                     'nature_3': 5,
                     'nature_4': 5,
                     'nature_5': 5,
-                    'team': uInvade._common_config['init_team'],
+                    'team': uInvade._userInit_config['init_team'],
                     'card_lv': [2, 4, 6, 8],
                     'card_favor':[0, 1, 0, 1],
                 }
@@ -271,12 +271,12 @@ def api_end_invade(win=True):
         opponent_invade_log['capital_city'] = opponentInvade.user_cities.capital_city
         # 要告诉对手他别打了
         opponentInvade.add_history(opponent_invade_log)
+        invade_user_instance = InvadeUser.get_instance()
         if win:
             opponent_coin = opponentInvade.user_property.coin 
             award['coin'] = min(opponent_invade_log['lose_coin'], opponent_coin) 
             tools.del_user_things(opponentInvade, 'coin', award['coin'], 'beinvaded')
             # 给被打人 加护盾时间
-            invade_user_instance = InvadeUser.get_instance()
             shield_gap = common_config['invade_keep_shield_seconds']
             shield_time = int(time.time()) + shield_gap
             invade_user_instance.add_user(opponent_uid, shield_time) 
@@ -349,7 +349,7 @@ def api_end_defense(win=True):
     defe_history = umodified.get_dungeon_info('invade_defense')['history']
     umodified.clear_dungeon_info('invade_defense')
     now = int(time.time())
-    if now - start_info['time'] <= 1:
+    if now - defe_history['time'] <= 1:
         raise LogicError("rush a dungeon to quick") 
 
     uInvade = user.user_invade

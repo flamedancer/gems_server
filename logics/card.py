@@ -192,6 +192,7 @@ def api_off_new(card_id):
         raise LogicError("Not exist card") 
     if 'is_new' in ucards.cards[card_id]:
         ucards.cards[card_id]['is_new'] = False
+        ucards.put()
     umodified.set_modify_info('cards', {card_id: ucards.cards[card_id]})
     return {}
     
