@@ -205,10 +205,6 @@ def api_start_invade(team_index='', new_team=None):
     else:
         opponent_invade = UserInvade.get(opponent_uid)
         opponent_team_info = opponent_invade.watch_team_info()
-    # 每次打别人， 自己的保护时间取消
-    invade_user_instance = InvadeUser.get_instance()
-    uInvade.reset_shield_time()
-    invade_user_instance.add_user(uInvade.uid)
     # 重置 连续寻找对手次数 清空已找到对手
     uInvade.reset_refresh_cnt()
     uInvade.clear_opponent()
@@ -249,6 +245,7 @@ def api_end_invade(win=True):
     opponent_invade_log['team_info'] = uInvade.now_team_info()
     # 胜利获得全额经验1奖杯和对手金钱;失败扣奖杯,且对手加代币
     full_exp = common_config['invade_fight_exp']
+    invade_user_instance = InvadeUser.get_instance()
     if win:
         # 连胜次数加1
         uInvade.inc_consecutive_win()
@@ -256,6 +253,9 @@ def api_end_invade(win=True):
         award['exp'] = full_exp
         opponent_invade_log['status'] = 0
         opponent_invade_log['lose_coin'] = award.get('coin', 0)
+        # 每次打赢别人， 自己的保护时间取消
+        uInvade.reset_shield_time()
+        invade_user_instance.add_user(uInvade.uid)
     else:
         # 失败清空连胜次数 
         uInvade.reset_consecutive_win()
@@ -271,7 +271,6 @@ def api_end_invade(win=True):
         opponent_invade_log['capital_city'] = opponentInvade.user_cities.capital_city
         # 要告诉对手他别打了
         opponentInvade.add_history(opponent_invade_log)
-        invade_user_instance = InvadeUser.get_instance()
         if win:
             opponent_coin = opponentInvade.user_property.coin 
             award['coin'] = min(opponent_invade_log['lose_coin'], opponent_coin) 

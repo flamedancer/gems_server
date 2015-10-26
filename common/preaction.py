@@ -81,7 +81,7 @@ def signature_validation(uid):
     # 如果没有uid, 新建
     if not uid:
         uid = 'test' + "{:0>6}".format(random.randrange(100000000))
-    user = UserBase.create(uid)
+    user = UserBase.get_no_none(uid)
     user.put()
     request.user = user
 

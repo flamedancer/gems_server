@@ -20,7 +20,6 @@ class GameModel(UserModel):
     @classmethod
     def create(cls, uid):
         obj = cls(uid)
-        obj.put()
         return obj 
 
     @classmethod
