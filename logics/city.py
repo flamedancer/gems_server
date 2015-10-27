@@ -7,6 +7,25 @@ from common import tools
 from common.exceptions import *
 
 
+def calcu_ex_natures(ucities, city_id):
+    city_lv = ucities.cities[city_id]['lv']
+    # 3,5,7,9,10级分别获得0,1,2,3,4index前加成
+    get_ex_index = city_lc // 2
+    lvup_nature_conf = ucities._city_config['lvup_nature']
+    ex_natures_list = [0] * 6
+    for natures, ex in lvup_nature_conf[:get_ex_index]):
+        for nature in natures:
+            ex_natures_list[nature] += ex
+    uproperty = ucities.user_property
+    umodified = ucities.user_modified
+    for nature_type, ex in enumertate(ex_nature_list):
+        nature_name = 'ex_nature_' + str(nature_type)
+        setattr(uproperty, nature_name, ex)
+        umodified.set_modify_info(nature_name, ex)
+    uproperty.put()
+    umodified.put()
+        
+        
 def api_set_capital(city_id):
     """ api/city/set_capital
     设置主城
@@ -18,6 +37,7 @@ def api_set_capital(city_id):
     ucities.set_capital(city_id)
     umodified = ucities.user_modified
     umodified.set_modify_info('capital_city', city_id)
+    calcu_ex_nature(ucities, city_id)
     return {}
     
 

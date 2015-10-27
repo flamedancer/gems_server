@@ -76,12 +76,19 @@ def debug_print(*msgs):
 def get_real_pvp_info(uid):
     pier_clear(uid)
     uBase = UserBase.create(uid) 
+    uProperty = uBase.user_property
     uCards = uBase.user_cards 
     team = uCards.cur_team()
     user_pvp_info = {
         'uid': uBase.uid,
         'name': uBase.name,
         'team': team,
+        'nature_0': uProperty.nature_0,
+        'nature_1': uProperty.nature_1,
+        'nature_2': uProperty.nature_2,
+        'nature_3': uProperty.nature_3,
+        'nature_4': uProperty.nature_4,
+        'nature_5': uProperty.nature_5,
         'card_lv': [uCards.cards.get(cid, {'lv': 0})['lv'] for cid in team],
         'card_favor': [uCards.cards.get(cid, {'favor': 0})['favor'] for cid in team],
     }

@@ -368,10 +368,11 @@ def api_end_defense(win=True):
     return award
 
     
-def api_set_watch_team(new_team):
+def api_set_watch_team(team_index, new_team):
     """ api/invade/set_watch_team
     更改防守编队队形
     Args:
+        team_index(str): 选择军旗
         new_team(list): 新的卡片编队 
     """
     uInvade = request.user.user_invade

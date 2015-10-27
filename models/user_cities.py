@@ -23,7 +23,7 @@ class UserCities(GameModel):
     """
     def __init__(self, uid=''):
         self.uid = uid
-        self.capital_city = '0'
+        self.capital_city = ''
         self.cities = {}
 
     @classmethod

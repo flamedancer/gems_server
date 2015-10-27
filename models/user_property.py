@@ -24,6 +24,13 @@ class UserProperty(GameModel):
         self.nature_5 = 0       # 紫元素掌握度
         self.nature_remain = 0      # 剩余元素掌握度
         self.topfull_exp = 10      # !待删
+  
+        self.ex_nature_0 = 0       # 加成蓝元素掌握度
+        self.ex_nature_1 = 0       # 加成红元素掌握度
+        self.ex_nature_2 = 0       # 加成绿元素掌握度
+        self.ex_nature_3 = 0       # 加成褐元素掌握度
+        self.ex_nature_4 = 0       # 加成黄元素掌握度
+        self.ex_nature_5 = 0       # 加成紫元素掌握度
 
     @classmethod
     def create(cls, uid):
