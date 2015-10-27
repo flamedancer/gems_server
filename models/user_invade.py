@@ -38,6 +38,7 @@ class UserInvade(GameModel):
         self.history = []
         self.has_new_history = False
         self.watch_team = []
+        self.watch_team_index = ''
         self.refresh_cnt = 0
         self.consecutive_win = 0
         self.opponent = {}
@@ -120,7 +121,7 @@ class UserInvade(GameModel):
         self.opponent = {}
         self.put()
 
-    def set_watch_team(self, team):
+    def set_watch_team(self, index, team):
         """ 修改守城编队
         Args:
             team: 新的编队list
@@ -139,6 +140,7 @@ class UserInvade(GameModel):
             elif uCards.cards[card_id]['num'] < team.count(card_id):
                 raise LogicError("%s num is not enough" % card_id)
         self.watch_team = team
+        self.watch_team_index = index
         self.put()
         
 

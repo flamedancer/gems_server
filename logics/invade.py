@@ -376,7 +376,7 @@ def api_set_watch_team(team_index, new_team):
         new_team(list): 新的卡片编队 
     """
     uInvade = request.user.user_invade
-    uInvade.set_watch_team(new_team)
+    uInvade.set_watch_team(team_index, new_team)
     return {}
 
 def api_buy(good_id):
