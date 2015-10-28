@@ -20,7 +20,7 @@ from models.user_base import UserBase
 from models.user_pvp import UserPvp
 from common import rank
 
-port = "9081"
+port = "9081" if len(sys.argv) != 2 else sys.argv[1]
 
 all_players = []  # 所有连接成功的玩家
 all_players_lock = Semaphore()
