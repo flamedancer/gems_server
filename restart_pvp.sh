@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DIR=$(dirname $(readlink -f $0))
-./pvp_stop.sh
+./stop_pvp.sh
 
 
 echo "restart"
