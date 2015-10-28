@@ -55,7 +55,7 @@ class UserPvp(GameModel):
             self.all_star += 2
         else:
             self.all_star += 1
-        self.consecutiv_win += 1
+        self.consecutive_win += 1
         self.adjust()
         self.put()
     
