@@ -26,6 +26,10 @@ def add_user_things(user, thing, num, way):
         new_card_info = user.user_cards.add_card(thing, num)
         umodified.set_modify_info('cards', {thing: new_card_info})
         change_info = new_card_info
+    elif thing.endswith('_item'):
+        new_item_info = user.user_items.add_item(thing, num)
+        umodified.set_modify_info('items', {thing: new_item_info})
+        change_info = new_item_info
     log(thing, num, way)
     return change_info 
 
@@ -45,6 +49,10 @@ def del_user_things(user, thing, num, way):
         new_card_info = user.user_cards.del_card(thing, num)
         umodified.set_modify_info('cards', {thing: new_card_info})
         change_info = new_card_info
+    elif thing.endswith('_item'):
+        new_item_info = user.user_items.del_item(thing, num)
+        umodified.set_modify_info('items', {thing: new_item_info})
+        change_info = new_item_info
     return change_info
     print "******del thing num way", thing, num, way 
 

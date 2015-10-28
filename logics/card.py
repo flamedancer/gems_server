@@ -63,9 +63,10 @@ def api_upgrade(card_id, lv_num):
     new_card_info = ucards.add_card_lv(card_id, lv_num)
     # 升满级后加对应城市等级
     if new_card_info['lv'] == max_card_lv:
-        camp = ucards._card_config[card_id]['camp']
+        camp = str(ucards._card_config[card_id]['camp'])
         ucities = ucards.user_cities
-        ucities.up_city_lv(str(camp))
+        if ucitiees.has_show_city(camp):  
+            ucities.up_city_lv(camp)
         
     umodified = request.user.user_modified
     umodified.set_modify_info('cards', {card_id: new_card_info})

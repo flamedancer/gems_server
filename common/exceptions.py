@@ -13,7 +13,7 @@ class ParamsError(Error):
     或不符要求，抛出此异常
     """
     error_code = 6
-    def __init__(self, error_msg):
+    def __init__(self, error_msg='params error'):
         self.error_msg = error_msg
 
 
@@ -52,7 +52,7 @@ class LogicError(Error):
     """
     error_code = 4
     error_msg = u"系统错误，请重进游戏！"
-    def __init__(self, error_msg):
+    def __init__(self, error_msg='logic error'):
         self.error_msg = error_msg
 
 class LackError(Error):
@@ -61,7 +61,7 @@ class LackError(Error):
     例如购买时金币不足等
     """   
     error_code = 5
-    def __init__(self, error_msg):
+    def __init__(self, error_msg='lack thing error'):
         self.error_msg = error_msg
 
 

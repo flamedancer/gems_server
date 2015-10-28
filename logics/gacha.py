@@ -9,23 +9,21 @@ from common.tools import *
 
 def gacha(gacha_type):
     """ 两种gacha_type
-        金币抽: coin_gacha
-        钻石抽: diamond_gacha
+        金币抽: coin
+        钻石抽: diamond
     """
     user = request.user
     common_config = user._common_config
-    if gacha_type == 'coin_gacha':
-        need_coin = common_config['gacha_coin']
-        del_user_things(user, 'coin', need_coin, gacha_type)
-    elif gacha_type == 'diamond_gacha':
-        need_diamond = common_config['gacha_diamond']
-        del_user_things(user, 'diamond', need_diamond, gacha_type)
+    if gacha_type == 'coin':
+        del_user_things(user, 'gachacoin_item', 1, gacha_type)
+    elif gacha_type == 'diamond':
+        del_user_things(user, 'gachadiamond_item', 1, gacha_type)
     
     get_cards = []
 
-    gacha_conf = user._gacha_config[gacha_type]
+    gacha_conf = user._gacha_config[gacha_type + '_gacha']
     color_rate_dict = {key: value['weight'] for key,value in gacha_conf.items()}
-    guarant_color = 2 if gacha_type == 'diamond_gacha' else 1 
+    guarant_color = 2 if gacha_type == 'diamond' else 1 
     get_guarant = False
     for cnt in range(0, 3):
         # 前两张没拿到保底颜色或以上卡，第三张必出保底颜色或以上
@@ -52,21 +50,33 @@ def gacha(gacha_type):
     return get_cards
 
 
-def api_coin_gacha():
-    """ api/gacha/coin_gacha
-    用金币抽卡,获得三张卡牌,必有一张绿卡
+def api_gacha(gacha_type):
+    """ api/gacha/gacha
+    抽卡,获得三张卡牌,必有一张绿卡
+    Args:
+        gacha_type(str): 抽卡类型: 'diamond'(钻石抽), 'coin'(金币抽) 
 
     Returns:
        get_cards(list): 获得的卡牌序列 
     """
-    return {'get_cards': gacha('coin_gacha')}
+    return {'get_cards': gacha(gacha_type)}
 
 
-def api_diamond_gacha():
-    """ api/gacha/diamond_gacha
-    用钻石抽卡
-
-    Returns:
-       get_cards(list): 获得的卡牌序列 
+def api_buy_gacha_item(gacha_type):
+    """ api/gacha/buy_gacha_item
+    购买抽卡道具
+    Args:
+        gacha_type(str): 购买的道具类型: 'diamond'(钻石抽道具), 'coin'(金币抽道具) 
     """
-    return {'get_cards': gacha('diamond_gacha')}
+    user = request.user
+    common_config = user._common_config
+    if gacha_type == 'coin':
+        need_coin = common_config['gacha_coin']
+        del_user_things(user, 'coin', need_coin, 'buy_gachacoin_item')
+        add_user_things(user, 'gachacoin_item', 1, 'buy_gachacoin_item')
+    elif gacha_type == 'diamond_gacha':
+        need_diamond = common_config['gacha_diamond']
+        del_user_things(user, 'diamond', need_diamond, 'buy_gachadiamond_item')
+        add_user_things(user, 'gachadiamond_item', 1, 'buy_gachadiamond_item')
+    return {}
+    

@@ -137,6 +137,7 @@ def get_user_info(ubase):
     user_info.update(ubase.user_property.to_dict())
     user_info.update(get_user_cardinfo(ubase))
     user_info.update(ubase.user_cities.to_dict())
+    user_info.update(ubase.user_items.to_dict())
     return user_info
 
 def get_user_cardinfo(ubase):

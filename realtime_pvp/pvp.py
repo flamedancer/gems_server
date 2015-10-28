@@ -17,6 +17,8 @@ import settings
 from libs.dbs import app
 from logics.login import get_user_info
 from models.user_base import UserBase
+from models.user_pvp import UserPvp
+from common import rank
 
 port = "9081"
 
@@ -92,6 +94,7 @@ def get_real_pvp_info(uid):
         'card_lv': [uCards.cards.get(cid, {'lv': 0})['lv'] for cid in team],
         'card_favor': [uCards.cards.get(cid, {'favor': 0})['favor'] for cid in team],
     }
+    pier_clear(uid)
     return user_pvp_info
 
 
@@ -271,6 +274,18 @@ class Player(object):
         """ <5>3
         """
         loser = self.uid if winner != self.uid else self.opponent.uid   
+        # 玩家加星
+        upvp_win = UserPvp.get(winner) 
+        upvp_lose = UserPvp.get(loser) 
+        upvp_win.win()
+        upvp_lose.lose()
+        upvp_win.do_put()
+        upvp_lose.do_put()
+        # 更新排行榜
+        top_model = rank.get_pvp_rank()
+        top_model.set(winner, upvp_win.all_star)
+        top_model.set(loser, upvp_lose.all_star)
+        pier_clear(loser, winner)
         data = {
             'end_reason': end_reason,
             'winner': winner,
