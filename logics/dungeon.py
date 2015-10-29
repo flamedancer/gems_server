@@ -43,9 +43,6 @@ def api_start(dungeon_type, city_id, team_index='', new_team=None, floor=''):
         need_stamina = stage_conf['stamina']
         # 扣体力
         tools.del_user_things(ubase, 'stamina', need_stamina, 'conquer')
-        # 加1/3经验 
-        add_exp = int((1.0 / 3) * stage_conf['award'].get('exp', 0))
-        tools.add_user_things(ubase, 'exp', add_exp, 'conquer')
         enemy_favor = stage_conf['enemy_favor'] 
         enemy_nature = stage_conf['enemy_nature'] 
         enemy_team = []
@@ -63,9 +60,6 @@ def api_start(dungeon_type, city_id, team_index='', new_team=None, floor=''):
         need_stamina = room_conf['stamina']
         # 扣体力
         tools.del_user_things(ubase, 'stamina', need_stamina, 'challenge')
-        # 加1/3经验 
-        add_exp = int((1.0 / 3) * room_conf['award'].get('exp', 0))
-        tools.add_user_things(ubase, 'exp', add_exp, 'conquer')
         enemy_favor = room_conf['enemy_favor'] 
         enemy_nature = room_conf['enemy_nature'] 
         enemy_team = []
@@ -88,7 +82,6 @@ def api_start(dungeon_type, city_id, team_index='', new_team=None, floor=''):
         'enemy_lv': enemy_lv,
         'enemy_favor': enemy_favor,
         'enemy_nature': enemy_nature,
-        'add_exp': add_exp,
     }
     return result
 
@@ -131,7 +124,7 @@ def calcu_enemy_lv(ucards, base_lv):
     return return_lv
 
 
-def api_end(dungeon_type, city_id, has_dead_mem=True):
+def api_end(dungeon_type, city_id, win=True, has_dead_mem=True):
     """ api/dungeon/end
     结束战斗
     Args:
@@ -178,10 +171,13 @@ def api_end(dungeon_type, city_id, has_dead_mem=True):
         cur_stage = ucities.cur_conquer_stage(city_id)
         stage_conf = conquer_config[city_id][cur_stage]
         award = stage_conf.get('award', {})
-        if 'exp' in award:
-            # 加2/3经验 
-            add_exp = award['exp'] - int((1.0 / 3) * award['exp'])
-            award['exp'] = add_exp
+
+        full_exp = award.get('exp', 0)
+        # 失败只加1/3经验 
+        if not win: 
+            add_exp = int((1.0 / 3) * full_exp)
+            tools.add_user_things(ubase, 'exp', add_exp, 'conquer')
+            return {'exp': add_exp}
         tools.add_user_awards(ubase, award, 'conquer')
         if str(int(cur_stage) + 1) not in conquer_config[city_id]:
             new_info = ucities.conquer_city(city_id)
@@ -194,10 +190,13 @@ def api_end(dungeon_type, city_id, has_dead_mem=True):
         cur_room = str(ucities.cities[city_id]['challenge'][floor])
         room_conf = challenge_config[city_id][floor][cur_room]
         award = room_conf.get('award', {})
-        if 'exp' in award:
-            # 加2/3经验 
-            add_exp = award['exp'] - int((1.0 / 3) * award['exp'])
-            award['exp'] = add_exp
+
+        full_exp = award.get('exp', 0)
+        # 失败只加1/3经验 
+        if not win: 
+            add_exp = int((1.0 / 3) * full_exp)
+            tools.add_user_things(ubase, 'exp', add_exp, 'challenge')
+            return {'exp': add_exp}
         if can_get_ext_award(ubase, room_conf['ext_term'], has_dead_mem):
             for thing, info in room_conf['ext_award'].items(): 
                 if thing in award:
