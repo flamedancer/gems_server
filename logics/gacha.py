@@ -74,7 +74,7 @@ def api_buy_gacha_item(gacha_type):
         need_coin = common_config['gacha_coin']
         del_user_things(user, 'coin', need_coin, 'buy_gachacoin_item')
         add_user_things(user, 'gachacoin_item', 1, 'buy_gachacoin_item')
-    elif gacha_type == 'diamond_gacha':
+    elif gacha_type == 'diamond':
         need_diamond = common_config['gacha_diamond']
         del_user_things(user, 'diamond', need_diamond, 'buy_gachadiamond_item')
         add_user_things(user, 'gachadiamond_item', 1, 'buy_gachadiamond_item')

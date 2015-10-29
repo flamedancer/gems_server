@@ -65,7 +65,7 @@ def api_upgrade(card_id, lv_num):
     if new_card_info['lv'] == max_card_lv:
         camp = str(ucards._card_config[card_id]['camp'])
         ucities = ucards.user_cities
-        if ucitiees.has_show_city(camp):  
+        if ucities.has_show_city(camp):  
             ucities.up_city_lv(camp)
         
     umodified = request.user.user_modified

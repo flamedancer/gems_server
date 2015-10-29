@@ -101,7 +101,7 @@ class UserInvade(GameModel):
         old_cup = self.cup
         self.cup = max(0, self.cup + num)
         invade_cup_rank = self._common_config['invade_cup_rank']
-        self.cup_rank = len(invade_cup_rank) - bisect.bisect(invade_cup_rank, self.cup)
+        self.cup_rank = len(invade_cup_rank) - bisect.bisect(invade_cup_rank, self.cup) + 1 
         self.put()
         return self.cup - old_cup
 
