@@ -124,7 +124,7 @@ def calcu_enemy_lv(ucards, base_lv):
     return return_lv
 
 
-def api_end(dungeon_type, city_id, win=True, has_dead_mem=True):
+def api_end(dungeon_type, city_id, win=True, has_dead_mem=True, bout=1):
     """ api/dungeon/end
     结束战斗
     Args:
@@ -132,6 +132,7 @@ def api_end(dungeon_type, city_id, win=True, has_dead_mem=True):
         city_id(str): 要打哪个城，城市id
         win(bool): 战斗胜利还是失败
         has_dead_mem(bool): 挑战模式战斗过程是否有队员死亡
+        bout(bool): 挑战模式战斗使用回合数
 
     Returns:
         coin(int): 奖励 铜钱
@@ -198,7 +199,7 @@ def api_end(dungeon_type, city_id, win=True, has_dead_mem=True):
             add_exp = int(full_exp / 3)
             tools.add_user_things(ubase, 'exp', add_exp, 'challenge')
             return {'exp': add_exp}
-        if can_get_ext_award(ubase, room_conf['ext_term'], has_dead_mem):
+        if can_get_ext_award(ubase, room_conf['ext_term'], has_dead_mem, bout):
             for thing, info in room_conf['ext_award'].items(): 
                 if thing in award:
                     award[thing] += info
@@ -213,12 +214,15 @@ def api_end(dungeon_type, city_id, win=True, has_dead_mem=True):
     
 
 
-def can_get_ext_award(user, ext_term, has_dead_mem):
+def can_get_ext_award(user, ext_term, has_dead_mem, bout):
     """
     a       己方卡牌不可阵亡
     b*      上阵卡牌必须全部为*阵营 例: b2 全属于尤克特拉希尔城
     c*      上阵卡牌必须全部带有某属性 例: c2 全有绿元素 
     d*      上阵卡牌必须包括某某卡牌 例:  d3 阵营要有斯雷普尼尔
+    e*      上阵卡牌必须不能带有*属性 例: e2 不能有有绿元素
+    f*      上阵卡牌必须全部为*种族 例: f2 全为妖鬼
+    g       必须在 <=* 回合内胜利 例: g20 不大于20回合内结束
     """
     card_config = user._card_config
     ucards = user.user_cards
@@ -233,11 +237,26 @@ def can_get_ext_award(user, ext_term, has_dead_mem):
                 if card_config[card_id]['camp'] != int(term_value):
                     return False
         elif term_name == 'c':
+            term_value = int(term_value)
             for card_id in cur_team:
-                if int(term_value) not in card_config[card_id]['type']:
+                if term_value not in card_config[card_id]['type']:
                     return False
         elif term_name == 'd':
             if term_value + '_card' not in cur_team:
+                return False
+        elif term_name == 'e':
+            term_value = int(term_value)
+            for card_id in cur_team:
+                if term_value in card_config[card_id]['type']:
+                    return False
+        elif term_name == 'f':
+            term_value = int(term_value)
+            for card_id in cur_team:
+                if term_value != card_config[card_id]['race']:
+                    return False
+        elif term_name == 'g':
+            term_value = int(term_value)
+            if term_value > bout:
                 return False
     return True
             

@@ -318,7 +318,7 @@ class Player(object):
         elif self.fight_status == 1 and self.opponent:
             # 通知对方自己已经放弃
             self.send('rsp_cancel_pvp')
-            disconnect_player(self, reason='cancel-fighting')
+            self.inf_fight_result(self.opponent.uid, end_reason='cancel-fighting')
     
     def ans_cancel_pvp(self):
         pass
@@ -357,10 +357,11 @@ def disconnect_player(player, reason=''):
     del_all_player(player)
     del_pear_dict(player.opponent)
     # 已近进入战斗要扣体力
-    if player.status >= 0:
+    if player.fight_status >= 0:
         uproperty = UserProperty.get(player.uid) 
         need_stamina = uproperty._common_config['pvp_stamina'] 
         tools.del_user_things(uproperty, 'stamina', need_stamina, 'pvp_start')
+        uproperty.do_put()
     pier_clear(player.uid)
 
     player.connecting = False
