@@ -87,6 +87,7 @@ modifide-time=2015-07-13 17:24
                 msgtype    req_end_fight
                 data {
                     "winner": "uid",
+                    "end_reason": "yyyy", 结束原因
                 }
         2. server 返回:
                 msgtype    rsp_end_fight

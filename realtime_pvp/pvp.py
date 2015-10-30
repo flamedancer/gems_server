@@ -18,7 +18,9 @@ from libs.dbs import app
 from logics.login import get_user_info
 from models.user_base import UserBase
 from models.user_pvp import UserPvp
+from models.user_property import UserProperty
 from common import rank
+from common import tools
 
 port = "9081" if len(sys.argv) != 2 else sys.argv[1]
 
@@ -267,7 +269,7 @@ class Player(object):
         self.send('rsp_end_fight')
         if self.opponent.fight_status == 2:
             winner = data["winner"]
-            end_reason = data["end_reason"]
+            end_reason = data.get("end_reason", "normal")
             self.inf_fight_result(winner, end_reason)
 
     def inf_fight_result(self, winner, end_reason):
@@ -277,8 +279,11 @@ class Player(object):
         # 玩家加星
         upvp_win = UserPvp.get(winner) 
         upvp_lose = UserPvp.get(loser) 
+        full_exp = upvp_win._common_config['pvp_exp']
         upvp_win.win()
+        tools.add_user_things(upvp_win, 'exp', full_exp, 'pvp_end')
         upvp_lose.lose()
+        tools.add_user_things(upvp_lose, 'exp', int(full_exp / 3), 'pvp_end')
         upvp_win.do_put()
         upvp_lose.do_put()
         # 更新排行榜
@@ -351,6 +356,11 @@ def disconnect_player(player, reason=''):
         return
     del_all_player(player)
     del_pear_dict(player.opponent)
+    # 已近进入战斗要扣体力
+    if player.status >= 0:
+        uproperty = UserProperty.get(player.uid) 
+        need_stamina = uproperty._common_config['pvp_stamina'] 
+        tools.del_user_things(uproperty, 'stamina', need_stamina, 'pvp_start')
     pier_clear(player.uid)
 
     player.connecting = False

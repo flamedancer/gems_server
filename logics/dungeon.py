@@ -130,6 +130,7 @@ def api_end(dungeon_type, city_id, win=True, has_dead_mem=True):
     Args:
         dungeon_type(str): 战斗类型 "conquer"征服模式 "challenge"挑战模式 
         city_id(str): 要打哪个城，城市id
+        win(bool): 战斗胜利还是失败
         has_dead_mem(bool): 挑战模式战斗过程是否有队员死亡
 
     Returns:
@@ -175,7 +176,7 @@ def api_end(dungeon_type, city_id, win=True, has_dead_mem=True):
         full_exp = award.get('exp', 0)
         # 失败只加1/3经验 
         if not win: 
-            add_exp = int((1.0 / 3) * full_exp)
+            add_exp = int(full_exp / 3)
             tools.add_user_things(ubase, 'exp', add_exp, 'conquer')
             return {'exp': add_exp}
         tools.add_user_awards(ubase, award, 'conquer')
@@ -194,7 +195,7 @@ def api_end(dungeon_type, city_id, win=True, has_dead_mem=True):
         full_exp = award.get('exp', 0)
         # 失败只加1/3经验 
         if not win: 
-            add_exp = int((1.0 / 3) * full_exp)
+            add_exp = int(full_exp / 3)
             tools.add_user_things(ubase, 'exp', add_exp, 'challenge')
             return {'exp': add_exp}
         if can_get_ext_award(ubase, room_conf['ext_term'], has_dead_mem):

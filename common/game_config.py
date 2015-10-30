@@ -87,6 +87,8 @@ u'''
 钻石抽奖消耗钻石 gahca_diamond
 
 pvp各段位升满所需星数(从15~1为序) pvp_rank_stars
+pvp开始战斗后消耗体力 pvp_stamina
+pvp胜利获得经验(失败获得1/3此值) pvp_exp
 
 城战奖杯对应段位 invade_cup_rank
 城战寻找对手需要金币(根据次数增加) invade_refresh_coin

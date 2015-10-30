@@ -11,17 +11,17 @@ class UserPvp(GameModel):
         # 玩家 属性数据
         self.uid = uid 
         self.all_star = 0 
-        self.grade = 15 # 段位 
+        self.grade = 0 # 段位 
         self.light_star = 0     # 显示亮星个数 
-        self.shade_star = 5  # 显示暗星个数 
+        self.shade_star = 0  # 显示暗星个数 
         self.consecutive_win = 0
-        self.init()
 
-    def init(self):
-        pvp_rank_stars = self._common_config['pvp_rank_stars']
-        self.grade = len(pvp_rank_stars)
-        self.shade_star = pvp_rank_stars[0]
-        self.put()
+    @classmethod
+    def create(cls, uid): 
+        obj = cls(uid)
+        obj.adjust()
+        obj.put()
+        return obj
 
     def team_info(self):
         uProperty = self.user_property
@@ -40,14 +40,14 @@ class UserPvp(GameModel):
         }
 
     def adjust(self):
-        pvp_rank_stars = [0] + self._common_config['pvp_rank_stars']
+        pvp_rank_stars = self._common_config['pvp_rank_stars']
         grade_index = bisect.bisect(pvp_rank_stars, self.all_star)
         self.light_star = self.all_star - pvp_rank_stars[grade_index - 1]
         if grade_index == len(pvp_rank_stars):
             self.shade_star = 0
         else:
             self.shade_star = pvp_rank_stars[grade_index] - self.all_star
-        self.grade = max(1, len(pvp_rank_stars) - grade_index)
+        self.grade = len(pvp_rank_stars) - grade_index
         
         
     def win(self):
