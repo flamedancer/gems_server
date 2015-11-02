@@ -50,7 +50,7 @@ class UserCities(GameModel):
             return {}
         self.cities[city_id] = {
             'status': 0,
-            'lv': 1,
+            'lv': 0,
             'jeton': 0,
             'reputation': 0,
             'reputation_lv': 0,
