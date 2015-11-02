@@ -6,6 +6,7 @@ from bottle import request
 from common import tools
 from common.exceptions import *
 from common import rank
+from models.user_base import UserBase
 
 
 def api_info():
@@ -52,19 +53,20 @@ def api_top():
         })
 
     self_rank = top_model.rank(user.uid)
+    self_score = top_model.score(user.uid) or 0
     # 不在排行榜内 返回 0
     if self_rank is None:
         self_rank = 0
         star_gap = 0
     # top 的rank 第一名是 0
     else:
-        star_gap = top_model.get_score(srank - 1) + 1
+        star_gap = top_model.get_score(self_rank - 1) - self_score + 1
         self_rank += 1
     return {
         'tops': tops,
         'self_rank': self_rank,
         'star_gap': star_gap,
-        'self_star': top_model.score(user.uid) or 0
+        'self_star': self_score,
     }
 
     
