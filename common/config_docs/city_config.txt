@@ -1,0 +1,11 @@
+城市配置	含义	类型	举例	补充
+id	城市id	str	1	
+name	名字	str	布达拉	
+type	元素类型	list	0,1	
+allies	关联城市	list	2,3	
+need_ulv	开启需要玩家等级	int	2	
+team_skills	军旗被动技能列表（根据声望顺序）	list	1_skill', '202_skill',….	
+reward_type	贡品类型	str	money	money(金钱),jeton(该城代币),statmina(体力),heroSoul(英魂)
+reward_num	贡品类型（根据城市等级顺序）	list	10,20,30….	
+lvup_fighting	战斗属性加成（根据城市偶数等级顺序）	list	[['defense', 1], ['attact',1], …..]	
+lvup_nature	元素掌握度加成（根据城市奇数等级顺序）	list	[[[0,1],1], [[2], 2],[[0,1,2,3,4,5],3]…...]	
