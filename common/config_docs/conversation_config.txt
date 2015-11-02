@@ -1,0 +1,31 @@
+
+        字段    类型    解释                
+                                
+key  (城市id)                               
+    key  （floor_index）                            
+        before  list    进场对话
+                                 说话者  说话者头像id    语句
+                                 self    ""  xxx
+                                 npc "1_card"    xxx
+                                 enemy   "2_card"    xxx
+                                
+        after   list    出场对话                
+                                
+                                
+                                
+                                
+例如：                              
+{ "0": {                                
+    "1": {                          
+        "before":[  ["self",    "", "你是谁"]，         
+            ["npc", "1_card",   "我是npc"]，            
+            ["self",    "", "..."]，            
+            ["npc", "", "xxx"]，            
+            ["enemy",   "2_card",   "插标卖耳"]，           
+                                
+        ],                      
+        "after":[                       
+        …                       
+        …                       
+        ..                      
+        ],                      

@@ -1,0 +1,23 @@
+					
+用途		字段		类型	示例
+唯一编号		id		str	 1_card
+属性(金木水火)		type		list	[‘0’,’1’]
+攻击力		attack		int	1000
+护甲值		defense		int	1000
+生命值		hp		int	1000
+法力		power		int	1000
+激活技能所需mp		skill_need_mp		int	50
+技能		skill		str	‘1’     (字段关联技能表)
+好感度		favor		int	1
+名字		name		str	张飞
+插画		picture		前段图片	xxx.png
+台词		words		前段存储台	xxx.txt
+等级		lv		int	100
+所属阵营		camp		int	0
+神话出处		myth		int	1
+品质		quality		int	0
+种族		race		int	1
+					
+技能特效及是否全屏		skill_ani		list	['xxx', true]
+子弹飞行特效及是否移动		bullet_ani		list	['yyy', true]
+敌方受击特效及是否AOE		effect_ani		list	['zzz', true]

@@ -1,0 +1,33 @@
+
+key  (城市id)                   
+    key  （floor_index）                
+        name    str 关卡名字    
+        stamina int 消耗体力    
+        award   dict    战场掉落    
+        enemy    list    敌将以及基础等级    
+        enemy_nature    int 对手全元素掌握度    
+        enemy_favor int 敌将好感度  
+                    
+                    
+                    
+例如：                  
+{ "0": {                    
+    "1": {              
+        "name": "第一关"，          
+        "stamina"： 10，            
+        "enemy"：[["1_card",1], ["3_card",2],["5_card",3], ["9_card",4]],           
+        "enemy_nature": 3,          
+        "enemy_favor": 1,           
+        "award": {          
+            "card": [  ["1_card", 1],  ["2_card", 2],…..], # [ [卡牌id, 数量], ..
+            "prop": [  ["1_prop", 1],  ["2_prop", 2],…..],
+            "exp": 10,      
+            "coin": 10,     
+            "heroSoul",     
+            "diamond": 1,       
+        },          
+    },              
+    "2": {              
+    ……              
+    ……              
+    ……              
