@@ -205,6 +205,11 @@ def api_end(dungeon_type, city_id, win=True, has_dead_mem=True, bout=1):
                     award[thing] += info
                 else:
                     award[thing] = info
+        # 加当前城市声望
+        if 'reputation' in award:
+            add_reputation = award.pop('reputation')
+            new_info = ucities.add_city_reputation(city_id, add_reputation)
+            umodified.set_modify_info('cities', new_info)
         tools.add_user_awards(ubase, award, 'conquer')
         new_info = ucities.up_challenge_stage(city_id, floor)
         umodified.set_modify_info('cities', new_info)

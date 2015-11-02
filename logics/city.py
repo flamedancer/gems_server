@@ -56,6 +56,14 @@ def api_open_city(city_id):
     tools.del_user_things(ucities, 'coin', need_coin, 'open_city')
     new_info = ucities.open_city(city_id)
     umodified.set_modify_info('cities', new_info)
+    # 城市每张满级卡加一级
+    ucards = ucities.user_cards
+    max_card_lv = ucards._common_config['max_card_lv', 15]
+    card_config = ucards._card_config
+    for card_id, card_info in ucards.items():
+        if card_info['lv'] == max_card_lv and\
+           city_id == card_config[card_id]['camp']:
+            ucities.up_city_lv(city_id)
     return {}
      
     

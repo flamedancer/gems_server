@@ -1,4 +1,5 @@
-
+      
+        
 ***一些游戏基础配置***
 
 
@@ -6,7 +7,7 @@
 
 城市最高等级 max_city_lv
 
-城市最高声望值 max_city_reputation
+城市声望配置 city_reputation
 
 卡牌编队最大长度 team_length
 
@@ -38,3 +39,6 @@ pvp胜利获得经验(失败获得1/3此值) pvp_exp
 
 
 
+
+
+      

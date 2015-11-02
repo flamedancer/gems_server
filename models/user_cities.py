@@ -1,6 +1,7 @@
 # -*- encoding: utf-8*
 
 import random
+import bisect
 from models import GameModel
 from common.exceptions import *
 
@@ -146,6 +147,22 @@ class UserCities(GameModel):
         max_city_lv = self._common_config['max_city_lv']
         self.cities[city_id]['lv'] = min(self.cities[city_id]['lv'] + 1, max_city_lv)
         self.put()
+
+    def add_city_reputation(self, city_id, add_reputation):
+        city_reputation_conf = self._common_config['city_reputation']
+        new_rep = self.cities[city_id]['reputation'] + add_reputation
+        self.cities[city_id]['reputation_lv'] = bisect.bisect(city_reputatiion_conf,
+            new_rep) - 1
+        self.cities[city_id]['reputation'] = min(max(city_reputation_conf), new_rep)
+        return {city_id: {'reputation': self.cities[city_id]['reputation'],
+                          'reputation_lv': self.cities[city_id]['reputation_lv'],
+                         }
+        }
+        
+        
+        
+        
+        
 
     def up_challenge_stage(self, city_id, floor):
         self.cities[city_id]['challenge'][floor] += 1

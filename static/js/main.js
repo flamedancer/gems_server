@@ -32,13 +32,13 @@ function json_format(txt,compress/*是否为压缩模式*/){/* 格式化JSON源�
                     function sort_by_id(id_type1, id_type2) {
                         var id1 = id_type1.split('_')[0]; 
                         var id2 = id_type2.split('_')[0];
-                        try{var nid1=Number(id1);var nid2=Number(                        id2);}
-                        catch(e){
+                        var nid1=Number(id1);
+                        var nid2=Number(id2);
+                        if(isNaN(nid1) && isNaN(nid2))
                             return (id1<id2) ? -1 : 1; 
-                        };
-                        if(id1 == id2)
+                        if(nid1 == nid2)
                             return (id_type1<id_type2) ? -1 : 1
-                        else if(id1<id2)
+                        else if(nid1<nid2)
                             return -1
                         else
                             return 1
