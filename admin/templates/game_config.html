@@ -6,6 +6,11 @@
     <script type="text/javascript" src="/static/js/main.js"></script>
 <script type="text/javascript">
     window.onload=set_ace_editor;
+    function open_edit(){
+        document.getElementById("config_note").readOnly=false; 
+        $("#cls_bnt").hide();
+        $("#save_bnt").show();
+    }
 </script>
 
 <div class="panel panel-primary" id='config_lists'>
@@ -54,14 +59,17 @@
         <h4 class="modal-title" id="myModalLabel">配置{{config_name}} 解释</h4>
       </div>
       <div class="modal-body">
-      <pre>{% if config_note %}
+<textarea class="form-control" id="config_note" rows="{{note_lines}}" readonly>
+      {% if config_note %}
         {{ config_note }}
       {% else %}
-         没什么可以说的
-      {% endif %}</pre>
+        没什么可以说的
+      {% endif %}</textarea>
       </div>
       <div class="modal-footer">
-        <button data-dismiss="modal" type="button" class="btn btn-primary">知道了</button>
+        <button type="button" id="edit_bnt" class="btn btn-default" onclick="open_edit()">编辑</button>
+        <button data-dismiss="modal" id="cls_bnt" type="button" class="btn btn-primary">知道了</button>
+        <button style="display:none;" id="save_bnt" type="button" class="btn btn-success" onclick="save_config_note('{{config_name}}')">保存</button>
       </div>
     </div>
   </div>

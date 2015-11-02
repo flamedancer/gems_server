@@ -5,7 +5,8 @@ import json
 import time
 
 from common.game_config import CONFIG_TITLES 
-from common.game_config import NOTE 
+from common.game_config import get_note 
+from common.game_config import save_note 
 from common.game_config import get_config_str 
 from common.game_config import get_config_dir 
 from common.game_config import set_config_update_time 
@@ -34,13 +35,16 @@ def resource_version():
 def config_view():
     this_config_name = request.query.get('config_name')
     view = {} 
+    doc = ''
+    doc_line_num = 0
     excel_file = request.files.get('xls')
     if excel_file:
         view = make_config(excel_file.file, this_config_name)
     elif this_config_name:
         view = get_config_str(this_config_name)
-       
-    return {'config_titles': CONFIG_TITLES, 'config_value': view, 'config_name': this_config_name, 'config_note': NOTE.get(this_config_name, '')}
+        doc = get_note(this_config_name) 
+        doc_line_num = doc.count('\n') or 5 
+    return {'config_titles': CONFIG_TITLES, 'config_value': view, 'config_name': this_config_name, 'config_note': doc, 'note_lines': doc_line_num}
 
 
 @route('/admin/save_config', method='POST')
@@ -69,6 +73,25 @@ def save_config():
     set_config_update_time(this_config_name)
     return ''
         
+
+@route('/admin/save_config_note', method='POST')
+@validate
+def save_config_note():
+    this_config_name = request.forms.get('config_name')
+    note = request.forms.get('note')
+    # config_list里是否有这个配置
+    has_get = False
+    for config_info in CONFIG_TITLES:
+        for name_conf in config_info['content']:
+            if name_conf[0] == this_config_name:
+                has_get = True
+                break
+        if has_get:
+            break
+    else:
+        raise Exception('This Config  Not Exist')
+    save_note(this_config_name, note)
+    return ''
     
 
 def make_config(excel_file, this_config_name):
@@ -76,7 +99,6 @@ def make_config(excel_file, this_config_name):
     sheet = excel.sheet_by_name('config')
     return excel_explain(sheet)
     
-
 
 def excel_explain(sheet):
     make_dict = {}

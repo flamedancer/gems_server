@@ -1,6 +1,7 @@
 #-*- coding: utf-8 -*-
 
 import time
+import os
 import json
 from libs.model import RedisKeyValue
 from libs.model import ConfigModel
@@ -463,3 +464,19 @@ def get_config_dir(config_name):
 
 def get_config_str(config_name):
     return json.dumps(get_config_dir(config_name))
+
+def get_note(config_name):
+    fname = os.path.join("common", "config_docs", config_name + ".txt")
+    if not os.path.exists(fname):
+        return ''
+    with open(fname, 'rb+') as doc_f:
+        doc = doc_f.read()
+    return doc.decode('utf-8')
+        
+
+def save_note(config_name, doc):
+    with open(os.path.join("common", "config_docs", config_name + ".txt"),
+             'wb+') as doc_f:
+        doc_f.write(doc)
+    return True
+        

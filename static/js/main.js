@@ -36,7 +36,12 @@ function json_format(txt,compress/*是否为压缩模式*/){/* 格式化JSON源�
                         catch(e){
                             return (id1<id2) ? -1 : 1; 
                         };
-                        return (nid1<nid2) ? -1 : 1;
+                        if(id1 == id2)
+                            return (id_type1<id_type2) ? -1 : 1
+                        else if(id1<id2)
+                            return -1
+                        else
+                            return 1
                     };
                     all_keys.sort(sort_by_id); 
                     for(var index in all_keys) {
@@ -78,10 +83,10 @@ function send_ajax(url, method, send_msg, callback) {
 function save_config(config_name) { 
     var editor = ace.edit('ace-editor');
     config_value = editor.getSession().getValue();
-    
-    try{var data= eval('('+config_value+')');}
+    try{var data= jQuery.parseJSON( config_value );}
+    //try{var data= eval('('+config_value+')');}
     catch(e){
-        alert('配置格式错误无法提交！）')
+        alert('配置格式错误无法提交！')
         return;
     }
     config_value = JSON.stringify(data);
@@ -128,4 +133,21 @@ function modify_user(can_modify, type, key) {
         }
     }
     send_ajax(host, "POST", send_msg, recall);
+}
+
+function save_config_note(config_name) {
+    note=$("#config_note").val();
+    // ajax 发送保存配置数据
+    function recall() {
+        if (xmlhttp.readyState !=4) {
+        }
+        else if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+            $("#myModal").modal('hide');
+         }
+        else {
+        }
+    }
+    send_msg = "config_name="+config_name+"&note="+note;    
+    send_ajax("/admin/save_config_note", "POST", send_msg, recall)
+ 
 }

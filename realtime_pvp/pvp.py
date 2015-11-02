@@ -256,7 +256,7 @@ class Player(object):
         self.send('rsp_fight_command')
         self.send_opponent('inf_fight_command', data)
 
-    def ans_fight_command(self):
+    def ans_fight_command(self, data):
         """ <4>4
         """
         pass
@@ -298,7 +298,7 @@ class Player(object):
         }         
         self.broad('inf_fight_result', data)
 
-    def ans_fight_result(self):
+    def ans_fight_result(self, data):
         """ <5>5、5
         """
         self.connecting = False
@@ -320,7 +320,7 @@ class Player(object):
             self.send('rsp_cancel_pvp')
             self.inf_fight_result(self.opponent.uid, end_reason='cancel-fighting')
     
-    def ans_cancel_pvp(self):
+    def ans_cancel_pvp(self, data):
         pass
 
     def req_random_sequence(self, data):
