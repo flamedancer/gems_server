@@ -50,6 +50,8 @@ CONFIG_TITLES = [
         'content':[
             ('arenapool_config', u'竞技卡池配置'),
             ('arenaaward_config', u'竞技奖励配置'),
+            ('invadeaward_config', u'城战奖励配置'),
+            ('pvpaward_config', u'天梯奖励配置'),
         ],
     },
     {
@@ -91,7 +93,7 @@ def get_config_dir(config_name):
     return ConfigModel.create(config_name).data
 
 def get_config_str(config_name):
-    return json.dumps(get_config_dir(config_name)).__repr__()[1:-1]
+    return json.dumps(get_config_dir(config_name))
 
 def get_note(config_name):
     fname = os.path.join("common", "config_docs", config_name + ".txt")

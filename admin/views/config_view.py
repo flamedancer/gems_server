@@ -53,7 +53,7 @@ def save_config():
     this_config_name = request.forms.get('config_name')
     this_config_value = request.forms.get('config_value')
     # 校验是否为json数据
-    this_config_value = json.loads(this_config_value)  
+    this_config_value = json.loads(this_config_value.replace(r'\n', r'\\n'))
     config_obj = ConfigModel.get(this_config_name)
     # config_list里是否有这个配置
     if not config_obj:

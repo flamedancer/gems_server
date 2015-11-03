@@ -368,7 +368,7 @@ def api_end_defense(win=True):
     return award
 
     
-def api_set_watch_team(team_index, new_team):
+def api_set_watch_team(new_team, team_index='0'):
     """ api/invade/set_watch_team
     更改防守编队队形
     Args:

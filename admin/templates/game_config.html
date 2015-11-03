@@ -59,12 +59,7 @@
         <h4 class="modal-title" id="myModalLabel">配置{{config_name}} 解释</h4>
       </div>
       <div class="modal-body">
-<textarea class="form-control" id="config_note" rows="{{note_lines}}" readonly>
-      {% if config_note %}
-        {{ config_note }}
-      {% else %}
-        没什么可以说的
-      {% endif %}</textarea>
+<textarea class="form-control" id="config_note" rows="{{note_lines}}" readonly>{% if config_note %}{{ config_note }}{% else %}没什么可以说的{% endif %}</textarea>
       </div>
       <div class="modal-footer">
         <button type="button" id="edit_bnt" class="btn btn-default" onclick="open_edit()">编辑</button>

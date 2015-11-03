@@ -151,7 +151,7 @@ class UserCities(GameModel):
     def add_city_reputation(self, city_id, add_reputation):
         city_reputation_conf = self._common_config['city_reputation']
         new_rep = self.cities[city_id]['reputation'] + add_reputation
-        self.cities[city_id]['reputation_lv'] = bisect.bisect(city_reputatiion_conf,
+        self.cities[city_id]['reputation_lv'] = bisect.bisect(city_reputation_conf,
             new_rep) - 1
         self.cities[city_id]['reputation'] = min(max(city_reputation_conf), new_rep)
         return {city_id: {'reputation': self.cities[city_id]['reputation'],
