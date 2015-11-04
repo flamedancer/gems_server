@@ -239,11 +239,15 @@ def can_get_ext_award(user, ext_term, has_dead_mem, bout):
                 return False
         elif term_name == 'b':
             for card_id in cur_team:
+                if not card_id:
+                    continue
                 if card_config[card_id]['camp'] != int(term_value):
                     return False
         elif term_name == 'c':
             term_value = int(term_value)
             for card_id in cur_team:
+                if not card_id:
+                    continue
                 if term_value not in card_config[card_id]['type']:
                     return False
         elif term_name == 'd':
@@ -252,11 +256,15 @@ def can_get_ext_award(user, ext_term, has_dead_mem, bout):
         elif term_name == 'e':
             term_value = int(term_value)
             for card_id in cur_team:
+                if not card_id:
+                    continue
                 if term_value in card_config[card_id]['type']:
                     return False
         elif term_name == 'f':
             term_value = int(term_value)
             for card_id in cur_team:
+                if not card_id:
+                    continue
                 if term_value != card_config[card_id]['race']:
                     return False
         elif term_name == 'g':

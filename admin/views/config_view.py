@@ -43,7 +43,7 @@ def config_view():
     elif this_config_name:
         view = get_config_str(this_config_name)
         doc = get_note(this_config_name) 
-        doc_line_num = doc.count('\n') or 5 
+        doc_line_num = doc.count('\n') + 2
     return {'config_titles': CONFIG_TITLES, 'config_value': view, 'config_name': this_config_name, 'config_note': doc, 'note_lines': doc_line_num}
 
 
