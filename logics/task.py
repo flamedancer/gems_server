@@ -117,7 +117,7 @@ def check_task(api_path, api_data):
             city_id = api_data['city_id']
             if int(city_id) != int(task_id[1:]):
                 continue
-            new_value = user.user_cities.cur_conquer_stage(city_id) - 1
+            new_value = int(user.user_cities.cur_conquer_stage(city_id)) - 1
             set_step(task_id, new_value)
         # G系列 竞技场胜场数
         elif task_id.startswith('G') and api_path == 'arena_end_fight':
@@ -167,6 +167,7 @@ def api_info():
 
     Retures:
         tasks(list->dict):
+            task_id(str): 任务代号
             title(str): 任务标题
             desc(str): 描述
             show_type(int): 未完成时显示格式 
@@ -209,3 +210,28 @@ def api_info():
     return {'tasks': completed_tasks + no_completed_tasks
     }
 
+
+def api_get_award(task_id):
+    """ api/task/get_award
+    领取任务奖励
+    Args:
+        task_id(str): 任务代号
+    """
+    utask= request.user.user_task
+    main_task_conf = utask._task_config['main_task']
+    if not utask.has_task(task_id) or task_id not in main_task_conf:
+        return {}
+    if not utask.main_task[task_id]['completed']:
+        return {}
+    now_step = utask.main_task[task_id]['step']
+    award = main_task_conf[task_id]['award'][now_step]
+    next_step = str(int(now_step) + 1)
+    if next_step in main_task_conf[task_id]['value']:
+        utask.set_step(task_id, new_step)
+    else:
+        utask.del_main_task(self, task_id)
+    tools.add_user_awards(utask, award, 'task')
+    return {'awards': award}
+    
+    
+    
