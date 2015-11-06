@@ -68,14 +68,14 @@ def check_task(api_path, api_data):
     modified_info = umodified.modified
     main_task_conf = utask._task_config['main_task']
 
-    def set_step(task_id, value):
-        utask.set_step(task_id, value) 
+    def set_value(task_id, value):
+        utask.set_now_value(task_id, value) 
         # pvp段位 15  比 10 弱(虽然15>10）
         if not task_id.startswith('J'):
-            if main_task_conf['value'][utask.main_task[task_id]['step']] <= value:
+            if main_task_conf[task_id]['value'][utask.main_task[task_id]['step']] <= value:
                 utask.set_completed(task_id) 
         else:
-            if main_task_conf['value'][utask.main_task[task_id]['step']] >= value:
+            if main_task_conf[task_id]['value'][utask.main_task[task_id]['step']] >= value:
                 utask.set_completed(task_id) 
 
     if 'lv' in modified_info:
@@ -97,19 +97,19 @@ def check_task(api_path, api_data):
         # A系列判定 玩家等级
         if task_id.startswith('A') and 'lv' in modified_info:
             new_value = modified_info['lv']
-            set_step(task_id, new_value)
+            set_value(task_id, new_value)
         # C系列 开城数
         elif task_id.startswith('C') and api_path == 'city_open_city':
             #city_id = api_data['city_id']
             #task_id = 'C' + city_id
             new_value = user.user_cities.get_opened_city_num()
-            set_step(task_id, new_value)
+            set_value(task_id, new_value)
         # D系列 征服城数
         elif task_id.startswith('D') and api_path == 'dungeon_end':
             if api_data['dungeon_type'] != 'conquer':
                 continue
             new_value = user.user_cities.get_conquered_city_num()
-            set_step(task_id, new_value)
+            set_value(task_id, new_value)
         # F系列 征服某关卡
         elif task_id.startswith('F') and api_path == 'dungeon_end':
             if api_data['dungeon_type'] != 'conquer':
@@ -118,45 +118,45 @@ def check_task(api_path, api_data):
             if int(city_id) != int(task_id[1:]):
                 continue
             new_value = int(user.user_cities.cur_conquer_stage(city_id)) - 1
-            set_step(task_id, new_value)
+            set_value(task_id, new_value)
         # G系列 竞技场胜场数
         elif task_id.startswith('G') and api_path == 'arena_end_fight':
             if not api_data['win']:
                 continue
             new_value = utask.get_now_value(task_id) + 1
-            set_step(task_id, new_value)
+            set_value(task_id, new_value)
         # H系列 竞技场连胜数 
         elif task_id.startswith('H') and api_path == 'arena_end_fight':
             if not api_data['win']:
                 continue
             new_value = max(utask.get_now_value(task_id), user.user_arena.win)
-            set_step(task_id, new_value)
+            set_value(task_id, new_value)
         # I系列 pvp胜数 
         elif task_id.startswith('I') and api_path == 'pvp_info':
             new_value = user.user_pvp.total_win
-            set_step(task_id, new_value)
+            set_value(task_id, new_value)
         # J系列 pvp段 
         elif task_id.startswith('J') and api_path == 'pvp_info':
             new_value = user.user_pvp.grade
-            set_step(task_id, new_value)
+            set_value(task_id, new_value)
         # K系列 城战侵略成功数 
         elif task_id.startswith('K') and api_path == 'invade_end_invade':
             if not api_data['win']:
                 continue
             new_value = user.user_invade.total_invade_win
-            set_step(task_id, new_value)
+            set_value(task_id, new_value)
         # L系列 城战反击成功数 
         elif task_id.startswith('L') and api_path == 'invade_end_defense':
             if not api_data['win']:
                 continue
             new_value = user.user_invade.total_defense_win
-            set_step(task_id, new_value)
+            set_value(task_id, new_value)
         # M系列 城战奖杯数 
         elif task_id.startswith('M') and api_path == 'invade_end_defense':
             if not api_data['win']:
                 continue
             new_value = max(utask.get_now_value(task_id), user.user_invade.cup)
-            set_step(task_id, new_value)
+            set_value(task_id, new_value)
         
         
             
