@@ -11,6 +11,13 @@
         $("#cls_bnt").hide();
         $("#save_bnt").show();
     }
+    function save_note(config_name){
+        document.getElementById("config_note").readOnly=true; 
+        $("#cls_bnt").show();
+        $("#save_bnt").hide();
+        save_config_note(config_name);
+        
+    }
 </script>
 
 <div class="panel panel-primary" id='config_lists'>
@@ -64,7 +71,7 @@
       <div class="modal-footer">
         <button type="button" id="edit_bnt" class="btn btn-default" onclick="open_edit()">编辑</button>
         <button data-dismiss="modal" id="cls_bnt" type="button" class="btn btn-primary">知道了</button>
-        <button style="display:none;" id="save_bnt" type="button" class="btn btn-success" onclick="save_config_note('{{config_name}}')">保存</button>
+        <button style="display:none;" id="save_bnt" type="button" class="btn btn-success" onclick="save_note('{{config_name}}')">保存</button>
       </div>
     </div>
   </div>

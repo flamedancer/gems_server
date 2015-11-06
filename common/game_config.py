@@ -58,7 +58,7 @@ CONFIG_TITLES = [
     {
         'category': u'物品',
         'content':[
-            ('prop_config', u'道具配置'),
+            ('item_config', u'道具配置'),
          ],
     },
 ]
