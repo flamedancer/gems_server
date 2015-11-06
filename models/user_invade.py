@@ -19,6 +19,8 @@ class UserInvade(GameModel):
         has_new_history: 是否有新日志
         refresh_cnt: 已连续寻找对手次数
         consecutive_win: 已连赢次数
+        total_invade_win: 总侵略胜场
+        total_invade_lose: 总侵略负场
         opponent: 当前对手对手信息,可为空
             uid(str): 对手uid
             name(str): 对手名字
@@ -42,6 +44,8 @@ class UserInvade(GameModel):
         self.refresh_cnt = 0
         self.consecutive_win = 0
         self.opponent = {}
+        self.total_invade_win = 0
+        self.total_defense_win = 0
 
     def set_opponent(self, opponent_info):
         self.opponent = opponent_info
@@ -155,3 +159,10 @@ class UserInvade(GameModel):
     def inc_consecutive_win(self):
         self.consecutive_win += 1
         self.put()
+
+    def inc_total_invade_win(self):
+        self.total_invade_win += 1
+
+    def inc_total_defense_win(self):
+        self.total_defense_win += 1
+

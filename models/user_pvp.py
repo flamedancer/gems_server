@@ -14,7 +14,9 @@ class UserPvp(GameModel):
         self.grade = 0 # 段位 
         self.light_star = 0     # 显示亮星个数 
         self.shade_star = 0  # 显示暗星个数 
-        self.consecutive_win = 0
+        self.consecutive_win = 0 # 连赢场数
+        self.total_win = 0   #总胜场
+        self.total_lose = 0  # 总负场
 
     @classmethod
     def create(cls, uid): 
@@ -56,6 +58,7 @@ class UserPvp(GameModel):
         else:
             self.all_star += 1
         self.consecutive_win += 1
+        self.total_win += 1
         self.adjust()
         self.put()
     
@@ -65,6 +68,7 @@ class UserPvp(GameModel):
             return
         self.all_star = max(0, self.all_star - 1)
         self.consecutive_win = 0
+        self.total_lose += 1
         self.adjust()
         self.put()
 

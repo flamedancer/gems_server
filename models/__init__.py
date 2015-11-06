@@ -18,11 +18,6 @@ class GameModel(UserModel):
     _ALL_USER_CLASSES = {}
 
     @classmethod
-    def create(cls, uid):
-        obj = cls(uid)
-        return obj 
-
-    @classmethod
     def get_no_none(cls, uid):
         return cls.get(uid) or cls.create(uid)
     

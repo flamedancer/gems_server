@@ -1,6 +1,4 @@
-# -*- encoding: utf-8*
-
-import random
+# -*- encoding: utf-8* import random
 import bisect
 from models import GameModel
 from common.exceptions import *
@@ -135,6 +133,9 @@ class UserCities(GameModel):
     def get_opened_city_num(self):
         return len([city for city in self.cities if self.cities[city]['status'] >=1])
 
+    def get_conquered_city_num(self):
+        return len([city for city in self.cities if self.cities[city]['status'] >=2])
+
     def cur_conquer_stage(self, city_id):
         return str(self.cities[city_id]['cur_conquer'])
 
@@ -158,10 +159,6 @@ class UserCities(GameModel):
                           'reputation_lv': self.cities[city_id]['reputation_lv'],
                          }
         }
-        
-        
-        
-        
         
 
     def up_challenge_stage(self, city_id, floor):

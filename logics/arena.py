@@ -145,7 +145,7 @@ def api_start_fight(team_index='', new_team=None):
     }
 
 
-def api_end_fight(win=True):
+def api_end_fight(win):
     """ api/arena/end_fight
     战斗胜利
     Argv:

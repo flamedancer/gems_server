@@ -69,6 +69,13 @@ class UserModel(BaseModel):
                 obj.do_put()
         if obj:
             app.pier.add_get_data(obj)
+            obj.put()
+        return obj
+
+    @classmethod
+    def create(cls, pk):
+        obj = cls.get(pk) or cls(pk)
+        obj.put()
         return obj
 
     def do_put(self):

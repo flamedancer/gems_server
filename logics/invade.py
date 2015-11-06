@@ -211,7 +211,7 @@ def api_start_invade(team_index='', new_team=None):
     return {'enemy': opponent_team_info}
     
 
-def api_end_invade(win=True):
+def api_end_invade(win):
     """ api/invade/end_invade
     战斗胜利
     Argvs:
@@ -249,6 +249,8 @@ def api_end_invade(win=True):
     if win:
         # 连胜次数加1
         uInvade.inc_consecutive_win()
+        # 侵略成功加1
+        uInvade.inc_total_invade_win()
         award = opponent_info['win_award']
         award['exp'] = full_exp
         opponent_invade_log['status'] = 0
@@ -334,7 +336,7 @@ def api_start_defense(history_index, team_index='', new_team=None):
     return {'enemy': defe_history['team_info']}
 
 
-def api_end_defense(win=True):
+def api_end_defense(win):
     """ api/invade/end_defense
     结束反击战斗
     
@@ -364,6 +366,8 @@ def api_end_defense(win=True):
     defe_history['win_invade_jeton'] = 1
     defe_history['time'] = int(time.time())
     uInvade.add_history(defe_history)
+    # 防守成功加1
+    uInvade.inc_total_defense_win()
     
     return award
 
