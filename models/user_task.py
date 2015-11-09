@@ -37,7 +37,7 @@ class UserTask(GameModel):
     def del_main_task(self, task_id):
         self.main_task.pop(task_id)
 
-    def has_task(task_id):
+    def has_task(self, task_id):
         return task_id in self.main_task
 
     def set_now_value(self, task_id, value):

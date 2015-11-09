@@ -8,6 +8,7 @@ from admin.decorators import validate
 from common import tools
 from logics import card as card_logic
 from logics import login
+from logics import task
 
 card_words = {
     # 品质
@@ -51,6 +52,10 @@ def player_detail(player_uid=''):
         detail['card_config'] = ubase._card_config
         detail['card_words'] = card_words
         detail['sorted_cards'] = login.dirtolist(detail['card_config'])
+    elif category == 'task':
+        detail['detail_category'] = 'task'
+        request.user = ubase
+        detail.update(task.api_info())
     return detail
 
 def can_modify():
@@ -129,7 +134,3 @@ def modify_player():
         thing = modify_type[1:]
         num = int(request.forms.get('add' + thing))
         return tools.add_user_things(ubase, thing, num, 'addby_admin')
-    
-
-        
-

@@ -5,6 +5,7 @@
 from bottle import request
 from common import tools
 from common.exceptions import *
+from libs.dbs import app
 
 
 def default_complete_num(task_id):
@@ -61,6 +62,16 @@ def default_complete_num(task_id):
         return user.user_invade.cup
         
 
+api_task_map = {
+    'city_open_city': ['C'],
+    'dungeon_end': ['D', 'F'],
+    'arena_end_fight': ['G', 'H'],
+    'pvp_info': ['I', 'J'],
+    'invade_end_invade': ['K'],
+    'invade_end_defense': ['L', 'M'],
+}
+
+
 def check_task(api_path, api_data):
     user = request.user 
     utask = user.user_task 
@@ -70,97 +81,104 @@ def check_task(api_path, api_data):
 
     def set_value(task_id, value):
         utask.set_now_value(task_id, value) 
+        print "debug_task set value", task_id, value
         # pvp段位 15  比 10 弱(虽然15>10）
         if not task_id.startswith('J'):
             if main_task_conf[task_id]['value'][utask.main_task[task_id]['step']] <= value:
                 utask.set_completed(task_id) 
+                print "debug_task com", task_id
         else:
             if main_task_conf[task_id]['value'][utask.main_task[task_id]['step']] >= value:
                 utask.set_completed(task_id) 
+                print "debug_task com", task_id
+        print "debug_task all", utask.main_task
+        print "debug_task in pear", app.pier.get_data
+        print "debug_task in pear", app.pier.put_data
+        print "debug_task task model", utask
 
+    # 是否新的任务进度
+    def check_value(task_type, task_id):
+        # A系列判定 玩家等级
+        if task_type == 'A':
+            new_value = modified_info['lv']
+        # C系列 开城数
+        elif task_type == 'C':
+            new_value = user.user_cities.get_opened_city_num()
+        # D系列 征服城数
+        elif task_type == 'D':
+            if api_data['dungeon_type'] != 'conquer':
+                return
+            new_value = user.user_cities.get_conquered_city_num()
+        # F系列 征服某关卡
+        elif task_type == 'F':
+            if api_data['dungeon_type'] != 'conquer':
+                return
+            city_id = api_data['city_id']
+            if int(city_id) != int(task_id[1:]):
+                return
+            new_value = int(user.user_cities.cur_conquer_stage(city_id)) - 1
+        # G系列 竞技场胜场数
+        elif task_type == 'G':
+            if not api_data['win']:
+                return
+            new_value = utask.get_now_value(task_id) + 1
+        # H系列 竞技场连胜数 
+        elif task_type == 'H':
+            if not api_data['win']:
+                return
+            new_value = max(utask.get_now_value(task_id), user.user_arena.win)
+        # I系列 pvp胜数 
+        elif task_type == 'I':
+            new_value = user.user_pvp.total_win
+        # J系列 pvp段 
+        elif task_type == 'J':
+            new_value = user.user_pvp.grade
+        # K系列 城战侵略成功数 
+        elif task_type == 'K':
+            if not api_data['win']:
+                return
+            new_value = user.user_invade.total_invade_win
+        # L系列 城战反击成功数 
+        elif task_type == 'L':
+            if not api_data['win']:
+                return
+            new_value = user.user_invade.total_defense_win
+        # M系列 城战奖杯数 
+        elif task_type == 'M':
+            if not api_data['win']:
+                return
+            new_value = max(utask.get_now_value(task_id), user.user_invade.cup)
+        set_value(task_id, new_value)
+ 
+    # 若升级：1 是否有新任务 2 是否完成升级任务
+    print "debug_task modifiedinfo", modified_info
+    
     if 'lv' in modified_info:
         # 是否有新任务
-        for task_id, info in main_task_conf:
-            if 'open_lv' in info and info['open_lv'] == user_lv:
+        for task_id, info in main_task_conf.items():
+            if 'open_lv' in info and info['open_lv'] == user.user_property.lv:
                 utask.add_main_task(task_id)
-    # 新的征服任务
+        # 检查A系列
+        for task_id in utask.main_task:
+            if task_id.startswith('A'):
+                check_value('A', task_id)
+
+    # 若开城: 1新的城市征服任务
     if api_path == 'city_open_city':
+        city_id = api_data['city_id']
         task_str = "F{:0>2}".format(city_id) 
         if task_str in main_task_conf:
             utask.add_main_task(task_str)
-            
-            
-        
+   
+    print "debug_task", api_path
+    if api_path not in api_task_map:
+        return
+    for task_type in api_task_map[api_path]:
+        for task_id in utask.main_task:
+            if task_id.startswith(task_type):
+                check_value(task_type, task_id)
 
-    
-    for task_id in utask.main_task:
-        # A系列判定 玩家等级
-        if task_id.startswith('A') and 'lv' in modified_info:
-            new_value = modified_info['lv']
-            set_value(task_id, new_value)
-        # C系列 开城数
-        elif task_id.startswith('C') and api_path == 'city_open_city':
-            #city_id = api_data['city_id']
-            #task_id = 'C' + city_id
-            new_value = user.user_cities.get_opened_city_num()
-            set_value(task_id, new_value)
-        # D系列 征服城数
-        elif task_id.startswith('D') and api_path == 'dungeon_end':
-            if api_data['dungeon_type'] != 'conquer':
-                continue
-            new_value = user.user_cities.get_conquered_city_num()
-            set_value(task_id, new_value)
-        # F系列 征服某关卡
-        elif task_id.startswith('F') and api_path == 'dungeon_end':
-            if api_data['dungeon_type'] != 'conquer':
-                continue
-            city_id = api_data['city_id']
-            if int(city_id) != int(task_id[1:]):
-                continue
-            new_value = int(user.user_cities.cur_conquer_stage(city_id)) - 1
-            set_value(task_id, new_value)
-        # G系列 竞技场胜场数
-        elif task_id.startswith('G') and api_path == 'arena_end_fight':
-            if not api_data['win']:
-                continue
-            new_value = utask.get_now_value(task_id) + 1
-            set_value(task_id, new_value)
-        # H系列 竞技场连胜数 
-        elif task_id.startswith('H') and api_path == 'arena_end_fight':
-            if not api_data['win']:
-                continue
-            new_value = max(utask.get_now_value(task_id), user.user_arena.win)
-            set_value(task_id, new_value)
-        # I系列 pvp胜数 
-        elif task_id.startswith('I') and api_path == 'pvp_info':
-            new_value = user.user_pvp.total_win
-            set_value(task_id, new_value)
-        # J系列 pvp段 
-        elif task_id.startswith('J') and api_path == 'pvp_info':
-            new_value = user.user_pvp.grade
-            set_value(task_id, new_value)
-        # K系列 城战侵略成功数 
-        elif task_id.startswith('K') and api_path == 'invade_end_invade':
-            if not api_data['win']:
-                continue
-            new_value = user.user_invade.total_invade_win
-            set_value(task_id, new_value)
-        # L系列 城战反击成功数 
-        elif task_id.startswith('L') and api_path == 'invade_end_defense':
-            if not api_data['win']:
-                continue
-            new_value = user.user_invade.total_defense_win
-            set_value(task_id, new_value)
-        # M系列 城战奖杯数 
-        elif task_id.startswith('M') and api_path == 'invade_end_defense':
-            if not api_data['win']:
-                continue
-            new_value = max(utask.get_now_value(task_id), user.user_invade.cup)
-            set_value(task_id, new_value)
-        
-        
-            
-    
+
 def api_info():
     """ api/task/info
     显示任务列表
@@ -186,6 +204,7 @@ def api_info():
     def info(task_id):
         task_conf = main_task_conf[task_id]
         return_info = {
+            'task_id': task_id,
             'title': task_conf['title'] % int(utask.main_task[task_id]['step']),
             'desc': task_conf['desc'],
             'show_type': task_conf['show_type'],
@@ -199,7 +218,6 @@ def api_info():
         return return_info
     completed_tasks = []
     no_completed_tasks = []
-    utask.init()
     print "debug", utask.main_task
     for task_id in sorted(utask.main_task.keys()):
         if utask.main_task[task_id]['completed']:
@@ -219,15 +237,17 @@ def api_get_award(task_id):
     """
     utask= request.user.user_task
     main_task_conf = utask._task_config['main_task']
+    print "debug guochen", utask.has_task(task_id), task_id in main_task_conf
     if not utask.has_task(task_id) or task_id not in main_task_conf:
         return {}
+    print "debug gucohen", utask.main_task[task_id]['completed']
     if not utask.main_task[task_id]['completed']:
         return {}
     now_step = utask.main_task[task_id]['step']
     award = main_task_conf[task_id]['award'][now_step]
     next_step = str(int(now_step) + 1)
     if next_step in main_task_conf[task_id]['value']:
-        utask.set_step(task_id, new_step)
+        utask.set_step(task_id, next_step)
     else:
         utask.del_main_task(self, task_id)
     tools.add_user_awards(utask, award, 'task')

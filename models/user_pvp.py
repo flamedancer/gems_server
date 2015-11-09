@@ -43,12 +43,12 @@ class UserPvp(GameModel):
 
     def adjust(self):
         pvp_rank_stars = self._common_config['pvp_rank_stars']
-        grade_index = bisect.bisect(pvp_rank_stars, self.all_star)
-        self.light_star = self.all_star - pvp_rank_stars[grade_index - 1]
-        if grade_index == len(pvp_rank_stars):
+        grade_index = bisect.bisect(pvp_rank_stars, self.all_star) - 1
+        self.light_star = self.all_star - pvp_rank_stars[grade_index]
+        if grade_index == len(pvp_rank_stars) - 1:
             self.shade_star = 0
         else:
-            self.shade_star = pvp_rank_stars[grade_index] - self.all_star
+            self.shade_star = pvp_rank_stars[grade_index + 1] - self.all_star
         self.grade = len(pvp_rank_stars) - grade_index
         
         

@@ -74,6 +74,7 @@ NEED_SYNC_CONFIGS = [
     'conquer_config',
     'conversation_config',
     'challenge_config',
+    'item_config',
 ]
 
 

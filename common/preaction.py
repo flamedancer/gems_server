@@ -94,7 +94,6 @@ def modified_user_data():
     modified_data = Umodified.modified
     if modified_data:
         Umodified.modified = {}
-        Umodified.put()
     return modified_data
 
 
