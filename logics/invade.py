@@ -29,6 +29,7 @@ def api_info():
         invade_jeton: 城战代币
         shield_time(int): 保护结束时间
         watch_team(list->str): 防守队伍
+        watch_team_index(list->str): 防守队伍军旗
         has_new_history(bool): 是否有新的防守日志
         refresh_coin(int): 寻找对手需要金币 
         opponent(dict): 对手信息，没对手时为空
@@ -168,6 +169,7 @@ def api_start_invade(team_index='', new_team=None):
         enemy(dict):
             nature_*: 敌人各元素掌握度
             team: 敌人卡片队伍
+            team_index: 敌人队伍军旗
             card_lv(list->int): 各卡片等级
             card_favor(list->int): 各卡片好感度
         

@@ -66,6 +66,7 @@ class UserInvade(GameModel):
             'nature_4': uProperty.nature_4,
             'nature_5': uProperty.nature_5,
             'team': team,
+            'team_index': self.watch_team_index or '0',
             'card_lv': [uCards.cards.get(cid, {'lv': 0})['lv'] for cid in team],
             'card_favor': [uCards.cards.get(cid, {'favor': 0})['favor'] for cid in team],
         }

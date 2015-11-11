@@ -160,7 +160,7 @@ def get_login_award(ubase):
     td = datetime.datetime.today()
     # 新玩家第一次登入
     if not ubase.last_login_date:
-        ubase.recored_login()
+        ubase.record_login()
         return awards_info
     today_first_login = ubase.record_login()
     if not today_first_login:
@@ -278,7 +278,7 @@ def prod_city_award(ubase):
         # 城市声望越高，贡品的数量越多
         award_num = city_config[city_id]['reward_num'][ucities.cities[city_id]['reputation_lv']]
         award.setdefault(award_type, 0)
-        award[award_typ] += award_num
+        award[award_type] += award_num
     ucities.set_city_award(award)
          
 

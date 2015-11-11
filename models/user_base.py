@@ -44,7 +44,7 @@ class UserBase(GameModel):
         if str(today.date()) == self.last_login_date:
             return False
         # 统计连续登入天数
-        if (datetime.datetime.strptime(self.last_login_date, "%Y-%m-%d") +
+        if self.last_login_date and (datetime.datetime.strptime(self.last_login_date, "%Y-%m-%d") +
             datetime.timedelta(days=1)).date() == today.date():
             self.consecutive_login += 1
         else:
