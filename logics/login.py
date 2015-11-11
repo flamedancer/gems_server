@@ -3,10 +3,13 @@
     玩家登入逻辑
 """
 
+import random
+import datetime
 import json
 from bottle import request
 from models.user_base import UserBase 
-from common.tools import add_user_things
+from common.tools import add_user_awards
+from common.utils import total_isoweek
 from common.game_config import get_config_update_time
 from common.game_config import get_config_str
 from common.game_config import get_config_dir
@@ -63,20 +66,19 @@ def api_login(last_update_time):
     """
     result = {}
     ubase = request.user
-    # add_user_things(ubase, 'money', 100, 'login')
     card_config = ubase._card_config
-    # for card_id in card_config:
-    #    add_user_things(ubase, card_id, 1, 'login')
     result['user_info'] = get_user_info(ubase)
     update_configs, update_time = get_update_config(int(last_update_time))
     if update_time:
         result['update_configs'], result['last_update_time'] = update_configs, update_time
         print "#####COnfig_keys:", result['update_configs'].keys()
-    #result['all_cards'] = get_all_cards_info(ubase)
-    # 登入游戏时不需要发已修改的信息
+    # 城市进贡
+    prod_city_award(ubase)
+    # 登入奖励
+    result['login_awards'] = get_login_award(ubase)
+    # 登入游戏时不需要发已修改的信息, 只留 红点标记
     umodified = ubase.user_modified
-    umodified.modified = {}
-    umodified.put()
+    umodified.modified = get_flags(ubase)
     # 检查是否有强退战场，防止未结束
     invade.check_remain_dungeon()
     return result
@@ -103,7 +105,6 @@ def get_update_config(last_update_time):
     new_last_update_time = 0
     for config_name in NEED_SYNC_CONFIGS:
         this_config_update_time = get_config_update_time(config_name)
-        print "config_update_check", config_name, str(this_config_update_time), last_update_time
         if not this_config_update_time:
             continue
         if this_config_update_time > last_update_time:
@@ -111,6 +112,7 @@ def get_update_config(last_update_time):
             if this_config_update_time > new_last_update_time:
                 new_last_update_time = this_config_update_time 
     return update_configs, new_last_update_time
+
 
 def dirtolist(old_dict):
     new_list = []
@@ -148,5 +150,135 @@ def get_user_cardinfo(ubase):
     # 调整user_cards 格式
     new_cards_info['cards'] = dirtolist(cards_info['cards'])
     return new_cards_info
-   
+
+def get_flags(ubase):
+    return {"flags": {}}
+
     
+def get_login_award(ubase):
+    awards_info = []
+    td = datetime.datetime.today()
+    # 新玩家第一次登入
+    if not ubase.last_login_date:
+        ubase.recored_login()
+        return awards_info
+    today_first_login = ubase.record_login()
+    if not today_first_login:
+        return awards_info
+    awards.append(get_capital_award(ubase))
+    awards.append(get_invade_award(ubase))
+    # 城市代币产出不在奖励弹框显示
+    get_city_jeton(ubase)
+    awards_info = [award for award in awards_info if award]
+    return awards
+
+def get_capital_award(ubase):
+    """ 主城进贡金币 """
+    # 没有主城没有进贡
+    if not ubase.user_cities.capital_city:
+        return {} 
+    lv_conf = ubase._userlv_config[str(ubase.user_property.lv)]
+    award = {}
+    award['coin'] = lv_conf['reward_coin']
+    tools.add_user_awards(ubase, award, 'login_capital')
+    return {'type':  'captial',
+            'award': capital_award,
+    }
+
+
+def get_invade_award(ubase):
+    uinvade = ubase.user_invade
+    td =  datetime.datetime.today() 
+    # 每周结算终极奖励 并重置城战
+    # 和上次登入是否同一周 若不是 重置
+    if not datetime.datetime.strptime(ubase.last_login_date,
+        "%Y-%m-%d").strftime("%W") == td.strftime("%W"):
+        uinvade.reset_invade()
+        
+    is_seventh_day = td.isoweekday() == ubase._common_config['invade_seventh_weekday']
+    invadeaward_config = ubase._invadeaward_config
+    cup_rank = str(ubase.user_invade.cup_rank)
+    if is_seventh_day:
+        award = invadeaward_config['seventh_award'].get(cup_rank, {})
+        uinvade.reset_invade()
+    else:
+        award = invadeaward_config['normal_award'].get(cup_rank, {})
+    if not award:
+        return {} 
+    tools.add_user_awards(ubase, award, 'login_invade')
+    return {'type': 'invade',
+            'award': award,
+    }
+
+
+def get_pvp_award(ubase):
+    upvp = ubase.user_pvp
+    td = datetime.datetime.today()
+    # 每双周结算奖励
+    award_day = ubase._common_config['pvp_award_weekday']
+    # 和上次登入是否同一双周 若不是 重置
+    last_day = datetime.date.fromtimestamp(ubase.last_login_time)
+    last_week = total_isoweek(stamp=ubase.last_login_time, start=award_day)
+    this_week = total_isoweek(start=award_day)
+    # 超过一个双周重置一次
+    if (this_week / 2) - (last_week / 2) == 1:
+        upvp.reset_pvp()
+    # 超过二个单周重置两次成初始
+    elif (this_week / 2) - (last_week / 2) >= 2:
+        upvp.reset_pvp()
+        upvp.reset_pvp()
+    # 此周为双周 且为发放奖励的日子
+    is_award_day = this_week % 2 == 1 and td.isoweekday() == award_day 
+    if not is_award_day:
+        return {}
+    pvpaward_config = ubase._pvpaward_config
+    pvp_grade = str(upvp.grade)
+    award = pvpaward_config.get(pvp_grade, {})
+    if not award:
+        return {}
+    tools.add_user_awards(ubase, award, 'login_pvp')
+    return {'type': 'pvp',
+            'award': award,
+    }
+    
+
+def get_city_jeton(ubase):
+    ucities = ubase.user_cities
+    city_config = ubase._city_config
+    # 每个征服了的城市都有进贡几率
+    for city_id in ucities.cities:
+        if not city_id.has_conquer_city(city_id):
+            continue
+        jeton_num = city_config[city_id]['jeton'][ucities.cities[city_id]['reputation_lv']]
+        ucities.add_city_jeton(city_id, jeton)
+
+
+def prod_city_award(ubase):
+    """ 产出城市进贡 """
+    td = datetime.datetime.today()
+    ucities = ubase.user_cities
+    last_datetime = datetime.datetime.fromtimestamp(ubase.last_login_time)
+    # 每小时产出一次
+    if str(last_datetime)[:13] == str(td)[:13]:
+        return
+    # 有未领取的进贡不产生新的进贡
+    if ucities.city_award:
+        return
+    award = {}
+    city_config = ubase._city_config
+    # 每个征服了的城市都有进贡几率
+    for city_id in ucities.cities:
+        if not ucities.has_conquer_city(city_id):
+            continue
+        # 每一级都增加1%的进贡率 
+        if random.random() > (0.01 * ucities.cities[city_id]['lv']):
+            continue
+        # 贡品类型
+        award_type = city_config[city_id]['reward_type']
+        # 城市声望越高，贡品的数量越多
+        award_num = city_config[city_id]['reward_num'][ucities.cities[city_id]['reputation_lv']]
+        award.setdefault(award_type, 0)
+        award[award_typ] += award_num
+    ucities.set_city_award(award)
+         
+

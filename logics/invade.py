@@ -144,7 +144,8 @@ def api_find_opponent():
     }
     # 掠夺的金币和对手主城进贡有关
     userlv_config = uInvade._userlv_config
-    win_get_coin = userlv_config[str(opponent_info['lv'])].get('reward_coin', 10) if opponent_info['uid'] else 0
+    coef = common_config.get('invade_coin_coef', 0.2) 
+    win_get_coin = int(userlv_config[str(opponent_info['lv'])]['reward_coin'] * coef) if opponent_info['uid'] else 0
     # 连胜两次以上获得两个杯，否则一个
     opponent_info['win_award'] = {
         'cup': 1 if uInvade.consecutive_win < 2 else 2,

@@ -125,7 +125,7 @@ function modify_user(can_modify, type, key) {
         if (xmlhttp.readyState == 4) {
             if (xmlhttp.status==200) {
                 //document.getElementById(type).innerHTML=xmlhttp.responseText;
-                alert("修改成功!");
+                // alert("修改成功!");
                 location.reload(); 
             }
             else

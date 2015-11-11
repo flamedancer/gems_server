@@ -72,4 +72,11 @@ class UserPvp(GameModel):
         self.adjust()
         self.put()
 
+    def reset_pvp(self):
+        pvp_rank_stars = self._common_config['pvp_rank_stars']
+        if self.grade <= 5:
+            self.all_star = pvp_rank_stars[5]
+        else:
+            self.all_satr = 0
+        self.adjust()
 

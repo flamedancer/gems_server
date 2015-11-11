@@ -53,8 +53,9 @@ def player_detail(player_uid=''):
         detail['card_words'] = card_words
         detail['sorted_cards'] = login.dirtolist(detail['card_config'])
     elif category == 'task':
-        detail['detail_category'] = 'task'
         request.user = ubase
+        detail['uid'] = ubase.uid
+        detail['detail_category'] = 'task'
         detail.update(task.api_info())
     return detail
 

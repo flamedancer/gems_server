@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import time
 import random
 
 
@@ -26,3 +27,16 @@ def get_key_by_weight_dict(item_weight_dict):
             lucker = key
             break
     return lucker
+
+
+def total_isoweek(stamp=None, start=1):
+    """ 今天是北京时间1970年01月01日(周四)08时00分00秒起第几周
+    以周start为一周开始，初始为第0周
+    """
+    if start >= 4:
+        indentday = start - 4
+    else:
+        indentday = 7 + start - 4
+    if stamp is None:
+        stamp = time.time()
+    return int((stamp + 86400 * indentday) / (86400 * 7))

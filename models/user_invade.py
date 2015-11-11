@@ -115,11 +115,9 @@ class UserInvade(GameModel):
 
     def reset_shield_time(self, shield_time=0):
         self.shield_time = shield_time 
-        self.put()
 
     def reset_refresh_cnt(self, new_time=0):
         self.refresh_cnt = new_time 
-        self.put()
 
     def clear_opponent(self):
         self.opponent = {}
@@ -145,8 +143,6 @@ class UserInvade(GameModel):
                 raise LogicError("%s num is not enough" % card_id)
         self.watch_team = team
         self.watch_team_index = index
-        self.put()
-        
 
     def inc_refresh_cnt(self):
         self.refresh_cnt += 1
@@ -154,15 +150,24 @@ class UserInvade(GameModel):
 
     def reset_consecutive_win(self):
         self.consecutive_win = 0
-        self.put()
 
     def inc_consecutive_win(self):
         self.consecutive_win += 1
-        self.put()
 
     def inc_total_invade_win(self):
         self.total_invade_win += 1
 
     def inc_total_defense_win(self):
         self.total_defense_win += 1
+
+    def reset_invade(self):
+        """ 重置竞技场 """ 
+        self.cup = 0
+        invade_cup_rank = self._common_config['invade_cup_rank']
+        self.cup_rank = len(invade_cup_rank)
+        self.reset_shield_time()
+        self.reset_refresh_cnt()
+        self.clear_opponent()
+        self.clear_history()
+        self.reset_consecutive_win()
 

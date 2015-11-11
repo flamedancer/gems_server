@@ -23,6 +23,7 @@ class UserCities(GameModel):
     def __init__(self, uid=''):
         self.uid = uid
         self.capital_city = ''
+        self.city_award = {} 
         self.cities = {}
 
     @classmethod
@@ -173,7 +174,6 @@ class UserCities(GameModel):
                 self.cities[city_id]['status'] = 3
                 self.up_city_lv(city_id)
             self.refresh_challenge(city_id)
-        self.put()
         return {city_id: {'challenge': self.cities[city_id]['challenge'],
                           'status': self.cities[city_id]['status'],
                           'lv': self.cities[city_id]['lv'],
@@ -189,4 +189,11 @@ class UserCities(GameModel):
         self.cities[city_id]['challenge'] = {city_id: 1 for city_id in sample_city}
         self.put()
         return {city_id: {'challenge': self.cities[city_id]['challenge']}}
+
+    def add_city_jeton(self, city_id, num):
+        self.cities[city_id]['jeton'] += num
+        return {city_id: {'jeton': self.cities[city_id]['jeton']}}
+
+    def set_city_award(self, award):
+        self.city_award = award
 

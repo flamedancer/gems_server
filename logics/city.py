@@ -7,23 +7,23 @@ from common import tools
 from common.exceptions import *
 
 
-def calcu_ex_natures(ucities, city_id):
-    city_lv = ucities.cities[city_id]['lv']
-    # 3,5,7,9,10级分别获得0,1,2,3,4index前加成
-    get_ex_index = city_lv // 2
-    lvup_nature_conf = ucities._city_config[city_id]['lvup_nature']
-    ex_natures_list = [0] * 6
-    for natures, ex in lvup_nature_conf[:get_ex_index]:
-        for nature in natures:
-            ex_natures_list[nature] += ex
-    uproperty = ucities.user_property
-    umodified = ucities.user_modified
-    for nature_type, ex in enumerate(ex_natures_list):
-        nature_name = 'ex_nature_' + str(nature_type)
-        setattr(uproperty, nature_name, ex)
-        umodified.set_modify_info(nature_name, ex)
-    uproperty.put()
-    umodified.put()
+# def calcu_ex_natures(ucities, city_id):
+#     city_lv = ucities.cities[city_id]['lv']
+#     # 3,5,7,9,10级分别获得0,1,2,3,4index前加成
+#     get_ex_index = city_lv // 2
+#     lvup_nature_conf = ucities._city_config[city_id]['lvup_nature']
+#     ex_natures_list = [0] * 6
+#     for natures, ex in lvup_nature_conf[:get_ex_index]:
+#         for nature in natures:
+#             ex_natures_list[nature] += ex
+#     uproperty = ucities.user_property
+#     umodified = ucities.user_modified
+#     for nature_type, ex in enumerate(ex_natures_list):
+#         nature_name = 'ex_nature_' + str(nature_type)
+#         setattr(uproperty, nature_name, ex)
+#         umodified.set_modify_info(nature_name, ex)
+#     uproperty.put()
+#     umodified.put()
         
         
 def api_set_capital(city_id):
@@ -37,7 +37,7 @@ def api_set_capital(city_id):
     ucities.set_capital(city_id)
     umodified = ucities.user_modified
     umodified.set_modify_info('capital_city', city_id)
-    calcu_ex_natures(ucities, city_id)
+    # calcu_ex_natures(ucities, city_id)
     return {}
     
 
@@ -65,5 +65,15 @@ def api_open_city(city_id):
            city_id == str(card_config[card_id]['camp']):
             ucities.up_city_lv(city_id)
     return {}
-     
+
+
+def api_get_city_award():
+    """ api/city/get_city_award 
+    领取城市进贡
+    """
+    ucities = request.user.user_cities
+    award = ucities.city_award
+    tools.add_user_awards(ucities, award, 'city_award')
+    return {'awards': award}
+         
     

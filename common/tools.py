@@ -86,6 +86,9 @@ def add_user_awards(user, award, way):
         if thing == 'card':
             for cid, num in info:
                 add_user_things(user, cid, num, way)
+        if thing == 'item':
+            for itemid, num in info:
+                add_user_things(user, itemid, num, way)
         else:
             add_user_things(user, thing, info, way)
         
