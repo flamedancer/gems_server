@@ -310,6 +310,7 @@ def api_start_defense(history_index, team_index='', new_team=None):
         enemy(dict):
             nature_*: 敌人各元素掌握度
             team: 敌人卡片队伍
+            team_index: 敌人队伍军旗
             card_lv(list->int): 各卡片等级
             card_favor(list->int): 各卡片好感度
     """ 
