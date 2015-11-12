@@ -182,7 +182,7 @@ def get_capital_award(ubase):
     award['coin'] = lv_conf['reward_coin']
     add_user_awards(ubase, award, 'login_capital')
     return {'type':  'captial',
-            'award': capital_award,
+            'award': award,
     }
 
 
@@ -254,7 +254,7 @@ def get_city_jeton(ubase):
         if not ucities.has_conquer_city(city_id):
             continue
         jeton_num = city_config[city_id]['jeton'][ucities.cities[city_id]['reputation_lv']]
-        ucities.add_city_jeton(city_id, jeton)
+        ucities.add_city_jeton(city_id, jeton_num)
 
 
 def prod_city_award(ubase):

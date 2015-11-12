@@ -9,7 +9,7 @@ import datetime
 import gevent
 import geventwebsocket
 from geventwebsocket import WebSocketServer
-from gevent.lock import Semaphore
+#from gevent.lock import Semaphore
 
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, base_dir)
@@ -25,13 +25,13 @@ from common import tools
 port = "9081" if len(sys.argv) != 2 else sys.argv[1]
 
 all_players = []  # 所有连接成功的玩家
-all_players_lock = Semaphore()
 
 pear_dict = {}  # 配对信息
-pear_dict_lock = Semaphore()
 
 INIT_BEAD_LIST = []
 [INIT_BEAD_LIST.extend([i] * 40) for i in range(7)]
+
+
 def _make_bead_list():
     """ 返回由200个0~6数字等概率组成的列表
     """        
@@ -39,29 +39,20 @@ def _make_bead_list():
     return INIT_BEAD_LIST[:200]
 
 def add_all_player(player):
-    all_players_lock.acquire()
     all_players.append(player)
-    all_players_lock.release()
-
 
 def del_all_player(player):
    if player not in all_players:
        return 
-   all_players_lock.acquire()
    all_players.remove(player)
-   all_players_lock.release()
 
 def add_pear_dict(player):
-    pear_dict_lock.acquire()
     pear_dict[player.uid] = player.opponent
-    pear_dict_lock.release()
 
 def del_pear_dict(player):
     if not player or player.uid not in pear_dict:
         return
-    pear_dict_lock.acquire()
     pear_dict.pop(player.uid, None)
-    pear_dict_lock.release()
 
 def pier_clear(*uids):
     """玩家退出pvp的善后处
@@ -70,12 +61,10 @@ def pier_clear(*uids):
     for uid in uids:
         if uid in app.pier.get_data:
             app.pier.get_data.pop(uid)
-    
 
 def debug_print(*msgs):
     if settings.DEBUG:
        print(",".join(msgs))
-
 
 def get_real_pvp_info(uid):
     pier_clear(uid)
@@ -87,6 +76,7 @@ def get_real_pvp_info(uid):
         'uid': uBase.uid,
         'name': uBase.name,
         'team': team,
+        'team_index': uCards.cur_team_index,
         'nature_0': uProperty.nature_0,
         'nature_1': uProperty.nature_1,
         'nature_2': uProperty.nature_2,
@@ -100,7 +90,6 @@ def get_real_pvp_info(uid):
     return user_pvp_info
 
 
-
 class Player(object):
     def __init__(self, core_id, websocket):
         self.core_id = core_id
@@ -108,10 +97,11 @@ class Player(object):
 
         self.opponent = None
 
-
         self.connecting = True
 
-        self.fight_status = -2  # -2 为连接上未做任何操作  -1 readying等待合适对手中 0 找到对手，但可以取消  1 fighting正在pk  2 end战斗结束
+        # -3 为连接上未做任何操作  -2 readying等待合适对手中 -1 找到对手，但可以取消
+        # 0准备战斗中(找到对手，但不可以可以取消) 1 fighting正在pk  2 end战斗结束
+        self.fight_status = -3 
 
         self.last_recv_fg = True    # 判断是否活跃通信的标示，用于主动断开长时间没有通信的玩家
 
@@ -195,7 +185,7 @@ class Player(object):
         """
         self.say_log('I try to get a opponent......')
         opponent = self.get_suitable_opponent()
-        self.fight_status = -1
+        self.fight_status = -2
         if opponent is None:
             return
         else:
@@ -204,6 +194,8 @@ class Player(object):
     def inf_readying_pvp(self, opponent):
         """ <3>1 server匹配好一对对手后通知两边
         """
+        self.status = -1
+        opponent.status = -1
         self.opponent = opponent
         self.opponent.opponent = self
 
@@ -214,6 +206,7 @@ class Player(object):
 
     def ans_readying_pvp(self, data):
         """ <3>3 client 已经准备就绪
+            当收到两边都准备好后
             状态改为准备战斗，不能主动取消
         """ 
         self.fight_status = 0
@@ -307,7 +300,7 @@ class Player(object):
         """ 退出匹配或战斗主动投降
         """
         # 还未匹配上,回应后直接退出
-        if self.fight_status < 0:
+        if self.fight_status < -1:
             self.send('rsp_cancel_pvp')
             disconnect_player(self, reason='cancel-matching')
             return
@@ -357,7 +350,7 @@ def disconnect_player(player, reason=''):
     del_all_player(player)
     del_pear_dict(player.opponent)
     # 已近进入战斗要扣体力
-    if player.fight_status >= 0:
+    if player.fight_status >= 1:
         uproperty = UserProperty.get(player.uid) 
         need_stamina = uproperty._common_config['pvp_stamina'] 
         tools.del_user_things(uproperty, 'stamina', need_stamina, 'pvp_start')
@@ -367,10 +360,8 @@ def disconnect_player(player, reason=''):
     player.connecting = False
     player.websocket.close()
 
-    del_pear_dict(player.opponent)
-
     # 如果自己掉线或投降  判定对手胜利
-    if player.fight_status == 1 and player.opponent and player.opponent.connecting:
+    if player.fight_status in [0, 1] and player.opponent and player.opponent.connecting:
         player.inf_fight_result(player.opponent.uid, reason)
         if reason.startswith('network-error'):
             print '\n 异常掉线了!!!!!  :****   ({}|--{})'.format(player.core_id, player.uid), datetime.datetime.now()
@@ -387,8 +378,6 @@ def check_status(msg_data):
     if set(check_keys) - set(msg_data.keys()):
         print '!!!!! json missing keys:', set(check_keys) - set(msg_data.keys())
         return 'missing keys'
-
-
 
 
 def application(environ, start_response):
@@ -430,8 +419,6 @@ def check_dead_user():
         gevent.sleep(600)
 
 
-
-
 if __name__ == "__main__":
     path = os.path.dirname(geventwebsocket.__file__)
     agent = "gevent-websocket/%s" % (geventwebsocket.get_version())
@@ -445,3 +432,4 @@ if __name__ == "__main__":
         WebSocketServer(("", int(port)), application, debug=False).serve_forever()
     except KeyboardInterrupt:
         print "close-server"
+
