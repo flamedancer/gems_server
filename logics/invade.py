@@ -2,6 +2,7 @@
 """ 城战逻辑
 """
 import time
+import datetime
 from bottle import request
 from logics import card
 from common.exceptions import *
@@ -19,11 +20,11 @@ def check_remain_dungeon():
         api_end_defense(win=False)
         
 
-
 def api_info():
     """ api/invade/info
     城战界面基本信息
     Returns:
+        award_time: 领奖时间
         cup(int): 奖杯数
         cup_rank(int): 城战段位
         invade_jeton: 城战代币
@@ -43,6 +44,7 @@ def api_info():
 
         例如:
         {
+            'award_time': 1447171200,
             'cup': 3,
             'cup_rank': 15,
             'shield_time': 1445333584,
@@ -65,12 +67,25 @@ def api_info():
 
     """
     uInvade = request.user.user_invade
-    coin_conf = uInvade._common_config['invade_refresh_coin']
+    common_config = uInvade._common_config
+    coin_conf = common_config['invade_refresh_coin']
     refresh_coin = coin_conf[min(uInvade.refresh_cnt, len(coin_conf) - 1)]
+    # 计算下次领奖时间
+    td = datetime.datetime.today()
+    seventh_weekday = common_config['invade_seventh_weekday']
+    tdweekday = td.isoweekday()
+    if tdweekday < seventh_weekday:
+        gap_day = seventh_weekday - tdweekday
+    else:
+        gap_day = 7 + seventh_weekday - tdweekday
+    print "debug guochen",gap_day
+    award_time = int(time.mktime((td.date()+datetime.timedelta(days=gap_day)).timetuple()))
+    
     # 若对手已过期 ，清空对手信息
     if uInvade.opponent.get('expire_time', 0) < time.time():
         uInvade.clear_opponent()
     return {
+        'award_time': award_time, 
         'cup': uInvade.cup,
         'cup_rank': uInvade.cup_rank,
         'invade_jeton': uInvade.invade_jeton,

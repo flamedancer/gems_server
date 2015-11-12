@@ -165,12 +165,12 @@ def get_login_award(ubase):
     today_first_login = ubase.record_login()
     if not today_first_login:
         return awards_info
-    awards.append(get_capital_award(ubase))
-    awards.append(get_invade_award(ubase))
+    awards_info.append(get_capital_award(ubase))
+    awards_info.append(get_invade_award(ubase))
     # 城市代币产出不在奖励弹框显示
     get_city_jeton(ubase)
     awards_info = [award for award in awards_info if award]
-    return awards
+    return awards_info
 
 def get_capital_award(ubase):
     """ 主城进贡金币 """
@@ -180,7 +180,7 @@ def get_capital_award(ubase):
     lv_conf = ubase._userlv_config[str(ubase.user_property.lv)]
     award = {}
     award['coin'] = lv_conf['reward_coin']
-    tools.add_user_awards(ubase, award, 'login_capital')
+    add_user_awards(ubase, award, 'login_capital')
     return {'type':  'captial',
             'award': capital_award,
     }
@@ -189,13 +189,17 @@ def get_capital_award(ubase):
 def get_invade_award(ubase):
     uinvade = ubase.user_invade
     td =  datetime.datetime.today() 
-    # 每周结算终极奖励 并重置城战
+    # 平日发普通奖励，第七天发终极奖励 并重置城战
+    sevent_day = ubase._common_config['invade_seventh_weekday']
+    
     # 和上次登入是否同一周 若不是 重置
-    if not datetime.datetime.strptime(ubase.last_login_date,
-        "%Y-%m-%d").strftime("%W") == td.strftime("%W"):
+    if total_isoweek(stamp=ubase.last_login_time, start=sevent_day) != (
+        total_isoweek(start=sevent_day)): 
+    #if not datetime.datetime.strptime(ubase.last_login_date,
+    #    "%Y-%m-%d").strftime("%W") == td.strftime("%W"):
         uinvade.reset_invade()
         
-    is_seventh_day = td.isoweekday() == ubase._common_config['invade_seventh_weekday']
+    is_seventh_day = td.isoweekday() == sevent_day 
     invadeaward_config = ubase._invadeaward_config
     cup_rank = str(ubase.user_invade.cup_rank)
     if is_seventh_day:
@@ -205,7 +209,7 @@ def get_invade_award(ubase):
         award = invadeaward_config['normal_award'].get(cup_rank, {})
     if not award:
         return {} 
-    tools.add_user_awards(ubase, award, 'login_invade')
+    add_user_awards(ubase, award, 'login_invade')
     return {'type': 'invade',
             'award': award,
     }
@@ -223,7 +227,7 @@ def get_pvp_award(ubase):
     # 超过一个双周重置一次
     if (this_week / 2) - (last_week / 2) == 1:
         upvp.reset_pvp()
-    # 超过二个单周重置两次成初始
+    # 超过二个双周重置两次成初始
     elif (this_week / 2) - (last_week / 2) >= 2:
         upvp.reset_pvp()
         upvp.reset_pvp()
@@ -236,7 +240,7 @@ def get_pvp_award(ubase):
     award = pvpaward_config.get(pvp_grade, {})
     if not award:
         return {}
-    tools.add_user_awards(ubase, award, 'login_pvp')
+    add_user_awards(ubase, award, 'login_pvp')
     return {'type': 'pvp',
             'award': award,
     }
@@ -247,7 +251,7 @@ def get_city_jeton(ubase):
     city_config = ubase._city_config
     # 每个征服了的城市都有进贡几率
     for city_id in ucities.cities:
-        if not city_id.has_conquer_city(city_id):
+        if not ucities.has_conquer_city(city_id):
             continue
         jeton_num = city_config[city_id]['jeton'][ucities.cities[city_id]['reputation_lv']]
         ucities.add_city_jeton(city_id, jeton)
