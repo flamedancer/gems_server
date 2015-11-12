@@ -196,8 +196,8 @@ class Player(object):
     def inf_readying_pvp(self, opponent):
         """ <3>1 server匹配好一对对手后通知两边
         """
-        self.status = -1
-        opponent.status = -1
+        self.fight_status = -1
+        opponent.fight_status = -1
         self.opponent = opponent
         self.opponent.opponent = self
 
@@ -409,15 +409,18 @@ def check_dead_user():
     """剔除长时间没有数据交互的晚间，每隔15秒检查
     """
     while True:
+        remove_players = []
         # print "checking connecting"
         for user in all_players:
             # print user.uid
             if user.last_recv_fg == False:
-                print "disconnect ", user.uid
-                disconnect_player(user, reason='Too long time no-msg-in-or-out')
-                print "now the connecting user counter is", len(all_players) 
+                remove_players.append(user)
             else:
                 user.last_recv_fg = False
+        for user in remove_players:
+            print "disconnect ", user.uid
+            disconnect_player(user, reason='Too long time no-msg-in-or-out')
+            print "now the connecting user counter is", len(all_players) 
         gevent.sleep(600)
 
 
