@@ -61,6 +61,8 @@ def pier_clear(*uids):
     for uid in uids:
         if uid in app.pier.get_data:
             app.pier.get_data.pop(uid)
+        if uid in app.pier.put_data:
+            app.pier.put_data.pop(uid)
 
 def debug_print(*msgs):
     if settings.DEBUG:
@@ -168,7 +170,7 @@ class Player(object):
 
     def get_suitable_opponent(self):
         for player in all_players:
-            if player.uid and player.uid != self.uid and player.fight_status == -1:
+            if player.uid and player.uid != self.uid and player.fight_status == -2:
                 return player
 
     def req_pvp(self, data):
@@ -185,8 +187,8 @@ class Player(object):
         """
         self.say_log('I try to get a opponent......')
         opponent = self.get_suitable_opponent()
-        self.fight_status = -2
         if opponent is None:
+            self.fight_status = -2
             return
         else:
             self.inf_readying_pvp(opponent)
