@@ -9,7 +9,7 @@ class UserTask(GameModel):
     def __init__(self, uid=''):
         # 玩家任务数据
         self.uid = uid 
-        self.has_new_task = False # 有新任务或由已完成任务
+        self.has_new_task = False # 有新任务或有已完成任务
         self.main_task = {} 
 
     @classmethod

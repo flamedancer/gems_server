@@ -68,5 +68,27 @@ class UserModified(GameModel):
         if dungeon_type not in self.dungeon:
             raise LogicError("End the wrong fight")
         return self.dungeon[dungeon_type]
+
+    def get_flags(self):
+        """ 主页红点标志 """
+        flags = [] 
+        uproperty = self.user_property
+        ucards = self.user_cards
+        utask = self.user_task
+        uinvade = self.user_invade
+        # 有剩余元素点
+        if uproperty.nature_remain:
+            flags.append("charactor") 
+        # 有新卡 
+        if ucards.new_card_num:
+            flags.append("cards") 
+        # 有已完成或新任务
+        if utask.has_new_task:
+            flags.append("task") 
+        # 有新的防守日志
+        if uinvade.has_new_history:
+            flags.append("invade")    
+        return flags
         
-        
+
+

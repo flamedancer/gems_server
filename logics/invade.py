@@ -112,7 +112,6 @@ def api_history():
     """
     uInvade = request.user.user_invade
     uInvade.has_new_history = False
-    uInvade.put()
     return {'history': uInvade.history}
 
 

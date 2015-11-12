@@ -65,7 +65,7 @@ def prelogic(func):
             })
             return result
         result['uid'] = request.user.uid
-        result['update_userInfo'] = modified_user_data()
+        result['update_userInfo'] = update_user_data()
         app.pier.save()
         print "debug_return", result
         return result
@@ -89,12 +89,13 @@ def pier_clear():
     app.pier.clear()
 
 
-def modified_user_data():
+def update_user_data():
     Umodified = request.user.user_modified
-    modified_data = Umodified.modified
-    if modified_data:
+    update_data = Umodified.modified
+    if update_data:
         Umodified.modified = {}
-    return modified_data
+    update_data['flags'] = Umodified.get_flags()
+    return update_data
 
 
 def print_err():

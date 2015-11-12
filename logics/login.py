@@ -76,9 +76,9 @@ def api_login(last_update_time):
     prod_city_award(ubase)
     # 登入奖励
     result['login_awards'] = get_login_award(ubase)
-    # 登入游戏时不需要发已修改的信息, 只留 红点标记
+    # 登入游戏时不需要发已修改的信息
     umodified = ubase.user_modified
-    umodified.modified = get_flags(ubase)
+    umodified.modified = {}
     # 检查是否有强退战场，防止未结束
     invade.check_remain_dungeon()
     return result
@@ -150,9 +150,6 @@ def get_user_cardinfo(ubase):
     # 调整user_cards 格式
     new_cards_info['cards'] = dirtolist(cards_info['cards'])
     return new_cards_info
-
-def get_flags(ubase):
-    return {"flags": {}}
 
     
 def get_login_award(ubase):

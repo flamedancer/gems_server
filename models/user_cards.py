@@ -33,6 +33,7 @@ class UserCards(GameModel):
         self.uid = uid
         self.cur_team_index = "0" # 当前使用城市卫队号
         self.cards = {}   # 所有 
+        self.new_card_num = 0   # 新卡数量
     
     @classmethod
     def create(cls, uid):
@@ -67,6 +68,7 @@ class UserCards(GameModel):
                 'num': num,
                 'is_new': True,
             }
+            self.add_new_card_num()
         self.put()
         return self.cards[card_id]
 
@@ -134,4 +136,8 @@ class UserCards(GameModel):
         self.cards[card_id]['favor'] += 1
         self.put()
         return self.cards[card_id]
+
+    def add_new_num(self, num=1):
+        self.new_card_num = max(0, self.new_card_num + num)
+        
 
