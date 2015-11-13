@@ -78,19 +78,20 @@ def api_info():
         gap_day = seventh_weekday - tdweekday
     else:
         gap_day = 7 + seventh_weekday - tdweekday
-    print "debug guochen",gap_day
     award_time = int(time.mktime((td.date()+datetime.timedelta(days=gap_day)).timetuple()))
     
     # 若对手已过期 ，清空对手信息
     if uInvade.opponent.get('expire_time', 0) < time.time():
         uInvade.clear_opponent()
+    ucards = uInvade.user_cards
     return {
         'award_time': award_time, 
         'cup': uInvade.cup,
         'cup_rank': uInvade.cup_rank,
         'invade_jeton': uInvade.invade_jeton,
         'shield_time': uInvade.shield_time,
-        'watch_team': uInvade.watch_team,
+        'watch_team': uInvade.watch_team or ucards.cur_team(),
+        'watch_team_index': uInvade.watch_team_index or ucards.cur_team_index,
         'has_new_history': uInvade.has_new_history,
         'refresh_coin': refresh_coin,
         'opponent': uInvade.opponent,
@@ -184,8 +185,10 @@ def api_start_invade(team_index='', new_team=None):
             nature_*: 敌人各元素掌握度
             team: 敌人卡片队伍
             team_index: 敌人队伍军旗
+            team_index_lv: 敌人队伍军旗等级
             card_lv(list->int): 各卡片等级
             card_favor(list->int): 各卡片好感度
+            city_lv: 城战发生城市等级
         
     """
     if team_index != '' and new_team is not None:
@@ -216,6 +219,9 @@ def api_start_invade(team_index='', new_team=None):
                     'nature_4': 5,
                     'nature_5': 5,
                     'team': uInvade._userInit_config['init_team'],
+                    'team_index': '',
+                    'team_index_lv': 0,
+                    'city_lv': 0,
                     'card_lv': [2, 4, 6, 8],
                     'card_favor':[0, 1, 0, 1],
                 }
@@ -274,7 +280,9 @@ def api_end_invade(win):
         opponent_invade_log['lose_coin'] = award.get('coin', 0)
         # 每次打赢别人， 自己的保护时间取消
         uInvade.reset_shield_time()
-        invade_user_instance.add_user(uInvade.uid)
+        # 如果自己有主城，加入被搜寻中
+        if uInvase.user_city.capital_city:
+            invade_user_instance.add_user(uInvade.uid)
     else:
         # 失败清空连胜次数 
         uInvade.reset_consecutive_win()
@@ -287,8 +295,13 @@ def api_end_invade(win):
     if opponent_uid:
         opponentInvade = UserInvade.get(opponent_uid)
         # 日志中主城设为被打者主城
-        opponent_invade_log['capital_city'] = opponentInvade.user_cities.capital_city
-        # 要告诉对手他别打了
+        capital_city = opponentInvade.user_cities.capital_city
+        opponent_invade_log['capital_city'] = capital_city
+        # 加上入侵者此城等级
+        uCities = uInvade.user_citites
+        city_lv = 0 if not uCities.has_show_city(capital_city) else uCities.cities[capital_city]['lv']  
+        opponent_invade_log['team_info']['city_lv'] = city_lv
+        # 要告诉对手他被打了
         opponentInvade.add_history(opponent_invade_log)
         if win:
             opponent_coin = opponentInvade.user_property.coin 
@@ -327,6 +340,7 @@ def api_start_defense(history_index, team_index='', new_team=None):
             team_index: 敌人队伍军旗
             card_lv(list->int): 各卡片等级
             card_favor(list->int): 各卡片好感度
+            city_lv: 此城等级
     """ 
     if team_index != '' and new_team is not None:
         if set(new_team) == set(['']):

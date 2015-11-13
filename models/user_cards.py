@@ -68,7 +68,7 @@ class UserCards(GameModel):
                 'num': num,
                 'is_new': True,
             }
-            self.add_new_card_num()
+            self.add_new_num()
         self.put()
         return self.cards[card_id]
 

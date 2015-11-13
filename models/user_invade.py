@@ -54,10 +54,12 @@ class UserInvade(GameModel):
     def watch_team_info(self):
         uProperty = self.user_property
         uCards = self.user_cards
+        uCities = self.user_cities
         team = self.watch_team
         # 防守编队为空时，用当前编队
         if not team or set(team) == set(['']):
             team = uCards.cur_team() or self._common_config['init_team']
+        team_index = self.watch_team_index or uCards.cur_team_index,
         return {
             'nature_0': uProperty.nature_0,
             'nature_1': uProperty.nature_1,
@@ -66,9 +68,11 @@ class UserInvade(GameModel):
             'nature_4': uProperty.nature_4,
             'nature_5': uProperty.nature_5,
             'team': team,
-            'team_index': self.watch_team_index or '0',
+            'team_index': team_index, 
+            'team_index_lv': uCities.cities[team_index]['reputation_lv'],
             'card_lv': [uCards.cards.get(cid, {'lv': 0})['lv'] for cid in team],
             'card_favor': [uCards.cards.get(cid, {'favor': 0})['favor'] for cid in team],
+            'city_lv': uCities.cities[uCities.capital_city or '0']['lv'],
         }
 
     def now_team_info(self):
@@ -84,6 +88,7 @@ class UserInvade(GameModel):
             'nature_5': uProperty.nature_5,
             'team': team,
             'team_index': uCards.cur_team_index,
+            'team_index_lv': uCities.cities[team_index]['reputation_lv'],
             'card_lv': [uCards.cards.get(cid, {'lv': 0})['lv'] for cid in team],
             'card_favor': [uCards.cards.get(cid, {'favor': 0})['favor'] for cid in team],
         }
