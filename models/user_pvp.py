@@ -65,8 +65,7 @@ class UserPvp(GameModel):
     def lose(self):
         # 5段以下不减星
         if self.grade > 5:
-            return
-        self.all_star = max(0, self.all_star - 1)
+            self.all_star = max(0, self.all_star - 1)
         self.consecutive_win = 0
         self.total_lose += 1
         self.adjust()

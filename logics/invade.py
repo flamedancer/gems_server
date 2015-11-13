@@ -281,8 +281,8 @@ def api_end_invade(win):
         # 每次打赢别人， 自己的保护时间取消
         uInvade.reset_shield_time()
         # 如果自己有主城，加入被搜寻中
-        if uInvase.user_city.capital_city:
-            invade_user_instance.add_user(uInvade.uid)
+        #if uInvade.user_cities.capital_city:
+        invade_user_instance.add_user(uInvade.uid)
     else:
         # 失败清空连胜次数 
         uInvade.reset_consecutive_win()
@@ -298,7 +298,7 @@ def api_end_invade(win):
         capital_city = opponentInvade.user_cities.capital_city
         opponent_invade_log['capital_city'] = capital_city
         # 加上入侵者此城等级
-        uCities = uInvade.user_citites
+        uCities = uInvade.user_cities
         city_lv = 0 if not uCities.has_show_city(capital_city) else uCities.cities[capital_city]['lv']  
         opponent_invade_log['team_info']['city_lv'] = city_lv
         # 要告诉对手他被打了
@@ -371,6 +371,8 @@ def api_start_defense(history_index, team_index='', new_team=None):
 def api_end_defense(win):
     """ api/invade/end_defense
     结束反击战斗
+    Argvs:
+        win(bool): 是否胜利
     
     """ 
     user = request.user
