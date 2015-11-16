@@ -101,6 +101,8 @@ class UserCards(GameModel):
         ucity = self.user_cities
         if not ucity.has_open_city(team_index): 
             raise LogicError("This city has't opened")
+        if set(team) == set(['']):
+            team = []
         ucity.cities[team_index]['team'] = team
         ucity.put()
         return team

@@ -67,3 +67,17 @@ def api_reallot_nature(natures):
     tools.update_user_info(uproperty, "nature_remain", remain_nature, "reallot_nature") 
     return {}
 
+
+def api_set_newbie_step(step):
+    """ api/charactor/set_newbie_step
+    设置玩家已过新手引导步数
+    Args:
+        step(int): 新手引导步数id
+    """
+
+    ubase = request.user
+    ubase.newbie_step = step
+    if step >= ubase._common_config.get('newbie_step', 0):
+        ubase.is_new_bie = False
+    return {}
+        

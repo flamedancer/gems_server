@@ -22,6 +22,9 @@ class UserBase(GameModel):
         self.total_login = 0  # 总共登入天数
         self.consecutive_login = 0 # 连续登入天数
 
+        self.is_newbie = True  # 是否过完新手引导
+        self.newbie_step = 0 # 已过新手引导步骤id
+
     @classmethod
     def create(cls, uid):
         obj = cls(uid)

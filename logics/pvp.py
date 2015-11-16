@@ -49,11 +49,12 @@ def api_top():
         tops.append({
             'lv': base_obj.user_property.lv, 
             'name': base_obj.name, 
-            'star': score,
+            'star': int(score),
         })
 
     self_rank = top_model.rank(user.uid)
     self_score = top_model.score(user.uid) or 0
+    self_score = int(self_score)
     # 不在排行榜内 返回 0
     if self_rank is None:
         self_rank = 0
