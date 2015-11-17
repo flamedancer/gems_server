@@ -1,5 +1,6 @@
 # -*- encoding: utf-8* import random
 import bisect
+import random
 from models import GameModel
 from common.exceptions import *
 

@@ -53,11 +53,9 @@ def default_complete_num(task_id):
     elif task_id.startswith('J'):
         return user.user_pvp.grade
     elif task_id.startswith('K'):
-        return user.user_invade.consecutive_win
-    elif task_id.startswith('K'):
-        return user.user_invade.consecutive_win
+        return user.user_invade.total_invade_win
     elif task_id.startswith('L'):
-        return user.user_invade.invade_jeton
+        return user.user_invade.total_defense_win
     elif task_id.startswith('M'):
         return user.user_invade.cup
         
@@ -67,8 +65,8 @@ api_task_map = {
     'dungeon_end': ['D', 'F'],
     'arena_end_fight': ['G', 'H'],
     'pvp_info': ['I', 'J'],
-    'invade_end_invade': ['K'],
-    'invade_end_defense': ['L', 'M'],
+    'invade_end_invade': ['K', 'M'],
+    'invade_end_defense': ['L'],
 }
 
 
@@ -90,11 +88,6 @@ def check_task(api_path, api_data):
         else:
             if main_task_conf[task_id]['value'][utask.main_task[task_id]['step']] >= value:
                 utask.set_completed(task_id) 
-                print "debug_task com", task_id
-        print "debug_task all", utask.main_task
-        print "debug_task in pear", app.pier.get_data
-        print "debug_task in pear", app.pier.put_data
-        print "debug_task task model", utask
 
     # 是否新的任务进度
     def check_value(task_type, task_id):
