@@ -53,6 +53,7 @@ class InvadeUser(BaseModel):
         return {
             'uid': selected_uid,
             'name': selected_user.name,
+            'subpicture': selected_user.subpicture,
             'lv': selected_uproperty.lv,
             'capital_city': selected_ucities.capital_city,
         }
@@ -61,6 +62,7 @@ class InvadeUser(BaseModel):
         return {
             'uid': '',
             'name': 'test',
+            'subpicture': 0,
             'lv': 10,
             'capital_city': '0',
         }

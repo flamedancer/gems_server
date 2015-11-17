@@ -251,7 +251,7 @@ def api_get_award(task_id):
     else:
         utask.del_main_task(self, task_id)
     tools.add_user_awards(utask, award, 'task')
-    return {'awards': award}
+    return api_info()
     
     
     

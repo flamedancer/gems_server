@@ -61,7 +61,7 @@ def api_top():
         star_gap = 0
     # top 的rank 第一名是 0
     else:
-        star_gap = top_model.get_score(self_rank - 1) - self_score + 1
+        star_gap = int(top_model.get_score(max(0, self_rank - 1)) - self_score + 1)
         self_rank += 1
     return {
         'tops': tops,
