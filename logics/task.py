@@ -70,6 +70,19 @@ api_task_map = {
 }
 
 
+def set_value(utask, task_id, value):
+    utask.set_now_value(task_id, value) 
+    print "debug_task set value", task_id, value
+    # pvp段位 15  比 10 弱(虽然15>10）
+    if not task_id.startswith('J'):
+        if main_task_conf[task_id]['value'][utask.main_task[task_id]['step']] <= value:
+            utask.set_completed(task_id) 
+            print "debug_task com", task_id
+    else:
+        if main_task_conf[task_id]['value'][utask.main_task[task_id]['step']] >= value:
+            utask.set_completed(task_id) 
+
+
 def check_task(api_path, api_data):
     user = request.user 
     utask = user.user_task 
@@ -77,17 +90,6 @@ def check_task(api_path, api_data):
     modified_info = umodified.modified
     main_task_conf = utask._task_config['main_task']
 
-    def set_value(task_id, value):
-        utask.set_now_value(task_id, value) 
-        print "debug_task set value", task_id, value
-        # pvp段位 15  比 10 弱(虽然15>10）
-        if not task_id.startswith('J'):
-            if main_task_conf[task_id]['value'][utask.main_task[task_id]['step']] <= value:
-                utask.set_completed(task_id) 
-                print "debug_task com", task_id
-        else:
-            if main_task_conf[task_id]['value'][utask.main_task[task_id]['step']] >= value:
-                utask.set_completed(task_id) 
 
     # 是否新的任务进度
     def check_value(task_type, task_id):
@@ -141,7 +143,7 @@ def check_task(api_path, api_data):
             if not api_data['win']:
                 return
             new_value = max(utask.get_now_value(task_id), user.user_invade.cup)
-        set_value(task_id, new_value)
+        set_value(utask, task_id, new_value)
  
     # 若升级：1 是否有新任务 2 是否完成升级任务
     print "debug_task modifiedinfo", modified_info
@@ -240,7 +242,9 @@ def api_get_award(task_id):
     award = main_task_conf[task_id]['award'][now_step]
     next_step = str(int(now_step) + 1)
     if next_step in main_task_conf[task_id]['value']:
+        utask.set_completed(task_id, completed=False)
         utask.set_step(task_id, next_step)
+        set_value(utask, task_id, utask.main_task[task_id]['now_value'])
     else:
         utask.del_main_task(task_id)
     tools.add_user_awards(utask, award, 'task')

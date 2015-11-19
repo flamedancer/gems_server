@@ -209,7 +209,7 @@ def api_get_award():
             returns['cards_price'] = int(all_price * discount_rate)
             uarena.set_step(7)
         else:
-            uarena.reseet_arena()
+            uarena.reset_arena()
     else:
         uarena.reset_arena()
     return returns

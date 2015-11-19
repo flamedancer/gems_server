@@ -51,9 +51,10 @@ class UserTask(GameModel):
     def set_step(self, task_id, step):
         self.main_task[task_id]['step'] = step
 
-    def set_completed(self, task_id):
-        self.main_task[task_id]['completed'] = True
-        self.turn_new_task(True)
+    def set_completed(self, task_id, completed=True):
+        self.main_task[task_id]['completed'] = completed
+        if completed:
+            self.turn_new_task(True)
 
     def turn_new_task(self, flag):
         if flag is False:
