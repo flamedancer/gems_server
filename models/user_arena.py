@@ -21,7 +21,8 @@ class UserArena(GameModel):
         self.reset_arena()
 
     def reset_arena(self):
-        self.step = 0 # 竞技场状态 0未开启竞技  1选第一张卡 2选第二张卡...  5准备开始竞技 6完成竞技等待领取奖励
+        self.step = 0 # 竞技场状态 0未开启竞技  1选第一张卡 2选第二张卡...
+                      # 5准备开始竞技 6完成竞技等待领取奖励 7 领取玩奖励(可能等待买卡包)
         team_length = self._common_config['team_length']
         self.selected_cards = [''] * team_length
         self.team_index = '0'

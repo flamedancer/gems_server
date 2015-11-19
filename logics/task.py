@@ -242,7 +242,7 @@ def api_get_award(task_id):
     if next_step in main_task_conf[task_id]['value']:
         utask.set_step(task_id, next_step)
     else:
-        utask.del_main_task(self, task_id)
+        utask.del_main_task(task_id)
     tools.add_user_awards(utask, award, 'task')
     return api_info()
     

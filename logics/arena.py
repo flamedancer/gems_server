@@ -36,6 +36,9 @@ def api_check_arena():
     # 是否结束竞技, 胜10或负2
     if uarena.win >= 10 or uarena.total - uarena.win >= 2:
         uarena.set_step(6)
+    # 不在出现打折卡包界面
+    if uarena.step == 7:
+        uarena.reset_arena()
     return uarena.pack_info()
 
 
@@ -180,12 +183,36 @@ def api_cancel_arena():
 def api_get_award():
     """ api/arena/get_award
     领取竞技奖励
+    Returns:
+        awards: 获得奖励
+        cards_price(inti): 卡包价格，若达到获得折扣卡包由此字段
     """
     uarena = request.user.user_arena
     award = uarena._arenaaward_config[str(uarena.win)]
     tools.add_user_awards(uarena, award, 'arena')
-    uarena.reset_arena()
-    return {'awards': award}
+    common_config = uarena._common_config
+    returns = {} 
+    returns['awards'] = award
+    if uarena.win >= common_config['arena_discount_win']:
+        all_price = 0
+        price_conf = uarena._cardup_config['price']
+        card_conf = uarena._card_config
+        for cid in uarena.selected_cards:
+            # 拥有卡不出售 
+            own_cards = uarena.user_cards.cards
+            if cid not in own_cards or own_cards[cid]['num'] != 0:
+                continue    
+            quality = card_conf[cid]['quality']
+            all_price += price_conf[quality]
+        if all_price:
+            discount_rate = uarena._common_config['arena_discount_rate']
+            returns['cards_price'] = int(all_price * discount_rate)
+            uarena.set_step(7)
+        else:
+            uarena.reseet_arena()
+    else:
+        uarena.reset_arena()
+    return returns
 
 
 def api_set_team(new_team):
@@ -201,11 +228,29 @@ def api_set_team(new_team):
     uarena.put()
     return {}
 
-def api_view_award():
-    """ api/arena/view_award
-     查看奖励
+
+def api_buy_discount_cards():
+    """ api/arena/buy_discount_cards
+    购买竞技场卡包
     """
     uarena = request.user.user_arena
-    award = uarena._arenaaward_config[str(uarena.win)]
-    return {'awards': award}
-    
+    if uarena.step != 7:
+        return {} 
+    all_price = 0
+    sell_cards = []
+    price_conf = uarena._cardup_config['price']
+    card_conf = uarena._card_config
+    discount_rate = uarena._common_config['arena_discount_rate']
+    for cid in uarena.selected_cards:
+        own_cards = uarena.user_cards.cards
+        if cid not in own_cards or own_cards[cid]['num'] != 0:
+            continue    
+        quality = card_conf[cid]['quality']
+        all_price += price_conf[quality]
+        sell_cards.append(cid)
+    all_price = int(all_price * discount_rate)
+    tools.del_user_things(uarena, 'diamond', all_price, 'arena_buy_discount_cards')
+    for cid in sell_cards:
+        tools.add_user_things(uarena, cid, 1, 'arena_buy_discount_cards') 
+    return {}
+
