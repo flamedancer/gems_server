@@ -186,13 +186,13 @@ def api_end(dungeon_type, city_id, win=False, has_dead_mem=True, bout=1):
         if str(int(cur_stage) + 1) not in conquer_config[city_id]:
             new_info = ucities.conquer_city(city_id)
             # 城市每张满级卡加一级
-            ucards = self.user_cards
+            ucards = ucities.user_cards
             max_card_lv = ucards._common_config['max_card_lv']
             card_config = ucards._card_config
             for card_id, card_info in ucards.cards.items():
                 if card_info['lv'] == max_card_lv and\
                    city_id == str(card_config[card_id]['camp']):
-                    self.up_city_lv(city_id)
+                    ucities.up_city_lv(city_id)
         umodified.set_modify_info('cities', new_info)
     elif dungeon_type == 'challenge':
         challenge_config = ubase._challenge_config

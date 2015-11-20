@@ -159,12 +159,12 @@ def check_task(api_path, api_data):
             if task_id.startswith('A'):
                 check_value('A', task_id)
 
-    # 若开城: 1新的城市征服任务
-    if api_path == 'city_open_city':
-        city_id = api_data['city_id']
-        task_str = "F{:0>2}".format(city_id) 
-        if task_str in main_task_conf:
-            utask.add_main_task(task_str)
+    # # 若开城: 1新的城市征服任务
+    # if api_path == 'city_open_city':
+    #     city_id = api_data['city_id']
+    #     task_str = "F{:0>2}".format(city_id) 
+    #     if task_str in main_task_conf:
+    #         utask.add_main_task(task_str)
    
     print "debug_task", api_path
     if api_path not in api_task_map:

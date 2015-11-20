@@ -27,12 +27,13 @@ class UserTask(GameModel):
         self.has_new_task = True
 
     def add_main_task(self, task_id):
-        self.main_task[task_id] = {
-            'step': '1',
-            'completed': False,
-            'now_value': None,
-        }
-        self.turn_new_task(True)
+        if task not in self.main_task:
+            self.main_task[task_id] = {
+                'step': '1',
+                'completed': False,
+                'now_value': None,
+            }
+            self.turn_new_task(True)
 
     def del_main_task(self, task_id):
         self.main_task.pop(task_id)
