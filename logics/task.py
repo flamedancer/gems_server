@@ -72,6 +72,7 @@ api_task_map = {
 
 def set_value(utask, task_id, value):
     utask.set_now_value(task_id, value) 
+    main_task_conf = utask._task_config['main_task']
     print "debug_task set value", task_id, value
     # pvp段位 15  比 10 弱(虽然15>10）
     if not task_id.startswith('J'):
