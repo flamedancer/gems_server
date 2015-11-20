@@ -27,7 +27,7 @@ class UserTask(GameModel):
         self.has_new_task = True
 
     def add_main_task(self, task_id):
-        if task not in self.main_task:
+        if task_id not in self.main_task:
             self.main_task[task_id] = {
                 'step': '1',
                 'completed': False,

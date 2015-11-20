@@ -37,7 +37,7 @@ def api_check_arena():
     if uarena.win >= 10 or uarena.total - uarena.win >= 2:
         uarena.set_step(6)
     # 不在出现打折卡包界面
-    if uarena.step == 7:
+    if uarena.step >= 6:
         uarena.reset_arena()
     return uarena.pack_info()
 
@@ -55,7 +55,6 @@ def get_arena_cards(user, step):
         cid_rate_conf.pop(card_key)
     return arena_cards
         
-
 
 def api_new_arena():
     """ api/arena/new_arena
