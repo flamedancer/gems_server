@@ -124,7 +124,7 @@ def calcu_enemy_lv(ucards, base_lv):
     return return_lv
 
 
-def api_end(dungeon_type, city_id, win=True, has_dead_mem=True, bout=1):
+def api_end(dungeon_type, city_id, win=False, has_dead_mem=True, bout=1):
     """ api/dungeon/end
     结束战斗
     Args:
@@ -181,10 +181,18 @@ def api_end(dungeon_type, city_id, win=True, has_dead_mem=True, bout=1):
             tools.add_user_things(ubase, 'exp', add_exp, 'conquer')
             return {'exp': add_exp}
         tools.add_user_awards(ubase, award, 'conquer')
+        new_info = ucities.up_conquer_stage(city_id)
+        # 征服玩此城市, 城市每张满级卡加一级
         if str(int(cur_stage) + 1) not in conquer_config[city_id]:
             new_info = ucities.conquer_city(city_id)
-        else:
-            new_info = ucities.up_conquer_stage(city_id)
+            # 城市每张满级卡加一级
+            ucards = self.user_cards
+            max_card_lv = ucards._common_config['max_card_lv']
+            card_config = ucards._card_config
+            for card_id, card_info in ucards.cards.items():
+                if card_info['lv'] == max_card_lv and\
+                   city_id == str(card_config[card_id]['camp']):
+                    self.up_city_lv(city_id)
         umodified.set_modify_info('cities', new_info)
     elif dungeon_type == 'challenge':
         challenge_config = ubase._challenge_config
