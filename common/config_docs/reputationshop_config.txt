@@ -1,0 +1,39 @@
+城市ID：
+     物品序号： 
+            need_reputation_lv  int  需要达到的声望等级
+            cost_city_jeton    int   购买所需此城代币
+            award             dict   具体物品
+
+例:
+{
+    "0":{
+        "1":{
+            "award":{
+                "card":[
+                    [
+                        "xxx_card",
+                        1
+                    ]
+                ],
+                "coin":3,
+                "item":[
+                    [
+                        "xxx_item",
+                        1
+                    ]
+                ]
+            },
+            "cost_city_jeton":10,
+            "need_reputation_lv":1
+        },
+        "2":{
+            "award":{
+                "coin":3,
+                "diamond":1,
+                "stamina":5
+            },
+            "cost_city_jeton":10,
+            "need_reputation_lv":1
+        }
+    }
+}

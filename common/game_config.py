@@ -59,6 +59,9 @@ CONFIG_TITLES = [
         'category': u'物品',
         'content':[
             ('item_config', u'道具配置'),
+            ('reputationshop_config', u'声望商店配置'),
+            ('invadeshop_config', u'城战商店配置'),
+            ('shop_config', u'土豪商城配置'),
          ],
     },
 ]
@@ -76,6 +79,9 @@ NEED_SYNC_CONFIGS = [
     'challenge_config',
     'arenaaward_config',
     'item_config',
+    'reputationshop_config',
+    'invadeshop_config',
+    'shop_config',
 ]
 
 

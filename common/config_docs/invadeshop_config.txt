@@ -1,0 +1,33 @@
+ 物品序号： 
+            cost_invade_jeton    int   购买所需城战代币
+            award             dict   具体物品
+例：
+{
+        "1":{
+            "award":{
+                "card":[
+                    [
+                        "xxx_card",
+                        1
+                    ]
+                ],
+                "coin":3,
+                "item":[
+                    [
+                        "xxx_item",
+                        1
+                    ]
+                ]
+            },
+            "cost_invade_jeton":10,
+        },
+        "2":{
+            "award":{
+                "coin":3,
+                "diamond":1,
+                "stamina":5
+            },
+            "cost_invade_jeton":10,
+        }
+
+}
