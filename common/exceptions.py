@@ -61,7 +61,7 @@ class LackError(Error):
     例如购买时金币不足等
     """   
     error_code = 5
-    def __init__(self, error_msg='lack thing error'):
-        self.error_msg = error_msg
+    def __init__(self, error_msg=''):
+        self.error_msg = 'Not enough thing ' + error_msg
 
 

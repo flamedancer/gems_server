@@ -184,7 +184,7 @@ def api_get_award():
     领取竞技奖励
     Returns:
         awards: 获得奖励
-        cards_price(inti): 卡包价格，若达到获得折扣卡包由此字段
+        cards_price(int): 卡包价格，若达到获得折扣卡包由此字段
     """
     uarena = request.user.user_arena
     award = uarena._arenaaward_config[str(uarena.win)]

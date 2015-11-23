@@ -49,7 +49,6 @@ class UserInvade(GameModel):
 
     def set_opponent(self, opponent_info):
         self.opponent = opponent_info
-        self.put()
 
     def watch_team_info(self):
         uProperty = self.user_property
@@ -99,27 +98,24 @@ class UserInvade(GameModel):
         self.history.append(history_log)
         self.history = self.history[-20:]
         self.has_new_history = True
-        self.put()
 
     def clear_history(self, index=None):
         if index is not None:
             self.history.pop(index)
         else:
             self.history = []
-        self.put()
-
 
     def add_cup(self, num):
         old_cup = self.cup
         self.cup = max(0, self.cup + num)
         invade_cup_rank = self._common_config['invade_cup_rank']
         self.cup_rank = len(invade_cup_rank) - bisect.bisect(invade_cup_rank, self.cup) + 1 
-        self.put()
         return self.cup - old_cup
 
     def add_invade_jeton(self, num):
-        self.invade_jeton = max(0, self.invade_jeton + num)
-        self.put()
+        self.invade_jeton = self.invade_jeton + num
+        if self.invade_jeton < 0:
+            raise LackError('invade_jeton')
 
     def reset_shield_time(self, shield_time=0):
         self.shield_time = shield_time 
@@ -129,7 +125,6 @@ class UserInvade(GameModel):
 
     def clear_opponent(self):
         self.opponent = {}
-        self.put()
 
     def set_watch_team(self, index, team):
         """ 修改守城编队
@@ -154,7 +149,6 @@ class UserInvade(GameModel):
 
     def inc_refresh_cnt(self):
         self.refresh_cnt += 1
-        self.put()
 
     def reset_consecutive_win(self):
         self.consecutive_win = 0

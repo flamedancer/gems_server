@@ -65,7 +65,7 @@ class UserProperty(GameModel):
         old_num = getattr(self, thing)
         new_num = old_num - num  
         if new_num < 0:
-            raise LackError('Not enough thing ' + thing)
+            raise LackError(thing)
         setattr(self, thing, new_num)
         self.put()
         return new_num

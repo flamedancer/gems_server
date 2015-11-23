@@ -193,6 +193,8 @@ class UserCities(GameModel):
 
     def add_city_jeton(self, city_id, num):
         self.cities[city_id]['jeton'] += num
+        if self.cities[city_id]['jeton'] < 0:
+            raise LackError('jeton')
         return {city_id: {'jeton': self.cities[city_id]['jeton']}}
 
     def set_city_award(self, award):

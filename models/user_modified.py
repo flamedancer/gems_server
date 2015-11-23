@@ -76,6 +76,7 @@ class UserModified(GameModel):
         ucards = self.user_cards
         utask = self.user_task
         uinvade = self.user_invade
+        uitems = self.user_items
         # 有剩余元素点
         if uproperty.nature_remain:
             flags.append("charactor") 
@@ -88,6 +89,9 @@ class UserModified(GameModel):
         # 有新的防守日志
         if uinvade.has_new_history:
             flags.append("invade")    
+        # 可以抽卡 
+        if uitems.get_item_num("gachadiamond_item") or uitems.get_item_num("gachacoin_item"):
+            flags.append("gacha")    
         return flags
         
 

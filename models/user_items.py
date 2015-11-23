@@ -54,3 +54,8 @@ class UserItems(GameModel):
         self.items[item_id] -= num
         self.put()
         return self.items[item_id]
+
+    def get_item_num(self, item_id):
+        if item_id not in self.items:
+            return 0
+        return self.items[item_id]
