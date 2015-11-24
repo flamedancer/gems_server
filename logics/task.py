@@ -154,6 +154,7 @@ def check_task(api_path, api_data):
         for task_id, info in main_task_conf.items():
             if 'open_lv' in info and info['open_lv'] == user.user_property.lv:
                 utask.add_main_task(task_id)
+                set_value(utask, task_id, default_complete_num(task_id))
         # 检查A系列
         for task_id in utask.main_task:
             if task_id.startswith('A'):

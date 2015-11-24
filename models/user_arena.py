@@ -41,6 +41,7 @@ class UserArena(GameModel):
         return {
             'step': self.step,
             'selected_cards': self.selected_cards,
+            'team_index': self.team_index,
             'cards_pool': self.cards_pool,
             'win': self.win,
             'lose': self.total - self.win,

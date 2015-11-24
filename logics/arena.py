@@ -16,6 +16,7 @@ def api_check_arena():
     Returns:
         step(int): 当前竞技场状态 0未开启 1选第一张卡 2选第二张卡...  5准备开始竞技 6完成竞技等待领取奖励 
         selected_cards(list): 已选的卡,长度为4,未选的位为空字符串      
+        team_index(str): 选择的军旗
         cards_pool(list): 备选的卡
         win(int): 已胜场数
         lose(int): 已负场数
@@ -67,9 +68,13 @@ def api_new_arena():
         raise LogicError('Aready in arena') 
     
     common_config = uarena._common_config
-    # 扣金币
-    need_coin = common_config['open_arena_coin'] 
-    tools.del_user_things(uarena, 'coin', need_coin, 'new_arena')
+    # 扣竞技场道具 若无 扣金币
+    uitems = uarena.user_items
+    if uitems.get_item_num('arenaticket_item'):
+        tools.del_user_things(uarena, 'arenaticket_item', 1, 'new_arena')
+    else:
+        need_coin = common_config['open_arena_coin'] 
+        tools.del_user_things(uarena, 'coin', need_coin, 'new_arena')
     
     team_length = common_config['team_length']
     cards_pool = []
@@ -120,10 +125,7 @@ def api_start_fight(team_index='', new_team=None):
     uarena = request.user.user_arena
     if not uarena.can_fight():
         raise LogicError('Cannot fight')
-    if new_team:
-        api_set_team(new_team)
-    if team_index:
-        uarena.set_team_index(new_team)
+    api_set_team(new_team, team_index)
     common_config = uarena._common_config
     # 扣除体力
     need_stamina = common_config['arena_fight_stamina']
@@ -214,17 +216,18 @@ def api_get_award():
     return returns
 
 
-def api_set_team(new_team):
+def api_set_team(new_team, team_index=''):
     """ api/arena/set_team
     更改竞技编队队形
     Args:
         new_team(list): 新的卡片编队 
+        team_index(str): 选择的编队号
     """
     uarena = request.user.user_arena
     if sorted(new_team) != sorted(uarena.selected_cards):
         raise ParamsError('Card not in old team')
     uarena.selected_cards = new_team
-    uarena.put()
+    uarena.set_team_index(team_index)
     return {}
 
 
