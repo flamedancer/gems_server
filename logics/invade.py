@@ -218,7 +218,7 @@ def api_start_invade(team_index='', new_team=None):
                     'nature_3': 5,
                     'nature_4': 5,
                     'nature_5': 5,
-                    'team': uInvade._userInit_config['init_team'],
+                    'team': ['1_card', '2_card', '3_card', '4_card'],
                     'team_index': '',
                     'team_index_lv': 0,
                     'city_lv': 0,

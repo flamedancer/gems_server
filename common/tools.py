@@ -30,6 +30,9 @@ def add_user_things(user, thing, num, way):
         new_item_info = user.user_items.add_item(thing, num)
         umodified.set_modify_info('items', {thing: new_item_info})
         change_info = new_item_info
+    elif thing == 'invade_jeton':
+        uinvade = user.user_invade
+        uinvade.add_invade_jeton(num)
     log(thing, num, way)
     return change_info 
 
@@ -53,6 +56,9 @@ def del_user_things(user, thing, num, way):
         new_item_info = user.user_items.del_item(thing, num)
         umodified.set_modify_info('items', {thing: new_item_info})
         change_info = new_item_info
+    elif thing == 'invade_jeton':
+        uinvade = user.user_invade
+        uinvade.add_invade_jeton(-num)
     return change_info
     print "******del thing num way", thing, num, way 
 
