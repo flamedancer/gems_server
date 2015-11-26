@@ -43,7 +43,7 @@ def default_complete_num(task_id):
     elif task_id.startswith('F'):
         ucities = user.user_cities
         city_id = str(int(task_id[1:]))
-        return int(ucities.cur_conquer_stage(city_id)) - 1
+        return int(ucities.cur_conquer_stage(city_id))
     elif task_id.startswith('G'):
         return user.user_arena.win
     elif task_id.startswith('H'):
@@ -221,6 +221,8 @@ def api_info():
             completed_tasks.append(info(task_id))
         else:
             no_completed_tasks.append(info(task_id))
+    # 取消标记
+    utask.turn_new_task(False)
         
     return {'tasks': completed_tasks + no_completed_tasks
     }

@@ -412,6 +412,7 @@ def check_dead_user():
     """剔除长时间没有数据交互的晚间，每隔15秒检查
     """
     while True:
+        print '='*20,"SSSSSSstart_check dead_user at", datetime.datetime.now()
         remove_players = []
         # print "checking connecting"
         for user in all_players:
@@ -421,9 +422,10 @@ def check_dead_user():
             else:
                 user.last_recv_fg = False
         for user in remove_players:
-            print "disconnect ", user.uid
+            print "disconnect ", user.uid, user.core_id
             disconnect_player(user, reason='Too long time no-msg-in-or-out')
             print "now the connecting user counter is", len(all_players) 
+        print '='*10,"EEEEEnd_check dead_user at", datetime.datetime.now()
         gevent.sleep(600)
 
 
