@@ -149,6 +149,7 @@ class Player(object):
 
     def handle_msg(self, msg):
         if msg is None:
+            print '\n   意外断线！  :****   ({}|--{})'.format(self.core_id, self.uid), datetime.datetime.now()
             disconnect_player(self, reason='network-error: msg is None')
             return
         msg = msg.strip()
@@ -284,6 +285,7 @@ class Player(object):
         tools.add_user_things(upvp_lose, 'exp', int(full_exp / 3), 'pvp_end')
         upvp_win.do_put()
         upvp_lose.do_put()
+        print "   Fight has end by reason: {}".format(end_reason)
         print "    WINNER : {}  || LOSER : {}".format(winner, loser)
         # 更新排行榜
         top_model = rank.get_pvp_rank()
@@ -300,7 +302,7 @@ class Player(object):
     def ans_fight_result(self, data):
         """ <5>5、5
         """
-        disconnect_player(self, reason='end-pvp-fight')
+        disconnect_player(self, reason='end-pvp')
         # self.connecting = False
 
     def req_cancel_pvp(self, data):
@@ -318,6 +320,7 @@ class Player(object):
         elif self.fight_status == 1 and self.opponent:
             # 通知对方自己已经放弃
             self.send('rsp_cancel_pvp')
+            print '\n   主动投降！  :****   ({}|--{})'.format(self.core_id, self.uid), datetime.datetime.now()
             self.inf_fight_result(self.opponent.uid, end_reason='cancel-fighting')
     
     def ans_cancel_pvp(self, data):
@@ -352,8 +355,23 @@ class Player(object):
 
 
 def disconnect_player(player, reason=''):
-    #if not player.connecting:
-    #    return
+    # 已结算战斗 
+    if reason = 'end-pvp':
+        clear_player(player)
+        return
+    # 非正常退出(掉线、超时等)  且在战斗中 判定对手胜利
+    if player.fight_status in [0, 1] and player.opponent and player.opponent.connecting:
+        #if reason.startswith('network-error'):
+        #    print '\n 战斗中掉线!!判负  :****   ({}|--{})'.format(player.core_id, player.uid), datetime.datetime.now()
+        player.inf_fight_result(player.opponent.uid, reason)
+    else:
+        clear_player(player)
+    print 'disconnect player:**** {}  ({}|--{})'.format(reason, player.core_id, player.uid)
+
+
+def clear_player(player):
+    if not player.connecting:
+        return
     del_all_player(player)
     del_pear_dict(player.opponent)
     # 已近进入战斗要扣体力
@@ -365,15 +383,9 @@ def disconnect_player(player, reason=''):
     pier_clear(player.uid)
 
     player.connecting = False
-    player.websocket.close()
+    if not player.closed:
+        player.websocket.close()
 
-    # 如果自己掉线或投降  判定对手胜利
-    if player.fight_status in [0, 1] and player.opponent and player.opponent.connecting:
-        if reason.startswith('network-error'):
-            print '\n 战斗中掉线!!判负  :****   ({}|--{})'.format(player.core_id, player.uid), datetime.datetime.now()
-        player.inf_fight_result(player.opponent.uid, reason)
-
-    print 'disconnect player:**** {}  ({}|--{})'.format(reason, player.core_id, player.uid)
 
 
 def check_status(msg_data):

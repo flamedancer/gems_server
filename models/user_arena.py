@@ -56,7 +56,7 @@ class UserArena(GameModel):
         self.put()
 
     def select_card(self, index, card_id):
-
+        self.selected_cards[index] = card_id
         self.put()
 
     def inc_total(self):

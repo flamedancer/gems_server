@@ -55,8 +55,8 @@ class UserPvp(GameModel):
             self.shade_star = pvp_rank_stars[grade_index + 1] - self.all_star
         self.grade = len(pvp_rank_stars) - grade_index
         # 如果超过最大星数,进入最强王者
-        if self.all_star > pvp_rank_stars[-1]:
-            self.grade = 0
+        #if self.all_star > pvp_rank_stars[-1]:
+        #    self.grade = 0
         
         
     def win(self):
