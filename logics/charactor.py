@@ -81,3 +81,23 @@ def api_set_newbie_step(step):
         ubase.is_new_bie = False
     return {}
         
+
+def api_turn_guide_flags(flag):
+    """ api/charactor/turn_guide_flags
+    完成指定系统引导
+    Args:
+        flga(str): 系统引导名 
+            arena  竞技场
+            pvp    天梯
+            invade 城战
+            charactor 主角系统
+            gacha   抽卡
+            cards   图鉴系统
+            task    任务
+            challenge 挑战模式
+            team_index_normal 获得新的军旗并进入除竞技场与城战防守外任意军旗界面-1默认转态
+            team_index_special        玩家第一次获得新的军旗并进入竞技场军旗界面
+    """
+    umodified = request.user.user_modified
+    umodified.del_guide_flags(flag)
+

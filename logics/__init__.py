@@ -24,7 +24,7 @@ def api(category='', method=''):
     if not func:
         return ''
     result = func(**request.api_data) 
-    task.check_task('_'.join([category, method]), request.api_data) 
+    task.check_task_and_guideflag('_'.join([category, method]), request.api_data) 
     return result 
 
 

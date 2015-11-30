@@ -44,12 +44,19 @@ class UserPvp(GameModel):
     def adjust(self):
         pvp_rank_stars = self._common_config['pvp_rank_stars']
         grade_index = bisect.bisect(pvp_rank_stars, self.all_star) - 1
-        self.light_star = self.all_star - pvp_rank_stars[grade_index]
+        # 刚好到达最后一段满星, 前端显示全为亮星
+        if self.all_star == pvp_rank_stars[-1]:
+            self.light_star = self.all_star - pvp_rank_stars[grade_index - 1] 
+        else:
+            self.light_star = self.all_star - pvp_rank_stars[grade_index]
         if grade_index == len(pvp_rank_stars) - 1:
             self.shade_star = 0
         else:
             self.shade_star = pvp_rank_stars[grade_index + 1] - self.all_star
         self.grade = len(pvp_rank_stars) - grade_index
+        # 如果超过最大星数,进入最强王者
+        if self.all_star > pvp_rank_stars[-1]:
+            self.grade = 0
         
         
     def win(self):

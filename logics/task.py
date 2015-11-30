@@ -84,12 +84,13 @@ def set_value(utask, task_id, value):
             utask.set_completed(task_id) 
 
 
-def check_task(api_path, api_data):
+def check_task_and_guideflag(api_path, api_data):
     user = request.user 
     utask = user.user_task 
     umodified = user.user_modified
     modified_info = umodified.modified
     main_task_conf = utask._task_config['main_task']
+    ucities = user.user_cities
 
 
     # 是否新的任务进度
@@ -99,12 +100,12 @@ def check_task(api_path, api_data):
             new_value = modified_info['lv']
         # C系列 开城数
         elif task_type == 'C':
-            new_value = user.user_cities.get_opened_city_num()
+            new_value = ucities.get_opened_city_num()
         # D系列 征服城数
         elif task_type == 'D':
             if api_data['dungeon_type'] != 'conquer':
                 return
-            new_value = user.user_cities.get_conquered_city_num()
+            new_value = ucities.get_conquered_city_num()
         # F系列 征服某关卡
         elif task_type == 'F':
             if api_data['dungeon_type'] != 'conquer':
@@ -112,7 +113,7 @@ def check_task(api_path, api_data):
             city_id = api_data['city_id']
             if int(city_id) != int(task_id[1:]):
                 return
-            new_value = int(user.user_cities.cur_conquer_stage(city_id)) - 1
+            new_value = int(ucities.cur_conquer_stage(city_id)) - 1
         # G系列 竞技场胜场数
         elif task_type == 'G':
             if not api_data['win']:
@@ -149,16 +150,24 @@ def check_task(api_path, api_data):
     # 若升级：1 是否有新任务 2 是否完成升级任务
     print "debug_task modifiedinfo", modified_info
     
+    guide_flags = user._userInit_config.get('guide_flags', {})
     if 'lv' in modified_info:
+        lv = user.user_property.lv
         # 是否有新任务
         for task_id, info in main_task_conf.items():
-            if 'open_lv' in info and info['open_lv'] == user.user_property.lv:
+            if 'open_lv' in info and info['open_lv'] == lv:
                 utask.add_main_task(task_id)
                 set_value(utask, task_id, default_complete_num(task_id))
         # 检查A系列
         for task_id in utask.main_task:
             if task_id.startswith('A'):
                 check_value('A', task_id)
+
+        # 系统引导flag   等级有关
+        for guide_type in ['arena', 'pvp', 'invade']:
+            if lv == guide_flags.get(guide_type):
+                umodified.set_guide_flags(guide_type, 2)
+        
 
     # # 若开城: 1新的城市征服任务
     # if api_path == 'city_open_city':
@@ -168,12 +177,39 @@ def check_task(api_path, api_data):
     #         utask.add_main_task(task_str)
    
     print "debug_task", api_path
-    if api_path not in api_task_map:
-        return
-    for task_type in api_task_map[api_path]:
-        for task_id in utask.main_task:
-            if task_id.startswith(task_type):
-                check_value(task_type, task_id)
+    # 判断有没完成新的任务
+    if api_path in api_task_map:
+        for task_type in api_task_map[api_path]:
+            for task_id in utask.main_task:
+                if task_id.startswith(task_type):
+                    check_value(task_type, task_id)
+
+    # 系统引导flag 过关有关
+    # 过完某关flag
+    if api_path == 'dungeon_end':
+        guide_conquer_type = ['charactor', 'gacha', 'cards', 'task']
+        win = api_data['win']
+        if win and api_data['dungeon_type'] == 'conquer':
+            city_id = api_data['city_id']
+            floor = str(int(ucities.cur_conquer_stage(city_id)) - 1)
+            conquered_city_num = user.user_cities.get_conquered_city_num()
+            # 挑战 征服完一个城
+            if conquered_city_num == 1 and umodified.has_guide_flags('challenge'):
+                umodified.set_guide_flags('challenge', 1)
+            if city_id == '0':
+                city_floor = '-'.join([city_id, floor])
+                for guide_type in guide_conquer_type:
+                    if guide_flags.get(guide_type) == city_floor:
+                        umodified.set_guide_flags(guide_type, 2)
+            # 获得新的军旗 (征服除城'0' 以外城市 )
+            if (conquered_city_num - 1 if ucities.has_conquer_city('0') else 0) == 1:
+                if umodified.has_guide_flags('team_index_normal'):
+                    umodified.set_guide_flags('team_index_normal', 1)
+                if umodified.has_guide_flags('team_index_special'):
+                    umodified.set_guide_flags('team_index_special', 1)
+    
+            
+            
 
 
 def api_info():

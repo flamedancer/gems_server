@@ -95,6 +95,7 @@ def update_user_data():
     if update_data:
         Umodified.modified = {}
     update_data['flags'] = Umodified.get_flags()
+    update_data['guide_flags'] = Umodified.guide_flags
     return update_data
 
 

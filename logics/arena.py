@@ -35,10 +35,9 @@ def api_check_arena():
     """
     uarena = request.user.user_arena
     # 是否结束竞技, 胜10或负2
-    if uarena.win >= 10 or uarena.total - uarena.win >= 2:
-        uarena.set_step(6)
+    uarena.check_over()
     # 不在出现打折卡包界面
-    if uarena.step >= 6:
+    if uarena.step > 6:
         uarena.reset_arena()
     return uarena.pack_info()
 
@@ -155,8 +154,8 @@ def api_end_fight(win):
     Argv:
         win(bool): 是否胜利
     """ 
+    uarena = request.user.user_arena
     if win:
-        uarena = request.user.user_arena
         umodified = uarena.user_modified
         if 'dungeon' not in umodified.temp:
             raise LogicError('Should start fight first')
@@ -167,6 +166,7 @@ def api_end_fight(win):
         if now - start_info['time'] <= 1:
             raise LogicError("rush a dungeon to quick")
         uarena.inc_win()
+    uarena.check_over()
     return {}
 
 
@@ -189,6 +189,8 @@ def api_get_award():
         cards_price(int): 卡包价格，若达到获得折扣卡包由此字段
     """
     uarena = request.user.user_arena
+    if uarena.step != 6:
+        return {}
     award = uarena._arenaaward_config[str(uarena.win)]
     tools.add_user_awards(uarena, award, 'arena')
     common_config = uarena._common_config

@@ -22,7 +22,7 @@ class UserArena(GameModel):
 
     def reset_arena(self):
         self.step = 0 # 竞技场状态 0未开启竞技  1选第一张卡 2选第二张卡...
-                      # 5准备开始竞技 6完成竞技等待领取奖励 7 领取玩奖励(可能等待买卡包)
+                      # 5准备开始竞技 6完成竞技等待领取奖励 7 领取玩奖励,等待买卡包
         team_length = self._common_config['team_length']
         self.selected_cards = [''] * team_length
         self.team_index = '0'
@@ -56,7 +56,7 @@ class UserArena(GameModel):
         self.put()
 
     def select_card(self, index, card_id):
-        self.selected_cards[index] = card_id
+
         self.put()
 
     def inc_total(self):
@@ -75,4 +75,10 @@ class UserArena(GameModel):
     def set_team_index(self, team_index):
         self.team_index = team_index
         self.put()
+    
+    def check_over(self):
+        # 是否结束竞技, 胜10或负2
+        if self.win >= 10 or self.total - self.win >= 2:
+            self.set_step(6)
+        
 

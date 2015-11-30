@@ -284,6 +284,7 @@ class Player(object):
         tools.add_user_things(upvp_lose, 'exp', int(full_exp / 3), 'pvp_end')
         upvp_win.do_put()
         upvp_lose.do_put()
+        print "    WINNER : {}  || LOSER : {}".format(winner, loser)
         # 更新排行榜
         top_model = rank.get_pvp_rank()
         top_model.set(winner, upvp_win.all_star)
@@ -299,7 +300,8 @@ class Player(object):
     def ans_fight_result(self, data):
         """ <5>5、5
         """
-        self.connecting = False
+        disconnect_player(self, reason='end-pvp-fight')
+        # self.connecting = False
 
     def req_cancel_pvp(self, data):
         """ 退出匹配或战斗主动投降
@@ -350,8 +352,8 @@ class Player(object):
 
 
 def disconnect_player(player, reason=''):
-    if not player.connecting:
-        return
+    #if not player.connecting:
+    #    return
     del_all_player(player)
     del_pear_dict(player.opponent)
     # 已近进入战斗要扣体力
@@ -367,9 +369,9 @@ def disconnect_player(player, reason=''):
 
     # 如果自己掉线或投降  判定对手胜利
     if player.fight_status in [0, 1] and player.opponent and player.opponent.connecting:
-        player.inf_fight_result(player.opponent.uid, reason)
         if reason.startswith('network-error'):
-            print '\n 异常掉线了!!!!!  :****   ({}|--{})'.format(player.core_id, player.uid), datetime.datetime.now()
+            print '\n 战斗中掉线!!判负  :****   ({}|--{})'.format(player.core_id, player.uid), datetime.datetime.now()
+        player.inf_fight_result(player.opponent.uid, reason)
 
     print 'disconnect player:**** {}  ({}|--{})'.format(reason, player.core_id, player.uid)
 
@@ -412,6 +414,9 @@ def check_dead_user():
     """剔除长时间没有数据交互的晚间，每隔15秒检查
     """
     while True:
+        gevent.sleep(600)
+        if not all_players:
+            continue
         print '='*20,"SSSSSSstart_check dead_user at", datetime.datetime.now()
         remove_players = []
         # print "checking connecting"
@@ -426,7 +431,6 @@ def check_dead_user():
             disconnect_player(user, reason='Too long time no-msg-in-or-out')
             print "now the connecting user counter is", len(all_players) 
         print '='*10,"EEEEEnd_check dead_user at", datetime.datetime.now()
-        gevent.sleep(600)
 
 
 if __name__ == "__main__":
