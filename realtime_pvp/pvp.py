@@ -181,6 +181,14 @@ class Player(object):
         """<2> 1. client 发送pvp请求
         """
         self.uid = data['uid']
+        # 判断体力是否足够
+        uproperty = UserProperty.get(self.uid) 
+        need_stamina = uproperty._common_config['pvp_stamina'] 
+        if uproperty.stamina < need_stamina:
+            print '\n   体力不足！  :****   ({}|--{})'.format(self.core_id, self.uid), datetime.datetime.now()
+            disconnect_player(self, reason='Lack of stamina')
+            
+
         self.send('rsp_pvp')
         self.say_log('I am reading to pvp.....')
         self.try_start_fight()
@@ -321,6 +329,9 @@ class Player(object):
             # 通知对方自己已经放弃
             self.send('rsp_cancel_pvp')
             print '\n   主动投降！  :****   ({}|--{})'.format(self.core_id, self.uid), datetime.datetime.now()
+            # 将自己和对方标记为已结算状态，防止多次投降结算
+            self.fight_status = 2
+            self.opponent.fight_status = 2
             self.inf_fight_result(self.opponent.uid, end_reason='cancel-fighting')
     
     def ans_cancel_pvp(self, data):
@@ -354,13 +365,16 @@ class Player(object):
         pass
 
 
-def disconnect_player(player, reason=''):
-    # 已结算战斗 
-    if reason = 'end-pvp':
-        clear_player(player)
+def disconnect_player(player, reason='', force=False):
+    if not force and not player.connecting:
         return
+    # 禁用 send
+    player.connecting = False 
+    # 已结算战斗 
+    if reason == 'end-pvp':
+        clear_player(player)
     # 非正常退出(掉线、超时等)  且在战斗中 判定对手胜利
-    if player.fight_status in [0, 1] and player.opponent and player.opponent.connecting:
+    elif player.fight_status in [0, 1] and player.opponent and player.opponent.connecting:
         #if reason.startswith('network-error'):
         #    print '\n 战斗中掉线!!判负  :****   ({}|--{})'.format(player.core_id, player.uid), datetime.datetime.now()
         player.inf_fight_result(player.opponent.uid, reason)
@@ -370,8 +384,6 @@ def disconnect_player(player, reason=''):
 
 
 def clear_player(player):
-    if not player.connecting:
-        return
     del_all_player(player)
     del_pear_dict(player.opponent)
     # 已近进入战斗要扣体力
@@ -383,7 +395,7 @@ def clear_player(player):
     pier_clear(player.uid)
 
     player.connecting = False
-    if not player.closed:
+    if not player.websocket.closed:
         player.websocket.close()
 
 
@@ -440,7 +452,7 @@ def check_dead_user():
                 user.last_recv_fg = False
         for user in remove_players:
             print "disconnect ", user.uid, user.core_id
-            disconnect_player(user, reason='Too long time no-msg-in-or-out')
+            disconnect_player(user, reason='Too long time no-msg-in-or-out', force=True)
             print "now the connecting user counter is", len(all_players) 
         print '='*10,"EEEEEnd_check dead_user at", datetime.datetime.now()
 
