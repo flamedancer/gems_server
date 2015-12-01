@@ -78,7 +78,7 @@ class UserArena(GameModel):
     
     def check_over(self):
         # 是否结束竞技, 胜10或负2
-        if self.win >= 10 or self.total - self.win >= 2:
+        if self.step == 5 and (self.win >= 10 or self.total - self.win >= 2):
             self.set_step(6)
         
 

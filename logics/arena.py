@@ -203,7 +203,7 @@ def api_get_award():
         for cid in uarena.selected_cards:
             # 拥有卡不出售 
             own_cards = uarena.user_cards.cards
-            if cid not in own_cards or own_cards[cid]['num'] != 0:
+            if cid in own_cards and own_cards[cid]['num'] != 0:
                 continue    
             quality = str(card_conf[cid]['quality'])
             all_price += price_conf[quality]
@@ -247,7 +247,7 @@ def api_buy_discount_cards():
     discount_rate = uarena._common_config['arena_discount_rate']
     for cid in uarena.selected_cards:
         own_cards = uarena.user_cards.cards
-        if cid not in own_cards or own_cards[cid]['num'] != 0:
+        if cid in own_cards and own_cards[cid]['num'] != 0:
             continue    
         quality = str(card_conf[cid]['quality'])
         all_price += price_conf[quality]
@@ -256,5 +256,6 @@ def api_buy_discount_cards():
     tools.del_user_things(uarena, 'diamond', all_price, 'arena_buy_discount_cards')
     for cid in sell_cards:
         tools.add_user_things(uarena, cid, 1, 'arena_buy_discount_cards') 
+    uarena.reset_arena()
     return {}
 
