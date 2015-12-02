@@ -3,6 +3,7 @@
 from libs.model import BaseModel
 from models import GameModel
 from common.exceptions import *
+from common.tools import add_user_things
 
 
 class UserProperty(GameModel):
@@ -45,6 +46,10 @@ class UserProperty(GameModel):
         while str(self.lv + 1) in userlv_config and \
         self.exp >= userlv_config[str(self.lv + 1)]['exp']:
             self.lv += 1
+            # 升级体力奖励
+            add_stamina = userlv_config[str(self.lv)]['lv_add_stamina']
+            add_user_things(self, 'stamina', add_stamina, 'lv_up')
+
         if str(self.lv + 1) not in userlv_config and \
         self.exp > userlv_config[str(self.lv)]:
             self.exp = userlv_config[str(self.lv)]

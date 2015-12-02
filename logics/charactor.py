@@ -53,6 +53,8 @@ def api_reallot_nature(natures):
           }
     """
     ubase = request.user
+    # 消耗元素重置道具
+    tools.del_user_things(ubase, 'elementrefresh_item', 1, 'reallot_nature')
     uproperty = ubase.user_property
     nature_types = ["0", "1", "2", "3", "4", "5", "remain"]
     has_nature_num = sum([getattr(uproperty, "nature_" + nature_type, 0) for nature_type in nature_types])
