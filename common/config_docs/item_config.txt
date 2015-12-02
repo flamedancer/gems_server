@@ -1,0 +1,4 @@
+1.key 为道具id
+2.value中：
+      name  道具名称
+      desc  道具描述

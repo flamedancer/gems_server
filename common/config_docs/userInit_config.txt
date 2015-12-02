@@ -1,0 +1,41 @@
+1. 各功能引导开始条件guide_flags，例如：
+    "guide_flags":{
+        "arena":10,              # 竞技场引导等级
+        "cards":"1-3",          # 打完此关引导图鉴
+        "charactor":"1-1",   # 打完此关引导主角系统
+        "gacha":"1-2",        # 打完此关引导抽卡
+        "invade":10,            # 城战引导等级
+        "pvp":10,                 # 天梯引导等级
+        "task":"1-4"            # 打完此关引导任务系统
+    },
+
+2.  新玩家除初始编队额外给的卡牌init_cards
+    "init_cards":{
+          "6_card": 4,     # 6_card 给4个
+           "7_card": 4,    #  7_card 给3个
+    },
+
+3.  新玩额外给的资源init_property
+    "init_property":{
+	"exp":           # 经验值
+	"lv":         # 玩家等级
+	"vip_lv":        # vip 等级
+	"stamina":       # 体力值
+	"diamond"	:       # 钻石
+	"coin":         # 金币
+	"pk_jeton":      # 天梯代币
+	"heroSoul":      # 英魂数量
+	"nature_0":       # 蓝元素掌握度
+	"nature_1":       # 红元素掌握度
+	"nature_2":       # 绿元素掌握度
+	"nature_3":       # 褐元素掌握度
+	"nature_4":       # 黄元素掌握度
+	"nature_5":       # 紫元素掌握度
+	nature_remain":      # 剩余元素掌握度"
+    },
+
+4. 初始玩家编队
+    "init_team":[
+        "1_card",
+        "2_card"
+    ]

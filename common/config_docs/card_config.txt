@@ -1,6 +1,4 @@
-      
-              
-        					
+       					
 用途		字段		类型	示例
 唯一编号		id		str	 1_card
 属性(金木水火)		type		list	[‘0’,’1’]
@@ -19,15 +17,27 @@
 神话出处		myth		int	1
 品质		quality		int	0
 种族		race		int	1
-中毒抵抗率	piosion_defense	float	0.3
-灼烧抵抗率	burn_defense	float	0.3
-冰冻抵抗率	frozen_defense	float	0.3
-沉默抵抗率	silence_defense	float	0.3
-缠绕抵抗率	wrap_defense	float	0.3
-晕眩抵抗率	stun_defense	float	0.3
+中毒抵抗率	piosion_defense	int 30
+灼烧抵抗率	burn_defense	int 30
+冰冻抵抗率	frozen_defense	int 30
+沉默抵抗率	silence_defense	int 30
+缠绕抵抗率	wrap_defense	int 30
+晕眩抵抗率	stun_defense	int 30
 攻击类型	attack_type	int	1					
-技能特效及是否全屏		skill_ani		list	["xxx", true]
-子弹飞行特效及是否移动		bullet_ani		list	["yyy", true]
-敌方受击特效及是否AOE		effect_ani		list	["zzz", true]
+释放  技能特效,音效及是否全屏		skill_ani		list	["xxx","mu1", true]
+子弹  飞行特效,音效及是否移动		bullet_ani		list	["yyy","mu2", true]
+受击   我方受击特效|我方受击音效|敌方受击特效|敌方受击音效|是否AOE
+		effect_ani		list	["zzz","mu3","www","mu4", true]
+死亡音效 dead_sound    缺省时填 ""
+技能语音  skill_voice      缺省时填 ""
       
-      
+
+附：
+1. 品质quality代号解释
+  品质	编号
+  普通	0
+  精良	1
+  稀有	2
+  史诗	3
+  传说	4
+  Boss      5       Boss只有战场出现，不显示在玩家图鉴

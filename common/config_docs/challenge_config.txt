@@ -1,4 +1,3 @@
-
             字段    类型    解释    
                         
 key  (城市id)                       
@@ -37,7 +36,7 @@ key  (城市id)
                 "heroSoul",     
                 "diamond": 1,       
                 "card": [  ["1_card", 1],  ["2_card", 2],…..], # [ [卡牌id, 数量], ..
-                "prop": [  ["1_prop", 1],  ["2_prop", 2],…..],
+                "item": [  ["1_item", 1],  ["2_item", 2],…..],
             },          
             "ext_award": {          
                 "coin" :3,      

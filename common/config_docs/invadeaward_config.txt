@@ -1,14 +1,18 @@
-1.key 城战段位 value为具体奖励
-2.例:
-{
+1. 第一层
+   normal_award    平时所发的奖励
+   seventh_award   第七天发的奖励
+2.第二层 key 城战段位 value为具体奖励 
+3.例:
+"normal_award":{
     "0": {
          "exp": 10,      
          "coin": 10,     
          "heroSoul",     
          "diamond": 1,       
          "card": [  ["1_card", 1],  ["2_card", 2],…..], # [ [卡牌id, 数量], ..
-         "prop": [  ["1_prop", 1],  ["2_prop", 2],…..],
+         "item": [  ["1_item", 1],  ["2_item", 2],…..],
          "stamina": 10,
+         "invade_jeton": 111,  # 城战代币
     },
     "1": {
          "exp": 10,      
@@ -16,8 +20,12 @@
          "heroSoul",     
          "diamond": 1,       
          "card": [  ["1_card", 1],  ["2_card", 2],…..], # [ [卡牌id, 数量], ..
-         "prop": [  ["1_prop", 1],  ["2_prop", 2],…..],
+         "item": [  ["1_item", 1],  ["2_item", 2],…..],
          "stamina": 10,
+         "invade_jeton": 111,  # 城战代币
     },
     ....
-}
+ },
+"seventh_award":{
+    ....... 
+    .......
