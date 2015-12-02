@@ -31,21 +31,21 @@ def api_reputation_shopping(city_id, index):
     return {}
     
 
-def api_invade_shopping(city_id, index):
+def api_invade_shopping(index):
     """ api/shop/invade_shopping
     购买城战商品，消耗城战代币 
     Args:
         index(str): 商品序号
     """
     uinvade = request.user.user_invade
-    invadeshop_config = ucities._invadeshop_config
-    if index not in invadeshop_config[city_id]:
+    invadeshop_config = uinvade._invadeshop_config
+    if index not in invadeshop_config:
         return {}
     shop = invadeshop_config[index]
     # 消耗城战代币
-    uinvade.add_invade_jeton(-shop['cost_invade_jeton'])
+    tools.del_user_things(uinvade, 'invade_jeton', shop['cost_invade_jeton'])
     # 添加奖励
-    tools.add_user_awards(ucities, shop['award'], 'invade_shopping')
+    tools.add_user_awards(uinvade, shop['award'], 'invade_shopping')
     return {}
     
    

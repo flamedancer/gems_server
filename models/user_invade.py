@@ -116,6 +116,7 @@ class UserInvade(GameModel):
         self.invade_jeton = self.invade_jeton + num
         if self.invade_jeton < 0:
             raise LackError('invade_jeton')
+        return self.invade_jeton
 
     def reset_shield_time(self, shield_time=0):
         self.shield_time = shield_time 
