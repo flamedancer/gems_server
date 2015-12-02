@@ -33,6 +33,9 @@ class UserProperty(GameModel):
 
     def init(self):
         init_property = self._userInit_config.get('init_property', {})
+        # 初始体力
+        init_stamina = self._userlv_config["1"]["stamina"]
+        self.stamina = init_stamina
         self.__dict__.update(init_property)
     
     def add_exp(self, num):

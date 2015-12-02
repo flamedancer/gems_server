@@ -21,6 +21,7 @@ class UserBase(GameModel):
         self.last_login_time = 0 #  最后登入时间戳
         self.total_login = 0  # 总共登入天数
         self.consecutive_login = 0 # 连续登入天数
+        self.last_recover_stamina_time = 0
 
         self.is_newbie = True  # 是否过完新手引导
         self.newbie_step = 0 # 已过新手引导步骤id

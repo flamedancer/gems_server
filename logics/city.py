@@ -32,6 +32,10 @@ def api_open_city(city_id):
     ucities = request.user.user_cities
     if ucities.has_open_city(city_id):
         return {}
+    # 开城等级限制
+    need_lv = ucities._city_config[city_id]["need_ulv"]
+    if ucities.user_property.lv < need_lv:
+        raise LogicError("Should reach the open lv")
     need_coin_conf = ucities._common_config["open_city_cost_coin"]
     has_opened_num = ucities.get_opened_city_num()
     need_coin = need_coin_conf[has_opened_num]
