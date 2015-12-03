@@ -25,14 +25,14 @@ data 游戏逻辑所需字段
 
 """
 
-import sys, os
+import os
 import json
 import time
 import random
 import datetime
-import traceback
 from libs.dbs import app 
 from common.exceptions import *
+from common.utils import print_err
 from bottle import request
 from models.user_base import UserBase
 
@@ -98,10 +98,3 @@ def update_user_data():
     update_data['guide_flags'] = Umodified.guide_flags
     return update_data
 
-
-def print_err():
-    sys.stderr.write('=='*30+os.linesep)
-    sys.stderr.write('err time: '+str(datetime.datetime.now())+os.linesep)
-    sys.stderr.write('--'*30+os.linesep)
-    traceback.print_exc(file=sys.stderr)
-    sys.stderr.write('=='*30+os.linesep)

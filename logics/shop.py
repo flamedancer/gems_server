@@ -43,7 +43,7 @@ def api_invade_shopping(index):
         return {}
     shop = invadeshop_config[index]
     # 消耗城战代币
-    tools.del_user_things(uinvade, 'invade_jeton', shop['cost_invade_jeton'])
+    tools.del_user_things(uinvade, 'invade_jeton', shop['cost_invade_jeton'], 'invade_shopping')
     # 添加奖励
     tools.add_user_awards(uinvade, shop['award'], 'invade_shopping')
     return {}

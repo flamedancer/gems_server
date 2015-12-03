@@ -41,6 +41,8 @@ class UserCities(GameModel):
         team_len = self._common_config['team_length']
         init_team.extend([''] * (team_len - len(init_team)))
         self.cities['0']['team'] = init_team
+        # 新加一个前置新手战场
+        self.cities['0']['cur_conquer'] = 0 
         self.put()
 
     def show_city(self, city_id):

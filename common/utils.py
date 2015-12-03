@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import sys
+import  traceback
 import time
 import random
 
@@ -14,15 +16,12 @@ def get_key_by_weight_dict(item_weight_dict):
         取得1，2，3，4，的概率分别为 0.1，0.3， 0.2， 0.4
     """
     all_weight = sum(item_weight_dict.values())
-    print "all_weight", all_weight
     random_weight = random.randint(1, all_weight)
-    print "randow weight",random_weight
 
     weight_count = 0
     lucker = None
     for key, value in item_weight_dict.items():
         weight_count += value
-        print "count weight", weight_count
         if weight_count >= random_weight:
             lucker = key
             break
@@ -40,3 +39,11 @@ def total_isoweek(stamp=None, start=1):
     if stamp is None:
         stamp = time.time()
     return int((stamp + 86400 * indentday) / (86400 * 7))
+
+
+def print_err():
+    sys.stderr.write('=='*30+os.linesep)
+    sys.stderr.write('err time: '+str(datetime.datetime.now())+os.linesep)
+    sys.stderr.write('--'*30+os.linesep)
+    traceback.print_exc(file=sys.stderr)
+    sys.stderr.write('=='*30+os.linesep)

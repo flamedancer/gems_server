@@ -43,7 +43,7 @@ def default_complete_num(task_id):
     elif task_id.startswith('F'):
         ucities = user.user_cities
         city_id = str(int(task_id[1:]))
-        return int(ucities.cur_conquer_stage(city_id))
+        return int(ucities.cur_conquer_stage(city_id)) - 1
     elif task_id.startswith('G'):
         return user.user_arena.win
     elif task_id.startswith('H'):
@@ -208,9 +208,6 @@ def check_task_and_guideflag(api_path, api_data):
                 if umodified.has_guide_flags('team_index_special'):
                     umodified.set_guide_flags('team_index_special', 1)
     
-            
-            
-
 
 def api_info():
     """ api/task/info

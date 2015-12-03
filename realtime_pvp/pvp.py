@@ -9,6 +9,7 @@ import datetime
 import gevent
 import geventwebsocket
 from geventwebsocket import WebSocketServer
+from common.utils impor print_err
 #from gevent.lock import Semaphore
 
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -80,7 +81,7 @@ def get_real_pvp_info(uid):
         'name': uBase.name,
         'team': team,
         'team_index': uCards.cur_team_index,
-        'team_index_lv': uCities.cities[uCards.cur_team_index]['reputation'],
+        'team_index_lv': uCities.cities[uCards.cur_team_index]['reputation_lv'],
         'capital': uCities.capital_city,
         'nature_0': uProperty.nature_0,
         'nature_1': uProperty.nature_1,
@@ -319,6 +320,7 @@ class Player(object):
         # 还未匹配上,回应后直接退出
         if self.fight_status < -1:
             self.send('rsp_cancel_pvp')
+            print '\n   取消匹配！  :****   ({}|--{})'.format(self.core_id, self.uid), datetime.datetime.now()
             disconnect_player(self, reason='cancel-matching')
             return
         # status0 为已匹配上玩家,忽略此操作
@@ -428,7 +430,7 @@ def application(environ, start_response):
     except geventwebsocket.WebSocketError as ex:
         print "{0}: {1}".format(ex.__class__.__name__, ex)
     except Exception as ex:
-        print ex
+        print_err()
         raise ex
     finally:
         disconnect_player(player, reason='Give up connecting finally')
