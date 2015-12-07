@@ -55,7 +55,7 @@ class UserCities(GameModel):
             'lv': 0,
             'jeton': 0,
             'reputation': 0,
-            'reputation_lv': 0,
+            'reputation_lv': -1,
             'team': [],
             'cur_conquer': 1,
             'challenge': {}
@@ -91,9 +91,11 @@ class UserCities(GameModel):
         challenge_config = self._challenge_config
         for floor in challenge_config[city_id]:
             self.cities[city_id]['challenge'][floor] = 1
-        self.put()
+        # 军旗等级未征服时为-1(竞技场，pvp时要传军旗等级)
+        self.cities[city_id]['reputation_lv'] = 0
         return {city_id: {'status': 2,
                           'lv': self.cities[city_id]['lv'],
+                          'reputation_lv': self.cities[city_id]['reputation_lv'],
                           'challenge': self.cities[city_id]['challenge'],
                          }
         }

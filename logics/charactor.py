@@ -80,7 +80,7 @@ def api_set_newbie_step(step):
     ubase = request.user
     ubase.newbie_step = step
     if step >= ubase._common_config.get('newbie_step', 0):
-        ubase.is_new_bie = False
+        ubase.is_newbie = False
     return {}
         
 

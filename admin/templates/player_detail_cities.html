@@ -1,0 +1,77 @@
+{% set city_status = ['未开城', '征服中', '首次挑战中', '完成首次挑战'] %}
+{% set reputation_words = ['中立', '友善', '尊敬', '崇敬', '崇拜'] %}
+{% for city_id, city in cities|dictsort %}
+<table class="table table-bordered table-condensed table-striped">
+  <caption>城{{city_id}} </caption>
+  <tr>
+    <td>状态</td>
+    <td>
+      <select id='city_status_{{city_id}}' class="form-control input-sm" onchange="modify_user('{{can_modify}}','city_status_{{city_id}}', 'city_status_{{city_id}}')">
+        {% for words in city_status %}
+        {% if city['status'] == loop.index0 %}
+        <option value={{loop.index0}} selected="selected">{{words}}</option> 
+        {% else %}
+        <option value={{loop.index0}}>{{words}}</option> 
+        {% endif %}
+        {% endfor %}
+      </select>
+    </td>
+  </tr>
+  {% if city['status'] == 1 %}
+  <tr>
+    <td>
+      征服进度
+    </td>
+    <td>
+      {% if '0' in conquer_config[city_id] %}
+      <input id='conquer_{{city_id}}' type='text' class="sm-input" value={{city['cur_conquer']}} onblur="modify_user('{{can_modify}}','conquer_{{city_id}}', 'conquer_{{city_id}}')"> / {{conquer_config[city_id]|count - 1}} 
+      {% else %}
+      <input id='conquer_{{city_id}}' type='text' class="sm-input" value={{city['cur_conquer']}} onblur="modify_user('{{can_modify}}','conquer_{{city_id}}', 'conquer_{{city_id}}')"> / {{conquer_config[city_id]|count}} 
+      {% endif %}
+    </td>
+  </tr>
+  {% elif city['status'] > 1 %}
+  <tr>
+    <td>等级</td>
+    <td>
+      <input id='city_lv_{{city_id}}' type='text' class="sm-input" value={{city['lv']}} onblur="modify_user('{{can_modify}}','city_lv_{{city_id}}', 'city_lv_{{city_id}}')">
+  </td>
+  </tr>
+    <td>代币</td>
+    <td>
+      <input id='city_jeton_{{city_id}}' type='text' class="sm-input" value={{city['jeton']}} onblur="modify_user('{{can_modify}}','city_jeton_{{city_id}}', 'city_jeton_{{city_id}}')">
+    </td>
+  <tr>
+  </tr>
+    <td>声望</td>
+    <td>
+      <select id='city_reputationlv_{{city_id}}' class="form-control input-sm" onchange="modify_user('{{can_modify}}','city_reputationlv_{{city_id}}', 'city_reputationlv_{{city_id}}')">
+        {% for words in reputation_words %}
+        {% if city['reputation_lv'] == loop.index0 %}
+        <option value={{loop.index0}} selected="selected">{{words}}</option> 
+        {% else %}
+        <option value={{loop.index0}}>{{words}}</option> 
+        {% endif %}
+        {% endfor %}
+      </select>
+    </td>
+  <tr>
+  </tr>
+    <td>声望值</td>
+    <td>
+      <input id='city_reputation_{{city_id}}' type='text' class="sm-input" value={{city['reputation']}} onblur="modify_user('{{can_modify}}','city_reputation_{{city_id}}', 'city_reputation_{{city_id}}')">
+    </td>
+  <tr>
+  {% for floor_id, stage in city['challenge']|dictsort %}
+  <tr>
+    <td> 挑战 {{floor_id}} {{challenge_config[city_id][floor_id|string][stage|string]['name']}}</td>
+    <td>
+      <input type='text' class="sm-input" value={{stage}}> / {{challenge_config[city_id][floor_id|string]|count}}
+    </td>
+  </tr>
+  {% endfor %}
+
+
+  {% endif %}
+</table>
+{% endfor %}

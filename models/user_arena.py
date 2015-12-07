@@ -74,7 +74,6 @@ class UserArena(GameModel):
 
     def set_team_index(self, team_index):
         self.team_index = team_index
-        self.put()
     
     def check_over(self):
         # 是否结束竞技, 胜10或负2

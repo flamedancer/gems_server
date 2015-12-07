@@ -48,10 +48,15 @@ def player_detail(player_uid=''):
         detail['detail_category'] = 'cards'
         detail.update(ubase.user_cards.to_dict())
         detail.update(ubase.user_cities.to_dict())
-        print detail
         detail['card_config'] = ubase._card_config
         detail['card_words'] = card_words
         detail['sorted_cards'] = login.dirtolist(detail['card_config'])
+    elif category == 'cities':
+        detail['reputation_words'] = ubase._language_config['reputation_name'] 
+        detail['conquer_config'] = ubase._conquer_config
+        detail['challenge_config'] = ubase._challenge_config
+        detail['detail_category'] = 'cities'
+        detail.update(ubase.user_cities.to_dict())
     elif category == 'task':
         request.user = ubase
         detail['uid'] = ubase.uid
@@ -91,6 +96,8 @@ def modify_player():
     if not modify_type:
         raise
     print "modfiy_type", modify_type
+    type_value = request.forms.get(modify_type)
+    print "type_value", type_value
     if modify_type == 'uname':
         new_name = request.forms.get('newname')
         update_name = tools.update_user_info(ubase, 'name', new_name, 'admin')
@@ -129,8 +136,40 @@ def modify_player():
         card_id = modify_type.split('summon_', 1)[1]
         request.user = ubase
         card_logic.api_summon(card_id)
+    elif modify_type.startswith('city_status_'):
+        ucities = ubase.user_cities
+        city_id = modify_type.split('city_status_', 1)[1]
+        new_status = int(request.forms.get(modify_type))
+        ucities.open_city(city_id)
+        ucities.cities[city_id]['status'] = new_status
+        if new_status > 1 and not ucities.cities[city_id]['challenge']:
+            ucities.conquer_city(city_id)
+    elif modify_type.startswith('conquer_'):
+        ucities = ubase.user_cities
+        city_id = modify_type.split('conquer_', 1)[1]
+        new_stage = int(request.forms.get(modify_type))
+        ucities.cities[city_id]['cur_conquer'] = new_stage
         
-        
+    elif modify_type.startswith('city_lv_'):
+        ucities = ubase.user_cities
+        city_id = modify_type.split('city_lv_', 1)[1]
+        new = int(request.forms.get(modify_type))
+        ucities.cities[city_id]['lv'] = new
+    elif modify_type.startswith('city_jeton_'):
+        ucities = ubase.user_cities
+        city_id = modify_type.split('city_jeton_', 1)[1]
+        new = int(request.forms.get(modify_type))
+        ucities.cities[city_id]['jeton'] = new
+    elif modify_type.startswith('city_reputationlv_'):
+        ucities = ubase.user_cities
+        city_id = modify_type.split('city_reputationlv_', 1)[1]
+        new = int(request.forms.get(modify_type))
+        ucities.cities[city_id]['reputation_lv'] = new
+    elif modify_type.startswith('city_reputation_'):
+        ucities = ubase.user_cities
+        city_id = modify_type.split('city_reputation_', 1)[1]
+        new = int(request.forms.get(modify_type))
+        ucities.cities[city_id]['reputation'] = new
     else:
         thing = modify_type[1:]
         num = int(request.forms.get('add' + thing))

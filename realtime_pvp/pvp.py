@@ -9,7 +9,6 @@ import datetime
 import gevent
 import geventwebsocket
 from geventwebsocket import WebSocketServer
-from common.utils impor print_err
 #from gevent.lock import Semaphore
 
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -22,6 +21,7 @@ from models.user_pvp import UserPvp
 from models.user_property import UserProperty
 from common import rank
 from common import tools
+from common.utils import print_err
 
 port = "9081" if len(sys.argv) != 2 else sys.argv[1]
 
@@ -380,6 +380,7 @@ def disconnect_player(player, reason='', force=False):
         #if reason.startswith('network-error'):
         #    print '\n 战斗中掉线!!判负  :****   ({}|--{})'.format(player.core_id, player.uid), datetime.datetime.now()
         player.inf_fight_result(player.opponent.uid, reason)
+        clear_player(player)
     else:
         clear_player(player)
     print 'disconnect player:**** {}  ({}|--{})'.format(reason, player.core_id, player.uid)

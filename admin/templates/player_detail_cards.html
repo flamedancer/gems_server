@@ -1,0 +1,103 @@
+{% for city_id, city in cities|dictsort %}
+{% if city["team"] or city["status"] == 2 %}
+<able class="table table-bordered table-condensed table-striped">
+  <caption>城{{city_id}}编队 </caption>
+  <tr>
+    <th>序</th>
+    <th>卡名</th>
+    <th>品质</th>
+    <th>等级</th>
+    <th>好感度</th>
+    <th>元素</th>
+    <th>攻击模式</th>
+    <th>阵营</th>
+    <th>神话</th>
+  </tr>
+  {% for card_id in city["team"] %}
+  <tr>
+  <td>{{loop.index}}</td>
+  {% if not card_id %}
+  <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  {% else %}
+    <td><label>{{card_config[card_id]['name']}}</label></td>
+    <td>{{card_words['quality'][card_config[card_id]['quality']]}}</td>
+    <td>{{cards[card_id]['lv']}}</td>
+    <td>{{cards[card_id]['favor']}}</td>
+    <td>
+      {% for type in card_config[card_id]['type'] %}
+          {{card_words['type'][type]}} 
+      {% endfor %}
+    </td>
+    <td>{{card_words['attack_type'][card_config[card_id]['attack_type']]}}</td>
+    <td>{{card_words['camp'][card_config[card_id]['camp']]}}</td>
+    <td>{{card_words['myth'][card_config[card_id]['myth']]}}</td>
+  </tr>
+  {% endif %}
+  {% endfor %}
+</table>
+{% endif %}  {# end judge empty team #}
+{% endfor %} {# end loop teams #}
+<table id="has_cards" class="table table-bordered table-condensed table-striped">
+  <caption> 拥有卡牌 </caption>
+  <tr>
+    <th>卡名</th>
+    <th>品质</th>
+    <th>等级</th>
+    <th>好感度</th>
+    <th>元素</th>
+    <th>攻击模式</th>
+    <th>阵营</th>
+    <th>神话</th>
+    <th>数量</th>
+    <th>召唤 | 释放</th>
+  </tr>
+  {% for card_id in cards %}
+  <tr>
+    <td><label>{{card_config[card_id]['name']}}</label></td>
+    <td>{{card_words['quality'][card_config[card_id]['quality']]}}</td>
+    <td><input class="sm-input" type="text" id="{{card_id}}_lv" value="{{cards[card_id]['lv']}}" onblur="modify_user('{{can_modify}}','{{card_id}}_lv','{{card_id}}_lv')"></td>
+    <td><input class="sm-input" type="text" id="{{card_id}}_favor" value="{{cards[card_id]['favor']}}" onblur="modify_user('{{can_modify}}','{{card_id}}_favor','{{card_id}}_favor')"></td>
+    <td>
+      {% for type in card_config[card_id]['type'] %}
+          {{card_words['type'][type]}} 
+      {% endfor %}
+    </td>
+    <td>{{card_words['attack_type'][card_config[card_id]['attack_type']]}}</td>
+    <td>{{card_words['camp'][card_config[card_id]['camp']]}}</td>
+    <td>{{card_words['myth'][card_config[card_id]['myth']]}}</td>
+    <td><input class="sm-input" type="text" id="{{card_id}}_num" value="{{cards[card_id]['num']}}" onblur="modify_user('{{can_modify}}','{{card_id}}_num','{{card_id}}_num')"></td>
+    <td>
+      {% if cards[card_id]['num'] %}
+       <input class="sm-input" type="text" id="dismiss_{{card_id}}" value="dismiss_one"><button onclick="modify_user('{{can_modify}}','dismiss_{{card_id}}','dismiss_{{card_id}}')">释放</button></td>
+      {% else %}
+      <button onclick="modify_user('{{can_modify}}','summon_{{card_id}}','{{card_id}}_num')">召唤</button></td>
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+<form class="form-inline" method="post" action="/admin/modify_player/add_cards/{{uid}}">
+<table id="add_cards" class="table table-bordered table-condensed table-striped">
+  <caption> 添加卡片 </caption>
+  {% for card_info in sorted_cards %}
+    {% if (loop.index) % 6 == 1 %}
+      <tr>
+    {% endif %}
+    <td>
+      <input class="select_card" type="checkbox" name="new_cards" value={{card_info.id}}>
+      {{card_info.id|replace("_card", "")}}:{{card_info.name}}</td>
+    {% if (loop.index) % 6 == 6 %}
+      </tr>
+    {% endif %}
+  {% endfor %} 
+</table>
+<div style="float:right">
+  <button type="button" onclick="turn_select()" class="btn btn btn-primary">反选</button>
+  <button type="submit" class="btn btn-success">添加所选</button>
+  <label for="card_num">数量:</label>
+  <input type="text" class="form-control" id="card_num" name="card_num"  value="1" >
+</div>
+</form> 
+{# end switch detail_category #}
+    
+

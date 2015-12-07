@@ -36,6 +36,7 @@ class UserModified(GameModel):
         obj.guide_flags = {
             'cards': 1,
             'task': 1,
+            'challeng': 0,
             'team_index_normal': 0,
             'team_index_special': 0,
         }

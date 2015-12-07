@@ -1,0 +1,96 @@
+<table class="table table-bordered">
+  <tr>
+    <td class="col-md-4"><label>用户uid</label></td>
+    <form>
+    <td class="col-md-3">{{uid}}</td>
+    <td class="col-md-5"></td>
+    </form>
+  </tr>
+  <tr>
+    <td class="col-md-4"><label>用户名</label></td>
+    <td class="col-md-3" id="uname">{{name}}</td>
+    <td class="col-md-5"><input type="text" id="newname"><button onclick="modify_user('{{can_modify}}','uname','newname')">修改</button></td>
+  </tr>
+  <tr>
+    <td class="col-md-4"><label>性别</label></td>
+    <td class="col-md-3">{{gender}}</td>
+    <td class="col-md-5"></td>
+    </form>
+  </tr>
+  <tr>
+    <td class="col-md-4"><label>经验值</label></td>
+    <td class="col-md-3" id="uexp">{{exp}}</td>
+    <td class="col-md-5"><input type="text" id="addexp"><button onclick="modify_user('{{can_modify}}','uexp','addexp')">增加</button></td>
+  </tr>
+  <tr>
+    <td class="col-md-4"><label>角色等级</label></td>
+    <td class="col-md-3" id="ulv">{{lv}}</td>
+    <td class="col-md-5"><input type="text" id="addlv"><button onclick="modify_user('{{can_modify}}','ulv','addlv')">增加</button></td>
+  </tr>
+  <tr>
+    <td class="col-md-4"><label>vip等级</label></td>
+    <td class="col-md-3" id="uvip_lv">{{vip_lv}}</td>
+    <td class="col-md-5"><input type="text" id="addvip_lv"><button onclick="modify_user('{{can_modify}}','uvip_lv','addvip_lv')">增加</button></td>
+  </tr>
+  <tr>
+    <td class="col-md-4"><label>体力</label></td>
+    <td class="col-md-3" id="ustamina">{{stamina}}</td>
+    <td class="col-md-5"><input type="text" id="addstamina"><button onclick="modify_user('{{can_modify}}','ustamina','addstamina')">添加</button></td>
+  </tr>
+  <tr>
+    <td class="col-md-4"><label>钻石</label></td>
+    <td class="col-md-3" id="udiamond">{{diamond}}</td>
+    <td class="col-md-5"><input type="text" id="adddiamond"><button onclick="modify_user('{{can_modify}}','udiamond','adddiamond')">添加</button></td>
+  </tr>
+  <tr>
+    <td class="col-md-4"><label>金币</label></td>
+    <td class="col-md-3" id="ucoin">{{coin}}</td>
+    <td class="col-md-5"><input type="text" id="addcoin"><button onclick="modify_user('{{can_modify}}','ucoin','addcoin')">添加</button></td>
+  </tr>
+  </tr>
+  <tr>
+    <td class="col-md-4"><label>天梯代币</label></td>
+    <td class="col-md-3" id="upk_jeton">{{pk_jeton}}</td>
+    <td class="col-md-5"><input type="text" id="addpk_jeton"><button onclick="modify_user('{{can_modify}}','upk_jeton','addpk_jeton')">添加</button></td>
+  </tr>
+  <tr>
+    <td class="col-md-4"><label>英魂</label></td>
+    <td class="col-md-3" id="uheroSoul">{{heroSoul}}</td>
+    <td class="col-md-5"><input type="text" id="addheroSoul"><button onclick="modify_user('{{can_modify}}','uheroSoul','addheroSoul')">添加</button></td>
+  </tr>
+  <tr>
+    <td class="col-md-4"><label>蓝 · 元素掌握度</label></td>
+    <td class="col-md-3" id="unature_0">{{nature_0}}</td>
+    <td class="col-md-5"><input type="text" id="addnature_0"><button onclick="modify_user('{{can_modify}}','unature_0','addnature_0')">添加</button></td>
+  </tr>
+  <tr>
+    <td class="col-md-4"><label>红 · 元素掌握度</label></td>
+    <td class="col-md-3" id="unature_1">{{nature_1}}</td>
+    <td class="col-md-5"><input type="text" id="addnature_1"><button onclick="modify_user('{{can_modify}}','unature_1','addnature_1')">添加</button></td>
+  </tr>
+  <tr>
+    <td class="col-md-4"><label>绿 · 元素掌握度</label></td>
+    <td class="col-md-3" id="unature_2">{{nature_2}}</td>
+    <td class="col-md-5"><input type="text" id="addnature_2"><button onclick="modify_user('{{can_modify}}','unature_2','addnature_2')">添加</button></td>
+  </tr>
+  <tr>
+    <td class="col-md-4"><label>褐 · 元素掌握度</label></td>
+    <td class="col-md-3" id="unature_3">{{nature_3}}</td>
+    <td class="col-md-5"><input type="text" id="addnature_3"><button onclick="modify_user('{{can_modify}}','unature_3','addnature_3')">添加</button></td>
+  </tr>
+  <tr>
+    <td class="col-md-4"><label>黄 · 元素掌握度</label></td>
+    <td class="col-md-3" id="unature_4">{{nature_4}}</td>
+    <td class="col-md-5"><input type="text" id="addnature_4"><button onclick="modify_user('{{can_modify}}','unature_4','addnature_4')">添加</button></td>
+  </tr>
+  <tr>
+    <td class="col-md-4"><label>紫 · 元素掌握度</label></td>
+    <td class="col-md-3" id="unature_5">{{nature_5}}</td>
+    <td class="col-md-5"><input type="text" id="addnature_5"><button onclick="modify_user('{{can_modify}}','unature_5','addnature_5')">添加</button></td>
+  </tr>
+  <tr>
+    <td class="col-md-4"><label>剩余元素掌握度</label></td>
+    <td class="col-md-3" id="unature_remain">{{nature_remain}}</td>
+    <td class="col-md-5"><input type="text" id="addnature_remain"><button onclick="modify_user('{{can_modify}}','unature_remain','addnature_remain')">添加</button></td>
+  </tr>
+</table>
