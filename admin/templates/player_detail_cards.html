@@ -1,6 +1,6 @@
 {% for city_id, city in cities|dictsort %}
 {% if city["team"] or city["status"] == 2 %}
-<able class="table table-bordered table-condensed table-striped">
+<table class="table table-bordered table-condensed table-striped">
   <caption>城{{city_id}}编队 </caption>
   <tr>
     <th>序</th>

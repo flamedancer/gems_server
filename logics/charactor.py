@@ -88,7 +88,7 @@ def api_turn_guide_flags(flag):
     """ api/charactor/turn_guide_flags
     完成指定系统引导
     Args:
-        flga(str): 系统引导名 
+        flag(str): 系统引导名 
             arena  竞技场
             pvp    天梯
             invade 城战

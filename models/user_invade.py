@@ -173,4 +173,5 @@ class UserInvade(GameModel):
         self.clear_opponent()
         self.clear_history()
         self.reset_consecutive_win()
+        self.has_new_history = False
 
