@@ -64,7 +64,12 @@
   <tr>
   {% for floor_id, stage in city['challenge']|dictsort %}
   <tr>
+    {% set stage_len = challenge_config[city_id][floor_id|string]|count %}
+    {% if stage > stage_len %}
+    <td> 挑战 {{floor_id}}
+    {% else %}
     <td> 挑战 {{floor_id}} {{challenge_config[city_id][floor_id|string][stage|string]['name']}}</td>
+    {% endif %}
     <td>
       <input type='text' class="sm-input" value={{stage}}> / {{challenge_config[city_id][floor_id|string]|count}}
     </td>
