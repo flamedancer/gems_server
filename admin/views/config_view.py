@@ -44,6 +44,7 @@ def config_view():
         view = get_config_str(this_config_name)
         doc = get_note(this_config_name) 
         doc_line_num = doc.count('\n') + 2
+    view = view.replace(r'\n', r'\\n')
     return {'config_titles': CONFIG_TITLES, 'config_value': view, 'config_name': this_config_name, 'config_note': doc, 'note_lines': doc_line_num}
 
 
@@ -53,7 +54,7 @@ def save_config():
     this_config_name = request.forms.get('config_name')
     this_config_value = request.forms.get('config_value')
     # 校验是否为json数据
-    this_config_value = json.loads(this_config_value.replace(r'\n', r'\\n'))
+    this_config_value = json.loads(this_config_value)
     config_obj = ConfigModel.get(this_config_name)
     # config_list里是否有这个配置
     if not config_obj:
