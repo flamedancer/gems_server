@@ -34,7 +34,7 @@ def resource_version():
 @validate
 def config_view():
     this_config_name = request.query.get('config_name')
-    view = {} 
+    view = '' 
     doc = ''
     doc_line_num = 0
     excel_file = request.files.get('xls')

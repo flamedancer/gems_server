@@ -49,6 +49,7 @@ def api_top():
         tops.append({
             'lv': base_obj.user_property.lv, 
             'name': base_obj.name, 
+            'grade': base_obj.user_pvp.grade, 
             'star': int(score),
         })
 

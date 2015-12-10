@@ -35,6 +35,7 @@ class UserModified(GameModel):
         obj = cls(uid)
         obj.guide_flags = {
             'cards': 1,
+            'gacha': 1,
             'task': 1,
             'challeng': 0,
             'team_index_normal': 0,

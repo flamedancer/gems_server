@@ -102,4 +102,5 @@ def api_turn_guide_flags(flag):
     """
     umodified = request.user.user_modified
     umodified.del_guide_flags(flag)
+    return {}
 
