@@ -199,7 +199,7 @@ def check_task_and_guideflag(api_path, api_data):
             if city_id == '0':
                 city_floor = '-'.join([city_id, floor])
                 for guide_type in guide_conquer_type:
-                    if guide_flags.get(guide_type) == city_floor:
+                    if guide_flags.get(guide_type) == city_floor and umodified.has_guide_flags(guide_type):
                         umodified.set_guide_flags(guide_type, 2)
             # 获得新的军旗 (征服除城'0' 以外城市 )
             if (conquered_city_num - 1 if ucities.has_conquer_city('0') else 0) == 1:

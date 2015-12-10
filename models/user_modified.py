@@ -34,6 +34,7 @@ class UserModified(GameModel):
     def create(cls, uid):
         obj = cls(uid)
         obj.guide_flags = {
+            'charactor': 0,
             'cards': 1,
             'gacha': 1,
             'task': 1,
