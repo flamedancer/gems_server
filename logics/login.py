@@ -142,6 +142,7 @@ def get_login_award(ubase):
         return awards_info
     awards_info.append(get_capital_award(ubase))
     awards_info.append(get_invade_award(ubase))
+    awards_info.append(get_pvp_award(ubase))
     # 城市代币产出不在奖励弹框显示
     get_city_jeton(ubase)
     awards_info = [award for award in awards_info if award]

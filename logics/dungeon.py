@@ -222,7 +222,6 @@ def api_end(dungeon_type, city_id, win=False, has_dead_mem=True, bout=1):
         new_info = ucities.up_challenge_stage(city_id, floor)
         umodified.set_modify_info('cities', new_info)
     umodified.temp.pop('dungeon')
-    umodified.put()
     return award
     
 

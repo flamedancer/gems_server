@@ -18,7 +18,7 @@ CONFIG_TITLES = [
     {
         'category': u'主角',
         'content':[
-            ('userInit_config', u'主角初始配置'),
+            ('userInit_config', u'玩家设置'),
             ('userlv_config', u'主角等级配置'),
             ('task_config', u'任务配置'),
          ],
