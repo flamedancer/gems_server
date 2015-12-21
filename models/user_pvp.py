@@ -83,6 +83,6 @@ class UserPvp(GameModel):
         if self.grade <= 5:
             self.all_star = pvp_rank_stars[5]
         else:
-            self.all_satr = 0
+            self.all_star = 0
         self.adjust()
 

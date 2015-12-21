@@ -137,12 +137,15 @@ def get_login_award(ubase):
     if not ubase.last_login_date:
         ubase.record_login()
         return awards_info
+    # 原始上次登入时间
+    last_login_time = ubase.last_login_time
+    # 修改上次登入时间等
     today_first_login = ubase.record_login()
     if not today_first_login:
         return awards_info
     awards_info.append(get_capital_award(ubase))
-    awards_info.append(get_invade_award(ubase))
-    awards_info.append(get_pvp_award(ubase))
+    awards_info.append(get_invade_award(ubase, last_login_time))
+    awards_info.append(get_pvp_award(ubase, last_login_time))
     # 城市代币产出不在奖励弹框显示
     get_city_jeton(ubase)
     awards_info = [award for award in awards_info if award]
@@ -162,14 +165,14 @@ def get_capital_award(ubase):
     }
 
 
-def get_invade_award(ubase):
+def get_invade_award(ubase, last_login_time):
     uinvade = ubase.user_invade
     td =  datetime.datetime.today() 
     # 平日发普通奖励，第七天发终极奖励 并重置城战
     sevent_day = ubase._common_config['invade_seventh_weekday']
     
     # 和上次登入是否同一周 若不是 重置
-    if total_isoweek(stamp=ubase.last_login_time, start=sevent_day) != (
+    if total_isoweek(stamp=last_login_time, start=sevent_day) != (
         total_isoweek(start=sevent_day)): 
     #if not datetime.datetime.strptime(ubase.last_login_date,
     #    "%Y-%m-%d").strftime("%W") == td.strftime("%W"):
@@ -191,14 +194,14 @@ def get_invade_award(ubase):
     }
 
 
-def get_pvp_award(ubase):
+def get_pvp_award(ubase, last_login_time):
     upvp = ubase.user_pvp
     td = datetime.datetime.today()
     # 每双周结算奖励
     award_day = ubase._common_config['pvp_award_weekday']
     # 和上次登入是否同一双周 若不是 重置
-    last_day = datetime.date.fromtimestamp(ubase.last_login_time)
-    last_week = total_isoweek(stamp=ubase.last_login_time, start=award_day)
+    last_day = datetime.date.fromtimestamp(last_login_time)
+    last_week = total_isoweek(stamp=last_login_time, start=award_day)
     this_week = total_isoweek(start=award_day)
     # 此周为双周 且为发放奖励的日子
     is_award_day = this_week % 2 == 1 and td.isoweekday() == award_day 
