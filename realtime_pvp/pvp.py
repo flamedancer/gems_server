@@ -78,6 +78,7 @@ def get_real_pvp_info(uid):
     team = uCards.cur_team()
     user_pvp_info = {
         'uid': uBase.uid,
+        'lv': uProperty.lv,
         'name': uBase.name,
         'team': team,
         'team_index': uCards.cur_team_index,

@@ -44,16 +44,16 @@ def api_login(last_update_time):
     """
     result = {}
     ubase = request.user
-    card_config = ubase._card_config
+    # 城市进贡
+    prod_city_award(ubase)
+    # 登入奖励
+    result['login_awards'] = get_login_award(ubase)
+
     result['user_info'] = get_user_info(ubase)
     update_configs, update_time = get_update_config(int(last_update_time))
     if update_time:
         result['update_configs'], result['last_update_time'] = update_configs, update_time
         print "#####COnfig_keys:", result['update_configs'].keys()
-    # 城市进贡
-    prod_city_award(ubase)
-    # 登入奖励
-    result['login_awards'] = get_login_award(ubase)
     # 登入游戏时不需要发已修改的信息
     umodified = ubase.user_modified
     umodified.modified = {}

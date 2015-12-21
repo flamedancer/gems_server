@@ -61,7 +61,7 @@ CONFIG_TITLES = [
             ('item_config', u'道具配置'),
             ('reputationshop_config', u'声望商店配置'),
             ('invadeshop_config', u'城战商店配置'),
-            ('shop_config', u'土豪商城配置'),
+            ('shop_config', u'商城'),
          ],
     },
 ]
@@ -81,7 +81,6 @@ NEED_SYNC_CONFIGS = [
     'item_config',
     'reputationshop_config',
     'invadeshop_config',
-    'shop_config',
 ]
 
 
