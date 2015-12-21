@@ -55,7 +55,7 @@ class InvadeUser(BaseModel):
             'name': selected_user.name,
             'subpicture': selected_user.subpicture,
             'lv': selected_uproperty.lv,
-            'capital_city': selected_ucities.capital_city,
+            'capital_city': selected_ucities.capital_city or '0',
         }
 
     def make_virtual_user(self):

@@ -200,6 +200,14 @@ def get_pvp_award(ubase):
     last_day = datetime.date.fromtimestamp(ubase.last_login_time)
     last_week = total_isoweek(stamp=ubase.last_login_time, start=award_day)
     this_week = total_isoweek(start=award_day)
+    # 此周为双周 且为发放奖励的日子
+    is_award_day = this_week % 2 == 1 and td.isoweekday() == award_day 
+    if not is_award_day:
+        return {}
+    # 先发奖 再变动段位 
+    pvpaward_config = ubase._pvpaward_config
+    pvp_grade = str(upvp.grade)
+    award = pvpaward_config.get(pvp_grade, {})
     # 超过一个双周重置一次
     if (this_week / 2) - (last_week / 2) == 1:
         upvp.reset_pvp()
@@ -207,13 +215,6 @@ def get_pvp_award(ubase):
     elif (this_week / 2) - (last_week / 2) >= 2:
         upvp.reset_pvp()
         upvp.reset_pvp()
-    # 此周为双周 且为发放奖励的日子
-    is_award_day = this_week % 2 == 1 and td.isoweekday() == award_day 
-    if not is_award_day:
-        return {}
-    pvpaward_config = ubase._pvpaward_config
-    pvp_grade = str(upvp.grade)
-    award = pvpaward_config.get(pvp_grade, {})
     if not award:
         return {}
     add_user_awards(ubase, award, 'login_pvp')
