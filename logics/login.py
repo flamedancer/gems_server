@@ -158,7 +158,7 @@ def get_capital_award(ubase):
     award = {}
     award['coin'] = lv_conf['reward_coin']
     add_user_awards(ubase, award, 'login_capital')
-    language = ubase.language_config['award_msg']['captial']
+    language = ubase._language_config['award_msg']['capital']
     return {'type':  'captial',
             'award': award,
             'content1': language['content1'],
@@ -190,7 +190,7 @@ def get_invade_award(ubase, last_login_time):
     if not award:
         return {} 
     add_user_awards(ubase, award, 'login_invade')
-    language = ubase.language_config['award_msg']['invade']
+    language = ubase._language_config['award_msg']['invade']
     return {'type': 'invade',
             'award': award,
             'content1': language['content1'],
@@ -225,7 +225,7 @@ def get_pvp_award(ubase, last_login_time):
     if not award:
         return {}
     add_user_awards(ubase, award, 'login_pvp')
-    language = ubase.language_config['award_msg']['pvp']
+    language = ubase._language_config['award_msg']['pvp']
     return {'type': 'pvp',
             'award': award,
             'content1': language['content1'],

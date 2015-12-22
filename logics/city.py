@@ -52,7 +52,7 @@ def api_get_city_award():
     ucities = request.user.user_cities
     award = ucities.city_award
     tools.add_user_awards(ucities, award, 'city_award')
-    language = ubase.language_config['award_msg']['city']
+    language = ubase._language_config['award_msg']['city']
     now = datetime.datetime.now()
     return {'type': 'city',
             'award': award,
