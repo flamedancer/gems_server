@@ -44,8 +44,6 @@ def api_login(last_update_time):
     """
     result = {}
     ubase = request.user
-    # 城市进贡
-    prod_city_award(ubase)
     # 登入奖励
     result['login_awards'] = get_login_award(ubase)
 
@@ -160,8 +158,11 @@ def get_capital_award(ubase):
     award = {}
     award['coin'] = lv_conf['reward_coin']
     add_user_awards(ubase, award, 'login_capital')
+    language = ubase.language_config['award_msg']['captial']
     return {'type':  'captial',
             'award': award,
+            'content1': language['content1'],
+            "title": language['title'],
     }
 
 
@@ -189,8 +190,11 @@ def get_invade_award(ubase, last_login_time):
     if not award:
         return {} 
     add_user_awards(ubase, award, 'login_invade')
+    language = ubase.language_config['award_msg']['invade']
     return {'type': 'invade',
             'award': award,
+            'content1': language['content1'],
+            "title": language['title'],
     }
 
 
@@ -221,8 +225,13 @@ def get_pvp_award(ubase, last_login_time):
     if not award:
         return {}
     add_user_awards(ubase, award, 'login_pvp')
+    language = ubase.language_config['award_msg']['pvp']
     return {'type': 'pvp',
             'award': award,
+            'content1': language['content1'],
+            'content2': language['content2'] % upvp.grade,
+            "title": language['title'],
+            
     }
     
 
@@ -235,34 +244,4 @@ def get_city_jeton(ubase):
             continue
         jeton_num = city_config[city_id]['jeton'][ucities.cities[city_id]['reputation_lv']]
         ucities.add_city_jeton(city_id, jeton_num)
-
-
-def prod_city_award(ubase):
-    """ 产出城市进贡 """
-    td = datetime.datetime.today()
-    ucities = ubase.user_cities
-    last_datetime = datetime.datetime.fromtimestamp(ubase.last_login_time)
-    # 每小时产出一次
-    if str(last_datetime)[:13] == str(td)[:13]:
-        return
-    # 有未领取的进贡不产生新的进贡
-    if ucities.city_award:
-        return
-    award = {}
-    city_config = ubase._city_config
-    # 每个征服了的城市都有进贡几率
-    for city_id in ucities.cities:
-        if not ucities.has_conquer_city(city_id):
-            continue
-        # 每一级都增加1%的进贡率 
-        if random.random() > (0.01 * ucities.cities[city_id]['lv']):
-            continue
-        # 贡品类型
-        award_type = city_config[city_id]['reward_type']
-        # 城市声望越高，贡品的数量越多
-        award_num = city_config[city_id]['reward_num'][ucities.cities[city_id]['reputation_lv']]
-        award.setdefault(award_type, 0)
-        award[award_type] += award_num
-    ucities.set_city_award(award)
-         
 

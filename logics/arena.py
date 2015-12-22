@@ -155,6 +155,7 @@ def api_end_fight(win):
         win(bool): 是否胜利
     """ 
     uarena = request.user.user_arena
+    full_exp = user._common_config['arena_fight_exp']
     if win:
         umodified = uarena.user_modified
         if 'dungeon' not in umodified.temp:
@@ -166,8 +167,12 @@ def api_end_fight(win):
         if now - start_info['time'] <= 1:
             raise LogicError("rush a dungeon to quick")
         uarena.inc_win()
+        add_exp = full_exp
+    else:
+        add_exp = full_exp // 3
+    tools.add_user_awards(uInvade, award, 'invade_denfense')
     uarena.check_over()
-    return {}
+    return {'award': {'exp': add_exp}}
 
 
 def api_cancel_arena():
