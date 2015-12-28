@@ -155,7 +155,7 @@ def api_end_fight(win):
         win(bool): 是否胜利
     """ 
     uarena = request.user.user_arena
-    full_exp = user._common_config['arena_fight_exp']
+    full_exp = uarena._common_config['arena_fight_exp']
     if win:
         umodified = uarena.user_modified
         if 'dungeon' not in umodified.temp:
@@ -170,9 +170,10 @@ def api_end_fight(win):
         add_exp = full_exp
     else:
         add_exp = full_exp // 3
-    tools.add_user_awards(uInvade, award, 'invade_denfense')
+    award = {'exp': add_exp} 
+    tools.add_user_awards(uarena, award, 'arena')
     uarena.check_over()
-    return {'award': {'exp': add_exp}}
+    return {'award': award}
 
 
 def api_cancel_arena():

@@ -6,12 +6,37 @@ from bottle import request
 from common import tools
 from common.exceptions import *
 
+
+def api_get_names():
+    """api/charactor/get_names
+    获取随机名字
+    Args:
+        names(list->str): 随机名字组
+    """
+    names = ['tt' + str(i) for i in range(0,7)]
+    return {'names':names}
+
+
+def api_init_charactor(name, picture):
+    """api/charactor/init_charactor
+    初始化玩家姓名，形象
+    Args:
+        name(str): 主角名字 
+        picture(int): 选择的皮肤id
+    """
+    ubase = request.user
+    tools.update_user_info(ubase, 'name', name, 'init_charactor')
+    tools.update_user_info(ubase, 'picture', new_name, 'init_charactor')
+    return {}
+    
+    
+
 def api_rename(new_name):
     """ api/charactor/rename
     重命名
     
     Args:
-        new_name(str): 新的玩家名字
+        new_name(str): 新的主角名字
     """
     ubase = request.user
     tools.update_user_info(ubase, 'name', new_name, 'api_rename')

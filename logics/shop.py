@@ -49,4 +49,40 @@ def api_invade_shopping(index):
     return {}
     
    
+def api_show_shop():
+    """ api/shop/show_shop
+    返回商城商品信息
+    """
+    umodified = request.user.user_modified
+    shop_config = umodified._shop_config
+    purchased = umodified.temp.get('shop', {})
+    # 限购次数为最大购买次数减去已购买次数
+    for shop_type in purchased:
+        for index in purchased[shop_type]:
+            conf = shop_config[shop_type][index]
+            limit_cnt = conf['limit_cnt']
+            new_limit_cnt = limit_cnt - purchased[shop_type][index]
+            conf['limit_cnt'] = new_limit_cnt
+    return shop_config 
+    
+    
+def api_shopping(shop_type, index):
+    """ api/shop/shopping
+    商城购买，消耗真实货币 
+    Args:
+        shop_type(str): 商品类型 【dimaond, item, coin, heroSoul】
+        index(str): 商品序号
+    """
+    umodified = request.user.user_modified
+    shop_config = umodified._shop_config
+    if shop_type not in shop_config or index not in shop_config[shop_type]:
+        return {}
+    # 判断购买次数是否超过
+    conf = shop_config[shop_type][index]
+    limit_cnt = conf['limit_cnt']
+    purchased = umodified.temp.get('shop', {})
+    if limit_cnt <= purchased.get(shop_type, {}).get(index, 0):
+        return {}
+    return {}
+    
     
