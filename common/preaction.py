@@ -30,11 +30,13 @@ import json
 import time
 import random
 import datetime
+import md5
 from libs.dbs import app 
 from common.exceptions import *
 from common.utils import print_err
 from bottle import request
 from models.user_base import UserBase
+import settings
 
 
 def prelogic(func):
@@ -43,8 +45,12 @@ def prelogic(func):
         result['timestamp'] = int(time.time())
         try:
             data = request.forms.get('data')
+            captcha = request.forms.get('captcha', None)
+            captcha_validation(captcha, data)
+        
             print data
-            data = json.loads(data) or {} 
+            data = json.loads(data)
+            
             timestamp = data.pop('timestamp')
             timestamp_validation(timestamp)
             uid = data.pop('uid', None)
@@ -72,6 +78,17 @@ def prelogic(func):
     return wrap_func
 
 
+def captcha_validation(captcha, data):
+    check_code = settings.CHECK_CODE
+    #local_arg = md5.md5((data + check_code).encode('utf-8')).hexdigest()[:10]
+    local_arg = md5.md5((data + check_code)).hexdigest()[:10]
+    print "md5 origin", data + check_code
+    print "md5 check", local_arg
+    if local_arg != captcha:
+        #raise SignatureError
+        print "debug captcha error local capt", local_arg, captcha 
+
+    
 def timestamp_validation(timestamp):
     pass
 

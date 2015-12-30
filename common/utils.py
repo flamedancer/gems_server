@@ -49,3 +49,7 @@ def print_err():
     sys.stderr.write('--'*30+os.linesep)
     traceback.print_exc(file=sys.stderr)
     sys.stderr.write('=='*30+os.linesep)
+
+
+def is_sense_word(words):
+    return False 

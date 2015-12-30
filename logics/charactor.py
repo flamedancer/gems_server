@@ -4,6 +4,8 @@
 
 from bottle import request
 from common import tools
+from common import utils
+from common.names import Names
 from common.exceptions import *
 
 
@@ -17,6 +19,19 @@ def api_get_names():
     return {'names':names}
 
 
+def check_name(name):
+    """
+    检查名字是否合法
+    """
+    if len(name.strip()) <= 0:
+        raise LogicError('名字不能为空哦亲')
+    if utils.is_sense_word(name):
+        raise LogicError('名字含有敏感词汇哦亲')
+    if Names.get(name):
+        #rk_user调用 UserName.set_name, UserName的 pk 是 name, 若重复，报错
+        raise LogicError('名字已被别人使用哦亲')
+
+
 def api_init_charactor(name, picture):
     """api/charactor/init_charactor
     初始化玩家姓名，形象
@@ -26,7 +41,9 @@ def api_init_charactor(name, picture):
     """
     ubase = request.user
     tools.update_user_info(ubase, 'name', name, 'init_charactor')
-    tools.update_user_info(ubase, 'picture', new_name, 'init_charactor')
+    check_name(name)
+    Names.set_name(ubase.uid, name)
+    tools.update_user_info(ubase, 'picture', name, 'init_charactor')
     return {}
     
     
@@ -39,6 +56,7 @@ def api_rename(new_name):
         new_name(str): 新的主角名字
     """
     ubase = request.user
+    check_name(name)
     tools.update_user_info(ubase, 'name', new_name, 'api_rename')
     return {}
 
