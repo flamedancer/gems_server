@@ -80,10 +80,9 @@ def prelogic(func):
 
 def captcha_validation(captcha, data):
     check_code = settings.CHECK_CODE
-    #local_arg = md5.md5((data + check_code).encode('utf-8')).hexdigest()[:10]
     local_arg = md5.md5((data + check_code)).hexdigest()[:10]
     print "md5 origin", data + check_code
-    print "md5 check", local_arg
+    print "debug captcha local capt", local_arg, captcha 
     if local_arg != captcha:
         raise SignatureError
         print "debug captcha error local capt", local_arg, captcha 
