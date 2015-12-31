@@ -57,6 +57,6 @@ def is_sense_word(words):
 
 
 def random_name():
-    return randomw.choice(name1) + random.choice(name2)
+    return random.choice(name1) + random.choice(name2)
     
     

@@ -85,7 +85,7 @@ def update_user_info(user, thing, new_info, way):
         return new_num
         
         
-    print "******update user info way", thing, new_info, way 
+    # print "******update user info way", thing, new_info, way 
 
 
 def add_user_awards(user, award, way):

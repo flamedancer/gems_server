@@ -31,6 +31,7 @@ import time
 import random
 import datetime
 import md5
+import urllib
 from libs.dbs import app 
 from common.exceptions import *
 from common.utils import print_err
@@ -47,7 +48,7 @@ def prelogic(func):
             data = request.forms.get('data')
             captcha = request.forms.get('captcha', None)
             captcha_validation(captcha, data)
-        
+            data = urllib.unquote(data)
             print data
             data = json.loads(data)
             
