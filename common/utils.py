@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 import sys
 import os
-import  traceback
+import traceback
 import time
 import random
 import datetime
+from common.name_text import name1, name2 
 
 
 def get_key_by_weight_dict(item_weight_dict):
@@ -53,3 +54,9 @@ def print_err():
 
 def is_sense_word(words):
     return False 
+
+
+def random_name():
+    return randomw.choice(name1) + random.choice(name2)
+    
+    

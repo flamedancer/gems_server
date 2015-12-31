@@ -15,7 +15,7 @@ def api_get_names():
     Args:
         names(list->str): 随机名字组
     """
-    names = ['tt' + str(i) for i in range(0,7)]
+    names = [utils.random_name() for i in range(0,7)]
     return {'names':names}
 
 
