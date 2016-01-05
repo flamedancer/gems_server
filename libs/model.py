@@ -289,6 +289,10 @@ class TopModel(object):
     def get(self, count=10, desc=True):
         """取前多少名，count为数量，desc=True从大到小 desc=False从小到大,返回一个list, count<1取所有的"""
         return app.top_redis.zrange(self.top_name, 0, count-1, desc=desc, withscores=True)
+
+    def delete(self):
+        """删除当前排行榜"""
+        return app.top_redis.delete(self.top_name)
     
     def get_score(self, rank, desc=True):
         """取前排名对应的分数，rank从0开始，desc=True从大到小 desc=False从小到大,返回一个list"""

@@ -201,6 +201,9 @@ def api_get_award():
     tools.add_user_awards(uarena, award, 'arena')
     common_config = uarena._common_config
     returns = {} 
+    language = ubase._language_config['award_msg']['arena']
+    returns['title'] = language['title']
+    returns['content1'] = language['content1']
     returns['awards'] = award
     if uarena.win >= common_config['arena_discount_win']:
         all_price = 0

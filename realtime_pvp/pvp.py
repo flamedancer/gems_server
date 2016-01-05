@@ -32,6 +32,7 @@ pear_dict = {}  # 配对信息
 INIT_BEAD_LIST = []
 [INIT_BEAD_LIST.extend([i] * 40) for i in range(7)]
 
+talkers = []
 
 def _make_bead_list():
     """ 返回由200个0~6数字等概率组成的列表
@@ -421,21 +422,39 @@ def application(environ, start_response):
         start_response('200 OK', [('Content-Type','text/html')])
         return ''
     core_id = environ['HTTP_SEC_WEBSOCKET_KEY']
-    player = Player(core_id, websocket)
-    add_all_player(player)
     print "\n##Connecting#########################websockets...", core_id, datetime.datetime.now()
+    if environ['PATH_INFO'] == '/chat/':
+        talkers.append(websocket)
+        while 1:
+            message = websocekt.receive()
+            if message is None:
+                break
+            closed = []
+            for talker in talkers:
+                if talker.closed:
+                    closed.append(closed)
+                continue
+                websocket.send(message)
+            for dead_talker in closed:
+                talkers.remove(talker)
+        if websocket in talker:
+            talkers.remove(websocekt)
+    
+    else:
+        player = Player(core_id, websocket)
+        add_all_player(player)
 
-    try:
-        while player.connecting:
-            message = websocket.receive()
-            player.handle_msg(message)
-    except geventwebsocket.WebSocketError as ex:
-        print "{0}: {1}".format(ex.__class__.__name__, ex)
-    except Exception as ex:
-        print_err()
-        raise ex
-    finally:
-        disconnect_player(player, reason='Give up connecting finally')
+        try:
+            while player.connecting:
+                message = websocket.receive()
+                player.handle_msg(message)
+        except geventwebsocket.WebSocketError as ex:
+            print "{0}: {1}".format(ex.__class__.__name__, ex)
+        except Exception as ex:
+            print_err()
+            raise ex
+        finally:
+            disconnect_player(player, reason='Give up connecting finally')
 
 
 def check_dead_user():

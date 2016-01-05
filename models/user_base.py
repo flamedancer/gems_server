@@ -34,7 +34,6 @@ class UserBase(GameModel):
         return obj
 
     def change_name(self, new_name):
-        new_name = new_name.decode('utf-8')
         self.name = new_name
         self.put()
         return new_name
