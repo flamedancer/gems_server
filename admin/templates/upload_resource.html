@@ -1,13 +1,15 @@
 {% extends "frame.html" %}
 {% block main %}
-
 <label> 当前资源(resource.zip)上传时间：{{last_upload_time}} </label>
-<form class="form-inline" action="save_resource" method="post" enctype="multipart/form-data">
+<form class="form-inline" action="upload_resource" method="post" enctype="multipart/form-data">
   <div class="form-group">
     <label for="filepick">选择上传的文件</label>
     <input type="file" class="form-control" id="filepick" name='data' placeholder="">
   </div>
   <button type="submit" class="btn btn-success">上传</button>
 </form>
+{% if is_new_upload %}
+<span class="label label-warning">上传成功!</span>
+{% endif %}
 
 {% endblock %}
