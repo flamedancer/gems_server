@@ -23,12 +23,6 @@ def server_static(filepath):
     return static_file(filepath, root='./static/')
     
 
-@route('/resource_version')
-def resource_version():
-    system_conf = get_config_dir('system_config')
-    return system_conf.get('resource_version', 0)  
-
-
 @route('/admin/game_config', method=['GET', 'POST'])
 @view('game_config.html')
 @validate

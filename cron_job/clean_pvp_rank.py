@@ -13,7 +13,7 @@ cur_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(cur_dir, ".."))
 from common import rank
 from common import game_config
-from common import utils
+from common.utils import total_isoweek
 
 
 

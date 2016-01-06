@@ -85,7 +85,7 @@ def captcha_validation(captcha, data):
     print "md5 origin", data + check_code
     print "debug captcha local capt", local_arg, captcha 
     if local_arg != captcha:
-        raise SignatureError
+        #raise SignatureError
         print "debug captcha error local capt", local_arg, captcha 
 
     

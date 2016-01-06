@@ -10,6 +10,10 @@ ALL_PERMISSIONS = [
         'description': u'游戏配置',        
     },
     {
+        'permission': 'upload_resource',
+        'description': u'上传资源',        
+    },
+    {
         'permission': 'server_doc',
         'description': u'后端接口文档',        
     },
