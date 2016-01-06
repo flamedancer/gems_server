@@ -1,13 +1,12 @@
-类型    （diamond 钻石  coin 金币   gacha 卡包 heroSoul 英魂）
+类型    （diamond 钻石  coin 金币   item 道具 heroSoul 英魂）
         序号
-                唯一商品标示符 id
                 名称name
                 物品award
-                消耗cost_xxx   cost_diamond 消耗钻石
+                限购次数 limit_cnt
+                消耗   cost_diamond 消耗钻石 cost_CNY 消耗人民币
                                          # 前端根据地区显示消耗货币类型
                                          cost_CNY 消耗人民币
                                          cost_USD 消耗人民币 
                                          cost_EUR 消耗欧元                                         
 
-疑问1： 是否要根据地区显示货币类型还是统一用人民币
-疑问1： gacha 类型里是否只能是卡包，能否包含其他道具
+?2： 是否要根据地区显示货币类型还是统一用人民币
