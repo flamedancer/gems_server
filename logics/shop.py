@@ -81,13 +81,13 @@ def api_show_shop():
     # 出售时间限制 
     for category in ['package', 'item']:
         pop_index = []
-        for index, info in shop_config[category]:
+        for index, info in shop_config[category].items():
             if 'start_sale_time' in info and 'end_sale_time' in info:
                 now_str = str(datetime.datetime.now())[:-7]
                 if not info['start_sale_time'] <= now_str <= info['end_sale_time']:
                     pop_index.append(index)
         for index in pop_index: 
-            info.pop(index)
+            shop_config[category].pop(index)
             
     return shop_config 
     
