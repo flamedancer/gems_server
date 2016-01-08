@@ -60,7 +60,7 @@ def default_complete_num(task_id):
         return user.user_invade.cup
         
 
-api_task_map = {
+task_api_map = {
     'city_open_city': ['C'],
     'dungeon_end': ['D', 'F'],
     'arena_end_fight': ['G', 'H'],
@@ -178,8 +178,8 @@ def check_task_and_guideflag(api_path, api_data):
    
     print "debug_task", api_path
     # 判断有没完成新的任务
-    if api_path in api_task_map:
-        for task_type in api_task_map[api_path]:
+    if api_path in task_api_map:
+        for task_type in task_api_map[api_path]:
             for task_id in utask.main_task:
                 if task_id.startswith(task_type):
                     check_value(task_type, task_id)

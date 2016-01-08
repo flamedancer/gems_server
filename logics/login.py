@@ -146,8 +146,8 @@ def get_login_award(ubase):
     awards_info.append(get_pvp_award(ubase, last_login_time))
     # 城市代币产出不在奖励弹框显示
     get_city_jeton(ubase)
-    # 清空商城限已购次数
-    ubase.user_modified.temp.pop('shop', None)
+    # 清空商城限每日商品已购次数
+    ubase.user_modified.temp.get('shop', {}).pop('daily_limit', None)
     awards_info = [award for award in awards_info if award]
     return awards_info
 

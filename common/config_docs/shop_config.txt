@@ -1,5 +1,6 @@
 类型    （diamond 钻石     item 抽卡道具 package 礼包）
         序号
+                商品图标icon  "xxxx.png"
                 名称name
                 描述 desc
                 物品award

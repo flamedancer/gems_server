@@ -94,9 +94,9 @@ def api_show_shop():
     
 def api_shopping(shop_type, index):
     """ api/shop/shopping
-    商城购买，消耗真实货币 
+    商城购买，消耗钻石 
     Args:
-        shop_type(str): 商品类型 【dimaond, item, coin, heroSoul】
+        shop_type(str): 商品类型 【item, package】
         index(str): 商品序号
     """
     umodified = request.user.user_modified
@@ -120,6 +120,15 @@ def api_shopping(shop_type, index):
             umodified.temp['shop'][limit_type[:-4]].setdefault(shop_type, {})
             umodified.temp['shop'][limit_type[:-4]][shop_type].setdefault(index, 0)
             umodified.temp['shop'][limit_type[:-4]][shop_type][index] += 1
+    # 判断限购
+    if 'start_sale_time' in conf and 'end_sale_time' in conf:
+        now_str = str(datetime.datetime.now())[:-7]
+        if not info['start_sale_time'] <= now_str <= info['end_sale_time']:
+            return {}
+    # 扣钻石
+    tools.del_user_things(umodified, 'diamond', conf['cost_diamond'], 'shopping_for_{}'.format(shop_type))
+    # 添加奖励
+    tools.add_user_awards(umodified, conf['award'], 'shopping_for_{}'.format(shop_type))
     return {}
     
     
