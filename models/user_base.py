@@ -26,6 +26,8 @@ class UserBase(GameModel):
         self.is_newbie = True  # 是否过完新手引导
         self.newbie_step = 0 # 已过新手引导步骤id
 
+        self.last_charge_time = 0  # 上次充值时间
+
     @classmethod
     def create(cls, uid):
         obj = cls(uid)

@@ -1,12 +1,16 @@
-类型    （diamond 钻石  coin 金币   item 道具 heroSoul 英魂）
+类型    （diamond 钻石     item 抽卡道具 package 礼包）
         序号
                 名称name
+                描述 desc
                 物品award
-                限购次数 limit_cnt
                 消耗   cost_diamond 消耗钻石 cost_CNY 消耗人民币
                                          # 前端根据地区显示消耗货币类型
                                          cost_CNY 消耗人民币
                                          cost_USD 消耗人民币 
                                          cost_EUR 消耗欧元                                         
-
-?2： 是否要根据地区显示货币类型还是统一用人民币
+            首次充值额外送  exfirstcharge_award
+            折扣率  "discount_rate":0.8,
+            每日限购次数  "daily_limit_cnt":5,
+            永久限购次数 "forever_limit_cnt":15,
+            开始出售时间 "start_sale_time": "2016-02-03 00:00:00",
+            结束出售时间 "end_sale_time": "2016-02-03 10:00:00",

@@ -33,6 +33,7 @@ INIT_BEAD_LIST = []
 [INIT_BEAD_LIST.extend([i] * 40) for i in range(7)]
 
 talkers = []
+history_words = {}
 
 def _make_bead_list():
     """ 返回由200个0~6数字等概率组成的列表
@@ -425,6 +426,7 @@ def application(environ, start_response):
     print "\n##Connecting#########################websockets...", core_id, datetime.datetime.now()
     if environ['PATH_INFO'] == '/chat/':
         talkers.append(websocket)
+        websocket.send(json.dumps(history_words))
         while 1:
             message = websocekt.receive()
             if message is None:
@@ -434,9 +436,18 @@ def application(environ, start_response):
                 if talker.closed:
                     closed.append(closed)
                 continue
-                websocket.send(message)
+                try:
+                    websocket.send(message)
+                except geventwebsocket.WebSocketError as ex:
+                    print "{0}: {1}".format(ex.__class__.__name__, ex)
+                    closed.append(closed)
+                except Exception as ex:
+                    print_err()
+                    closed.append(closed)
             for dead_talker in closed:
                 talkers.remove(talker)
+            history_words.append(message)
+            history_words = history_words[:-20]
         if websocket in talker:
             talkers.remove(websocekt)
     
