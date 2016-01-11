@@ -69,7 +69,7 @@ def api_show_shop():
             limit_cnt = conf.get('daily_limit_cnt')
             if limit_cnt:
                 new_limit_cnt = limit_cnt - purchased[shop_type][index]
-                conf['daily_limit_cnt'] = new_limit_cnt
+                conf['now_daily_limit_cnt'] = new_limit_cnt
     # 永久限购 限购次数为最大购买次数减去已购买次数
     for shop_type in purchased.get('forever_limit', {}):
         for index in purchased[shop_type]['forever_limit']:
@@ -77,7 +77,7 @@ def api_show_shop():
             limit_cnt = conf.get('forever_limit_cnt')
             if limit_cnt:
                 new_limit_cnt = limit_cnt - purchased[shop_type][index]
-                conf['forver_limit_cnt'] = new_limit_cnt
+                conf['now_forver_limit_cnt'] = new_limit_cnt
     # 出售时间限制 
     for category in ['package', 'item']:
         pop_index = []

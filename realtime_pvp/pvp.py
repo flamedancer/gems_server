@@ -425,20 +425,21 @@ def application(environ, start_response):
     core_id = environ['HTTP_SEC_WEBSOCKET_KEY']
     print "\n##Connecting#########################websockets...", core_id, datetime.datetime.now()
     if environ['PATH_INFO'] == '/chat/':
+        global history_words, talkers
         talkers.append(websocket)
-        global history_words
         websocket.send(dumps(history_words))
         while 1:
             message = websocket.receive()
+            print "Recv words then Send to all", message
             if message is None:
                 break
             closed = []
             for talker in talkers:
                 if talker.closed:
-                    closed.append(closed)
-                continue
+                    closed.append(talker)
+                    continue
                 try:
-                    websocket.send(message)
+                    talker.send(message)
                 except geventwebsocket.WebSocketError as ex:
                     print "{0}: {1}".format(ex.__class__.__name__, ex)
                     closed.append(closed)
@@ -449,7 +450,7 @@ def application(environ, start_response):
                 talkers.remove(talker)
             history_words.append(message)
             history_words = history_words[:-20]
-        if websocket in talker:
+        if websocket in talkers:
             talkers.remove(websocket)
     
     else:

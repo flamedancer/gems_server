@@ -23,7 +23,8 @@
 沉默抵抗率	silence_defense	int 30
 缠绕抵抗率	wrap_defense	int 30
 晕眩抵抗率	stun_defense	int 30
-攻击类型	attack_type	int	1					
+攻击类型	attack_type	int	1
+攻击范围	attack_range	int	1      # 0 近战   1 远程					
 释放  技能特效,音效及是否全屏		skill_ani		list	["xxx","mu1", true]
 子弹  飞行特效,音效及是否移动		bullet_ani		list	["yyy","mu2", true]
 受击   我方受击特效|我方受击音效|敌方受击特效|敌方受击音效|是否AOE
