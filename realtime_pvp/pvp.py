@@ -449,7 +449,7 @@ def application(environ, start_response):
             for dead_talker in closed:
                 talkers.remove(talker)
             history_words.append(message)
-            history_words = history_words[:-20]
+            history_words = history_words[-20:]
         if websocket in talkers:
             talkers.remove(websocket)
     
