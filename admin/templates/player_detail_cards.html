@@ -1,7 +1,6 @@
-{% for city_id, city in cities|dictsort %}
-{% if city["team"] or city["status"] == 2 %}
+{% for team in teams %}
 <table class="table table-bordered table-condensed table-striped">
-  <caption>城{{city_id}}编队 </caption>
+  <caption>编队 {{loop.index0}}</caption>
   <tr>
     <th>序</th>
     <th>卡名</th>
@@ -13,7 +12,7 @@
     <th>阵营</th>
     <th>神话</th>
   </tr>
-  {% for card_id in city["team"] %}
+  {% for card_id in team %}
   <tr>
   <td>{{loop.index}}</td>
   {% if not card_id %}
@@ -35,7 +34,6 @@
   {% endif %}
   {% endfor %}
 </table>
-{% endif %}  {# end judge empty team #}
 {% endfor %} {# end loop teams #}
 <table id="has_cards" class="table table-bordered table-condensed table-striped">
   <caption> 拥有卡牌 </caption>
