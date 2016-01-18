@@ -32,7 +32,8 @@ class UserCards(GameModel):
     def __init__(self, uid=''):
         self.uid = uid
         self.cur_team_index = "0" # 当前使用城市卫队号
-        self.cards = {}   # 所有 
+        self.cards = {}   # 所有卡牌 
+        self.teams = []   # 编队信息 
         self.new_card_num = 0   # 新卡数量
     
     @classmethod
@@ -48,6 +49,9 @@ class UserCards(GameModel):
         userInit_conf = self._userInit_config 
         init_team = userInit_conf['init_team']
         init_cards_conf = userInit_conf.get('init_cards', {})
+        team_len = userInit_conf.get('team_length', 4)
+        self.teams = len(userInit_conf['get_team_lv']) * ([[''] * team_len])
+        self.teams[0] = init_team
         for card_id in init_team:
             self.add_card(card_id, 1)
         for card_id,num in init_cards_conf.items(): 
@@ -98,25 +102,20 @@ class UserCards(GameModel):
                 raise LogicError(" %s num is 0" % card_id)
             elif self.cards[card_id]['num'] < team.count(card_id):
                 raise LogicError("%s num is not enough" % card_id)
-        ucity = self.user_cities
-        if not ucity.has_open_city(team_index): 
-            raise LogicError("This city has't opened")
+        if not 0 <= team_index < len(self.teams):
+            raise LogicError("Illegal team index!")
         if set(team) == set(['']):
             team = []
-        ucity.cities[team_index]['team'] = team
-        ucity.put()
+        self.teams[team_index] = team
         return team
 
     def set_cur_team_index(self, team_index):
-        ucity = self.user_cities
-        if not ucity.has_open_city(team_index): 
-            raise LogicError("This city has't opened")
+        if not 0 <= team_index < len(self.teams):
+            raise LogicError("Illegal team index!")
         self.cur_team_index = team_index
-        self.put()
 
     def cur_team(self):
-        ucity = self.user_cities
-        return ucity.cities[self.cur_team_index]['team']
+        return self.teams[self.cur_team_index]
 
     def get_card_lv(self, card_id):
         if card_id == '':

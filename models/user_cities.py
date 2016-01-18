@@ -37,13 +37,8 @@ class UserCities(GameModel):
     def init(self):
         self.show_city('0')
         self.open_city('0')
-        init_team = self._userInit_config['init_team']
-        team_len = self._common_config['team_length']
-        init_team.extend([''] * (team_len - len(init_team)))
-        self.cities['0']['team'] = init_team
         # 新加一个前置新手战场
         self.cities['0']['cur_conquer'] = 0 
-        self.put()
 
     def show_city(self, city_id):
         """ 打开战争迷雾
@@ -56,11 +51,9 @@ class UserCities(GameModel):
             'jeton': 0,
             'reputation': 0,
             'reputation_lv': -1,
-            'team': [],
             'cur_conquer': 1,
             'challenge': {}
         }
-        self.put()
         return {city_id: self.cities[city_id]}
 
     def open_city(self, city_id):
@@ -76,7 +69,6 @@ class UserCities(GameModel):
             for allies_city in allies_cities:
                 new_city = self.show_city(allies_city)
                 modified.update(new_city)
-        self.put()
         modified[city_id] = {'status': 1}
         return modified
 
@@ -104,7 +96,6 @@ class UserCities(GameModel):
         if not self.has_conquer_city(city_id):
             raise "Cannot set this city capital"
         self.capital_city = city_id
-        self.put()
 
     def has_show_city(self, city_id):
         if city_id in self.cities:
@@ -169,7 +160,6 @@ class UserCities(GameModel):
 
     def up_challenge_stage(self, city_id, floor):
         self.cities[city_id]['challenge'][floor] += 1
-        self.put()
         # 检查是否全部通关
         for room in self.cities[city_id]['challenge'].values():
             if room <= 5:
@@ -192,7 +182,6 @@ class UserCities(GameModel):
         city_challenge_conf = self._challenge_config[city_id]
         sample_city = random.sample(city_challenge_conf, 3)
         self.cities[city_id]['challenge'] = {city_id: 1 for city_id in sample_city}
-        self.put()
         return {city_id: {'challenge': self.cities[city_id]['challenge']}}
 
     def add_city_jeton(self, city_id, num):

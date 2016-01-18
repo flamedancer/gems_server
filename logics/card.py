@@ -12,7 +12,7 @@ def api_switch_team_index(team_index):
     切换编队
     
     Args:
-        team_index(str): 新的当前编队序号
+        team_index(int): 新的当前编队序号
     """
     umodified = request.user.user_modified
     ucards = request.user.user_cards
@@ -34,7 +34,7 @@ def api_set_team(team_index, new_team):
         return {} 
     umodified = request.user.user_modified
     team = ucards.set_team(team_index, new_team)
-    umodified.set_modify_info('cities', {team_index: {'team': team}})
+    umodified.set_modify_info('teams', {team_index: team})
     umodified.set_modify_info('cur_team_index', team_index)
     return {}
 

@@ -10,6 +10,7 @@
 城市声望配置 city_reputation
 
 卡牌编队最大长度 team_length
+各编队获得等级 get_team_lv 
 
 
 开城消耗金币配置 open_city_consume_coin
