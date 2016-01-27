@@ -12,7 +12,7 @@
     <th>阵营</th>
     <th>神话</th>
   </tr>
-  {% for card_id in team %}
+  {% for card_id in team[0] %}
   <tr>
   <td>{{loop.index}}</td>
   {% if not card_id %}

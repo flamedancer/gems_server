@@ -10,7 +10,8 @@ class UserCards(GameModel):
     
     Attribute:
         team: 玩家编队list, len为common_config['team_number'] 每个玩家总共可以编队数,
-              其中每个item为一个编队, card_id组成的list,''代表这个位置没有武将,len为common_config['team_length'],
+              其中每个item[0]为一个编队, card_id组成的list,''代表这个位置没有武将,len为common_config['team_length'],
+              item[1] 为此编队选择的城市buff
              eg:
                 [['1_card', '', '2_card', '3_card', ''],[],[],[],[]]
         cards: 玩家所有武将信息dict, key为武将id, 
@@ -31,7 +32,7 @@ class UserCards(GameModel):
     """
     def __init__(self, uid=''):
         self.uid = uid
-        self.cur_team_index = "0" # 当前使用城市卫队号
+        self.cur_team_index = 0 # 当前使用城市卫队号
         self.cards = {}   # 所有卡牌 
         self.teams = []   # 编队信息 
         self.new_card_num = 0   # 新卡数量
@@ -50,13 +51,14 @@ class UserCards(GameModel):
         init_team = userInit_conf['init_team']
         init_cards_conf = userInit_conf.get('init_cards', {})
         team_len = userInit_conf.get('team_length', 4)
-        self.teams = len(userInit_conf['get_team_lv']) * ([[''] * team_len])
-        self.teams[0] = init_team
+        common_config = self._common_config
+
+        self.teams = len(common_config['get_team_lv']) * ([[[''] * team_len, '0']])
+        self.teams[0][0] = init_team + [''] * (team_len - len(init_team))
         for card_id in init_team:
             self.add_card(card_id, 1)
         for card_id,num in init_cards_conf.items(): 
             self.add_card(card_id, num)
-        self.put()
         
 
     def add_card(self, card_id, num=1):
@@ -73,7 +75,6 @@ class UserCards(GameModel):
                 'is_new': True,
             }
             self.add_new_num()
-        self.put()
         return self.cards[card_id]
 
     def del_card(self, card_id, num=1):
@@ -84,11 +85,12 @@ class UserCards(GameModel):
         self.put()
         return self.cards[card_id]
 
-    def set_team(self, team_index, team):
+    def set_team(self, team_index, team, buff_city):
         """ 修改编队
         Args:
             team_index: 要修改第几个城市编队
             team: 新的编队list
+            buff_city: 新的编队list
         """
         team_len = self._common_config['team_length'] 
         if len(team) != team_len:
@@ -106,7 +108,7 @@ class UserCards(GameModel):
             raise LogicError("Illegal team index!")
         if set(team) == set(['']):
             team = []
-        self.teams[team_index] = team
+        self.teams[team_index] = [team, buff_city]
         return team
 
     def set_cur_team_index(self, team_index):

@@ -57,8 +57,8 @@ class UserInvade(GameModel):
         team = self.watch_team
         # 防守编队为空时，用当前编队
         if not team or set(team) == set(['']):
-            team = uCards.cur_team() or self._common_config['init_team']
-        team_index = self.watch_team_index or uCards.cur_team_index
+            team = uCards.cur_team()[0] or self._common_config['init_team']
+        team_index = self.watch_team_index or uCards.cur_team()[1]
         return {
             'nature_0': uProperty.nature_0,
             'nature_1': uProperty.nature_1,
@@ -78,7 +78,7 @@ class UserInvade(GameModel):
         uProperty = self.user_property
         uCards = self.user_cards
         uCities = self.user_cities
-        team = uCards.cur_team()
+        team = uCards.cur_team()[0]
         return {
             'nature_0': uProperty.nature_0,
             'nature_1': uProperty.nature_1,

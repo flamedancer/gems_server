@@ -28,7 +28,7 @@ class UserPvp(GameModel):
     def team_info(self):
         uProperty = self.user_property
         uCards = self.user_cards
-        team = uCards.cur_team()
+        team = uCards.cur_team()[0]
         return {
             'nature_0': uProperty.nature_0,
             'nature_1': uProperty.nature_1,

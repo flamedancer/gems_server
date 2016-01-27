@@ -2,7 +2,8 @@ key  (城市id)
     key  （floor_index）                
         name    str 关卡名字    
         stamina int 消耗体力    
-        award   dict    战场掉落    
+        award   dict    战场掉落
+        box_award  dict  额外宝箱奖励  （部分关卡有）    
         enemy    list    敌将以及基础等级    
         enemy_nature    int 对手全元素掌握度    
         enemy_favor int 敌将好感度  

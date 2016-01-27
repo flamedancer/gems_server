@@ -9,7 +9,7 @@ from common import tools
 from common.exceptions import *
 
 
-def api_start(dungeon_type, city_id, team_index='', new_team=None, floor=''):
+def api_start(dungeon_type, city_id, team_index='', new_team=None, buff_city="0", floor=''):
     """ api/dungeon/start
     进战场
     1.进战场先扣体力 
@@ -19,6 +19,7 @@ def api_start(dungeon_type, city_id, team_index='', new_team=None, floor=''):
         city_id(str): 要打哪个城，城市id
         team_index(str): 选取的城市编队id
         new_team(list->str): 新的战斗卡片队伍
+        buff_city(list->str): 新的战斗卡片队伍选择的城市buff
         floor(str): 挑战模式选取的大关卡
 
     Returns:
@@ -31,7 +32,7 @@ def api_start(dungeon_type, city_id, team_index='', new_team=None, floor=''):
     if team_index != '' and new_team is not None:
         if set(new_team) == set(['']):
             raise ParmasError('Can\'t set empty team !')
-        card.api_set_team(team_index, new_team)
+        card.api_set_team(team_index, new_team, buff_city)
     ubase = request.user
     ucities = ubase.user_cities
     if dungeon_type == 'conquer':
@@ -101,7 +102,7 @@ def calcu_enemy_lv(ucards, base_lv):
         其中当x>=15时，f(x)=0.1*x+2.5，g(x)=0.07*x-1                        
     """
     top_lv = ucards._common_config.get('max_card_lv', 15)
-    user_team = ucards.cur_team()
+    user_team = ucards.cur_team()[0]
     user_card_lv = [ucards.get_card_lv(cid) for cid in user_team if cid]
     aulv = sum(user_card_lv)
     average = sum(base_lv) * 0.1 / len(base_lv)
@@ -238,7 +239,7 @@ def can_get_ext_award(user, ext_term, has_dead_mem, bout):
     """
     card_config = user._card_config
     ucards = user.user_cards
-    cur_team = ucards.cur_team()
+    cur_team = ucards.cur_team()[0]
     for term in ext_term:
         term_name, term_value = term[0], term[1:]
         if term_name == 'a':

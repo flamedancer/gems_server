@@ -77,13 +77,13 @@ def get_real_pvp_info(uid):
     uProperty = uBase.user_property
     uCards = uBase.user_cards 
     uCities = uBase.user_cities 
-    team = uCards.cur_team()
+    team, team_index = uCards.cur_team()
     user_pvp_info = {
         'uid': uBase.uid,
         'lv': uProperty.lv,
         'name': uBase.name,
         'team': team,
-        'team_index': uCards.cur_team_index,
+        'team_index': team_index,
         'team_index_lv': uCities.cities[uCards.cur_team_index]['reputation_lv'],
         'capital': uCities.capital_city,
         'nature_0': uProperty.nature_0,

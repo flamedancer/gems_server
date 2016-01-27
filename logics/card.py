@@ -20,21 +20,22 @@ def api_switch_team_index(team_index):
     umodified.set_modify_info('cur_team_index', index)
     return {}
 
-def api_set_team(team_index, new_team):
+def api_set_team(team_index, new_team, buff_city):
     """ api/card/set_team
     切换编队
     
     Args:
         team_index(int): 要修改的编队序号
         new_team(list): 新的编队
+        buff_city(str): 新的编队选择的城市buff
     """
     ucards = request.user.user_cards
     ucards.set_cur_team_index(team_index)
-    if ucards.cur_team == new_team:
+    if ucards.cur_team == [new_team, buff_city]:
         return {} 
     umodified = request.user.user_modified
-    team = ucards.set_team(team_index, new_team)
-    umodified.set_modify_info('teams', {team_index: team})
+    team = ucards.set_team(team_index, new_team, buff_city)
+    umodified.set_modify_info('teams', {team_index: [team, buff_city]})
     umodified.set_modify_info('cur_team_index', team_index)
     return {}
 
