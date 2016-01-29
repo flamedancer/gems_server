@@ -22,6 +22,7 @@ class Employee(MongoModel):
 
     def set_password(self, password):
         self.password = hashlib.md5(password).hexdigest() 
+        self.put()
 
     def check_password(self, password):
         return self.password == hashlib.md5(password).hexdigest()

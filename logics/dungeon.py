@@ -182,6 +182,9 @@ def api_end(dungeon_type, city_id, win=False, has_dead_mem=True, bout=1):
             tools.add_user_things(ubase, 'exp', add_exp, 'conquer')
             return {'exp': add_exp}
         tools.add_user_awards(ubase, award, 'conquer')
+        # 额外宝箱奖励
+        if 'box_award' in stage_conf:
+            tools.add_user_awards(ubase, stage_conf['box_award'], 'conquer')
         new_info = ucities.up_conquer_stage(city_id)
         # 征服玩此城市, 城市每张满级卡加一级
         if str(int(cur_stage) + 1) not in conquer_config[city_id]:

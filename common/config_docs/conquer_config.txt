@@ -7,6 +7,7 @@ key  (城市id)
         enemy    list    敌将以及基础等级    
         enemy_nature    int 对手全元素掌握度    
         enemy_favor int 敌将好感度  
+        ai_level   int  电脑智能程度   由低到高取值 1~3  
                     
                     
                     
