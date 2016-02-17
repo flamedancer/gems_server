@@ -235,8 +235,8 @@ def api_info():
         task_conf = main_task_conf[task_id]
         return_info = {
             'task_id': task_id,
-            'title': task_conf['title'] % int(utask.main_task[task_id]['step']),
-            'desc': task_conf['desc'],
+            'title': task_conf['title_desc'][utask.main_task[task_id]['step']][0],
+            'desc': task_conf['title_desc'][utask.main_task[task_id]['step']][1],
             'show_type': task_conf['show_type'],
             'current': utask.main_task[task_id]['now_value'] if\
                  utask.main_task[task_id]['now_value'] is not None else\
